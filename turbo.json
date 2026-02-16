@@ -1,0 +1,24 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"proto:gen": {
+			"inputs": ["proto/**/*.proto", "scripts/proto-gen.ts"],
+			"outputs": ["src/generated/**"],
+			"cache": true
+		},
+		"build": {
+			"dependsOn": ["^build", "proto:gen"],
+			"inputs": ["src/**", "tsconfig.json"],
+			"outputs": ["dist/**"]
+		},
+		"dev": {
+			"dependsOn": ["^build", "proto:gen"],
+			"persistent": true,
+			"cache": false
+		},
+		"lint": {},
+		"typecheck": {
+			"dependsOn": ["^build"]
+		}
+	}
+}

@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.turbo/
+.next/
+*.tsbuildinfo
+
+# Generated
+**/generated/
+**/docs/
+
+# Environment
+.env
+.env.local
+
+# Reference repos (not committed)
+_reference/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

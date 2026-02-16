@@ -1,0 +1,8 @@
+[submodule "packages/sdk"]
+	path = packages/sdk
+	url = https://github.com/Dilettante258/tieba.js.git
+	branch = v3
+[submodule "apps/api"]
+	path = apps/api
+	url = https://github.com/Dilettante258/Tieba-API-SCF.git
+	branch = v3
