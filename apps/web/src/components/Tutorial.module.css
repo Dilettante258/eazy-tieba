@@ -1,0 +1,116 @@
+.tutorial {
+	margin-top: 0.25rem;
+}
+
+.trigger {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--fgColor-muted, #656d76);
+	cursor: pointer;
+	list-style: none;
+}
+
+.trigger::-webkit-details-marker {
+	display: none;
+}
+
+.trigger::before {
+	content: "\25B6";
+	display: inline-block;
+	font-size: 10px;
+	margin-right: 6px;
+	transition: transform 0.15s ease;
+}
+
+details[open] > .trigger::before {
+	transform: rotate(90deg);
+}
+
+.trigger:hover {
+	color: var(--fgColor-default, #1f2328);
+}
+
+/* ── TabNav ── */
+
+.tabNav {
+	display: flex;
+	border-bottom: 1px solid var(--borderColor-default, #d1d9e0);
+	margin: 0.75rem 0 12px;
+}
+
+.tab {
+	padding: 8px 16px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--fgColor-default, #1f2328);
+	background: none;
+	border: 1px solid transparent;
+	border-bottom: none;
+	border-radius: 6px 6px 0 0;
+	cursor: pointer;
+	margin-bottom: -1px;
+}
+
+.tab:hover {
+	color: var(--fgColor-default, #1f2328);
+	text-decoration: none;
+}
+
+.tabSelected {
+	background: var(--bgColor-default, #fff);
+	border-color: var(--borderColor-default, #d1d9e0);
+	color: var(--fgColor-default, #1f2328);
+	font-weight: 600;
+}
+
+/* ── Panel content ── */
+
+.desc {
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--fgColor-muted, #656d76);
+	margin: 0 0 8px;
+}
+
+.desc:last-child {
+	margin-bottom: 0;
+}
+
+.desc code {
+	background: var(--bgColor-muted, #f6f8fa);
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-size: 13px;
+	word-break: break-all;
+}
+
+.jsonBlock {
+	background: var(--bgColor-muted, #f6f8fa);
+	border-radius: 6px;
+	padding: 12px 16px;
+	margin-bottom: 12px;
+	font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	overflow-x: auto;
+}
+
+.jsonKey {
+	color: var(--fgColor-accent, #0550ae);
+}
+
+.jsonStr {
+	color: var(--color-prettylights-syntax-string, #0a3069);
+}
+
+.jsonNum {
+	color: var(--color-prettylights-syntax-constant, #0550ae);
+}
+
+.jsonPunc {
+	color: var(--fgColor-default, #1f2328);
+}
+
+.jsonOmit {
+	color: var(--fgColor-muted, #656d76);
+}

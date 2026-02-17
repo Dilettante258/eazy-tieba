@@ -1,0 +1,78 @@
+.landing {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* ── Hero 区域 ── */
+
+/* 用负 margin 让 hero 上移，覆盖到 sticky 透明 navbar 下方 */
+.heroWrap {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	position: relative;
+	overflow: hidden;
+	margin-top: -3.25rem;
+	padding-top: 3.25rem;
+	background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 25%, #db2777 50%, #ea580c 75%, #f59e0b 100%);
+}
+
+.heroBg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* 轻微的噪点纹理增加质感 */
+.heroWrap::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.05) 0%,
+		transparent 40%,
+		rgba(0, 0, 0, 0.1) 100%
+	);
+	pointer-events: none;
+	z-index: 0;
+}
+
+[data-color-mode="dark"] .heroWrap {
+	background: linear-gradient(135deg, #0f1d45 0%, #4c1d95 25%, #831843 50%, #7c2d12 75%, #78350f 100%);
+}
+
+[data-color-mode="dark"] .heroWrap::after {
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.2) 0%,
+		transparent 40%,
+		rgba(0, 0, 0, 0.3) 100%
+	);
+}
+
+.heading {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+	justify-content: space-between;
+	align-items: center;
+	margin: 4rem 0 2rem;
+	padding: 0 1rem;
+	width: 100%;
+	max-width: 1248px;
+	position: relative;
+	z-index: 1;
+}
+
+@media (max-width: 768px) {
+	.heading {
+		grid-template-columns: 1fr;
+		gap: 3rem;
+	}
+}

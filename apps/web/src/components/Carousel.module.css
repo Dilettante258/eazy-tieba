@@ -1,0 +1,224 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.cardWrapper {
+	overflow: hidden;
+	border-radius: 1.5rem;
+	box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.08);
+	cursor: grab;
+	user-select: none;
+}
+
+.cardWrapper:active {
+	cursor: grabbing;
+}
+
+.card {
+	width: 23.75em;
+	height: 25.6rem;
+	border-radius: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	overflow: hidden;
+}
+
+/* ── 卡片内装饰 ── */
+
+.card::before {
+	content: "";
+	position: absolute;
+	width: 180%;
+	height: 180%;
+	border-radius: 50%;
+	opacity: 0.35;
+}
+
+.card::after {
+	content: "";
+	position: absolute;
+	width: 60%;
+	height: 60%;
+	border-radius: 50%;
+	opacity: 0.3;
+}
+
+.cardLabel {
+	position: relative;
+	z-index: 1;
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	opacity: 0.6;
+}
+
+/* ── 蓝色卡片 ── */
+
+.card1 {
+	composes: card;
+	background: linear-gradient(135deg, #e6f4fe 0%, #c2e0ff 100%);
+}
+
+.card1::before {
+	background: radial-gradient(circle, #a8d4ff 0%, transparent 70%);
+	top: -60%;
+	left: -40%;
+}
+
+.card1::after {
+	background: radial-gradient(circle, #7abfff 0%, transparent 70%);
+	bottom: -20%;
+	right: -15%;
+}
+
+.card1 .cardLabel {
+	color: #1a6dba;
+}
+
+/* ── 橙色卡片 ── */
+
+.card2 {
+	composes: card;
+	background: linear-gradient(135deg, #ffefd6 0%, #ffd9a8 100%);
+}
+
+.card2::before {
+	background: radial-gradient(circle, #ffc985 0%, transparent 70%);
+	top: -50%;
+	right: -40%;
+}
+
+.card2::after {
+	background: radial-gradient(circle, #ffb05c 0%, transparent 70%);
+	bottom: -25%;
+	left: -20%;
+}
+
+.card2 .cardLabel {
+	color: #a86320;
+}
+
+/* ── 绿色卡片 ── */
+
+.card3 {
+	composes: card;
+	background: linear-gradient(135deg, #e6f6eb 0%, #b8e6c8 100%);
+}
+
+.card3::before {
+	background: radial-gradient(circle, #8dd4a6 0%, transparent 70%);
+	bottom: -60%;
+	left: -30%;
+}
+
+.card3::after {
+	background: radial-gradient(circle, #6bc48c 0%, transparent 70%);
+	top: -20%;
+	right: -20%;
+}
+
+.card3 .cardLabel {
+	color: #2a7a4a;
+}
+
+/* ── 暗色模式 ── */
+
+[data-color-mode="dark"] .card1 {
+	background: linear-gradient(135deg, #0d3868 0%, #205d9e 100%);
+}
+
+[data-color-mode="dark"] .card2 {
+	background: linear-gradient(135deg, #331e0b 0%, #5c3a16 100%);
+}
+
+[data-color-mode="dark"] .card3 {
+	background: linear-gradient(135deg, #0d2e1c 0%, #1a5435 100%);
+}
+
+[data-color-mode="dark"] .card1 .cardLabel { color: #8ec8f6; }
+[data-color-mode="dark"] .card2 .cardLabel { color: #f5ae73; }
+[data-color-mode="dark"] .card3 .cardLabel { color: #8eceaa; }
+
+[data-color-mode="dark"] .cardWrapper {
+	box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.3);
+}
+
+/* ── 动画 ── */
+
+.slideRight {
+	animation: easeInFromRight 0.5s ease-in-out;
+}
+
+.slideLeft {
+	animation: easeInFromLeft 0.5s ease-in-out;
+}
+
+@keyframes easeInFromLeft {
+	0% {
+		opacity: 0;
+		transform: translateX(-70%);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes easeInFromRight {
+	0% {
+		opacity: 0;
+		transform: translateX(70%);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* ── 进度条 ── */
+
+.processBar {
+	z-index: 10;
+	display: flex;
+	max-width: 596px;
+	justify-content: center;
+	gap: 0.625rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+}
+
+.dot {
+	height: 0.375rem;
+	width: 90px;
+	cursor: pointer;
+	border-radius: 0.25rem;
+	background-color: rgba(255, 255, 255, 0.3);
+	border: none;
+	padding: 0;
+	transition: background-color 0.3s;
+}
+
+.dot[data-active="true"]:nth-child(1) {
+	background-color: #93c5fd;
+}
+
+.dot[data-active="true"]:nth-child(2) {
+	background-color: #fdba74;
+}
+
+.dot[data-active="true"]:nth-child(3) {
+	background-color: #86efac;
+}
+
+@media (max-width: 768px) {
+	.card {
+		width: 18rem;
+		height: 20rem;
+	}
+}

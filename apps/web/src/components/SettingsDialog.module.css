@@ -1,0 +1,84 @@
+/* ── 设置 Dialog 内部布局 ── */
+
+.splitLayout {
+	display: flex;
+	min-height: 400px;
+}
+
+.sidebar {
+	flex-shrink: 0;
+	width: 180px;
+	border-right: 1px solid var(--borderColor-default);
+	padding-right: 8px;
+}
+
+.content {
+	flex: 1;
+	padding-left: 16px;
+	overflow-y: auto;
+}
+
+/* ── 占位面板 ── */
+
+.placeholder {
+	color: var(--fgColor-muted);
+	font-size: 0.875rem;
+}
+
+.placeholder h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	color: var(--fgColor-default);
+	margin: 0 0 0.75rem;
+}
+
+.placeholder p {
+	margin: 0.375rem 0;
+}
+
+/* ── 关于面板 ── */
+
+.aboutSection {
+	font-size: 0.875rem;
+	color: var(--fgColor-default);
+}
+
+.aboutSection h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0 0 0.75rem;
+}
+
+.aboutSection p {
+	margin: 0.375rem 0;
+	color: var(--fgColor-muted);
+}
+
+.aboutSection a {
+	color: var(--fgColor-accent);
+	text-decoration: none;
+}
+
+.aboutSection a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+	.splitLayout {
+		flex-direction: column;
+		min-height: auto;
+	}
+
+	.sidebar {
+		width: 100%;
+		border-right: none;
+		border-bottom: 1px solid var(--borderColor-default);
+		padding-right: 0;
+		padding-bottom: 8px;
+		margin-bottom: 8px;
+	}
+
+	.content {
+		padding-left: 0;
+	}
+}

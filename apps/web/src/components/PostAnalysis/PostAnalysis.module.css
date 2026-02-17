@@ -1,0 +1,293 @@
+/* ── Module 卡片容器 ── */
+
+.module {
+  background-color: var(--bgColor-default, #ffffff);
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+[data-color-mode="dark"] .module {
+  background-color: var(--bgColor-default, #0d1117);
+  border-color: var(--borderColor-default, #30363d);
+}
+
+.moduleTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.375rem;
+  color: var(--fgColor-default, #1f2328);
+}
+
+[data-color-mode="dark"] .moduleTitle {
+  color: var(--fgColor-default, #e6edf3);
+}
+
+.moduleDescription {
+  font-size: 0.8125rem;
+  color: var(--fgColor-muted, #656d76);
+  margin: 0 0 0.5rem;
+}
+
+/* ── DataIndicator 数据控制器 ── */
+
+.dataIndicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
+}
+
+[data-color-mode="dark"] .userProfile {
+  border-bottom-color: var(--borderColor-muted, #21262d);
+}
+
+.avatarSkeleton {
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.userProfileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fgColor-default, #1f2328);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-color-mode="dark"] .userName {
+  color: var(--fgColor-default, #e6edf3);
+}
+
+.userStats {
+  font-size: 0.75rem;
+  color: var(--fgColor-muted, #656d76);
+}
+
+.dataList {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.dataList > dt {
+  color: var(--fgColor-muted, #656d76);
+  white-space: nowrap;
+}
+
+.dataList > dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--fgColor-default, #1f2328);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-color-mode="dark"] .dataList > dd {
+  color: var(--fgColor-default, #e6edf3);
+}
+
+.dataListSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.errorText {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--fgColor-danger, #d1242f);
+}
+
+/* ── DataSelector 数据筛选 ── */
+
+.dataSelector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dataSelector button {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── ChartActionBar 操作栏 ── */
+
+.chartActionBar {
+  flex-shrink: 0;
+  min-width: 9rem;
+	padding-inline: unset;
+}
+
+/* ── ChartWrapper Spec 编辑器 ── */
+
+.specHint {
+  font-size: 0.8125rem;
+  color: var(--fgColor-muted, #656d76);
+  margin: 0 0 0.5rem;
+}
+
+.specEditor {
+  width: 100%;
+  min-height: 24rem;
+  font-family: var(--fontStack-monospace, ui-monospace, monospace);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  padding: 0.5rem;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  resize: vertical;
+  background: var(--bgColor-default);
+  color: var(--fgColor-default);
+}
+
+/* ── PostListVirtualized 虚拟化帖子列表 ── */
+
+.virtualList {
+  height: 30rem;
+  border-radius: 6px;
+  overflow: auto;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+}
+
+[data-color-mode="dark"] .virtualList {
+  border-color: var(--borderColor-default, #30363d);
+}
+
+.listItemOdd,
+.listItemEven {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  gap: 0.125rem;
+}
+
+.listItemOdd {
+  background-color: var(--bgColor-default, #ffffff);
+}
+
+[data-color-mode="dark"] .listItemOdd {
+  background-color: var(--bgColor-default, #0d1117);
+}
+
+.listItemEven {
+  background-color: var(--bgColor-muted, #f6f8fa);
+}
+
+[data-color-mode="dark"] .listItemEven {
+  background-color: var(--bgColor-muted, #161b22);
+}
+
+.postInfo {
+  font-size: 0.8125rem;
+  margin: 0;
+  color: var(--fgColor-default, #1f2328);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+[data-color-mode="dark"] .postInfo {
+  color: var(--fgColor-default, #e6edf3);
+}
+
+.forumLink {
+  color: var(--fgColor-accent, #0969da);
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 0.125rem;
+}
+
+.forumLink:hover {
+  text-decoration: underline;
+}
+
+.threadLink {
+  color: var(--fgColor-default, #1f2328);
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 0.125rem;
+}
+
+[data-color-mode="dark"] .threadLink {
+  color: var(--fgColor-default, #e6edf3);
+}
+
+.threadLink:hover {
+  color: var(--fgColor-accent, #0969da);
+}
+
+.postContentText {
+  font-size: 0.8125rem;
+  color: var(--fgColor-muted, #656d76);
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.replyTarget {
+  color: var(--fgColor-accent, #0969da);
+  margin: 0 0.125rem;
+}
+
+.postItemFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.postItemTags {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.postItemMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.postItemLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 0.75rem;
+  color: var(--fgColor-accent, #0969da);
+  text-decoration: none;
+}
+
+.postItemLink:hover {
+  text-decoration: underline;
+}
+
+.postItemTime {
+  font-size: 0.75rem;
+  color: var(--fgColor-muted, #848d97);
+}

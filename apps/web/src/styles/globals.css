@@ -1,8 +1,19 @@
-@import "tailwindcss";
+/* Primer 基础样式由 ThemeProvider + BaseStyles 提供 */
 
 body {
 	margin: 0;
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-		Arial, sans-serif;
+}
+
+/* BaseStyles 只设了 color/font，需要补上背景色并撑满视口 */
+[data-color-mode] {
+	background-color: var(--bgColor-default, #fff);
+	min-height: 100vh;
+}
+
+/* 搜索高亮（CSS Custom Highlight API） */
+::highlight(search-highlight) {
+	background-color: var(--bgColor-accent-emphasis, #0969da);
+	color: var(--fgColor-onEmphasis, #fff);
+	text-decoration: underline wavy var(--fgColor-accent, #0969da);
+	text-underline-offset: 3px;
 }

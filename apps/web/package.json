@@ -12,32 +12,28 @@
 	"dependencies": {
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-router": "^7",
+		"@tanstack/react-router": "^1",
 		"@tanstack/react-query": "^5.61.0",
 		"@tanstack/react-query-devtools": "^5.61.0",
-		"@tanstack/react-virtual": "^3.13.2",
-		"zustand": "^5.0.3",
+		"@primer/react": "^38",
+		"@primer/primitives": "^11",
+		"@primer/octicons-react": "^19",
 		"hono": "^4.6.8",
-		"echarts": "^5.6.0",
-		"echarts-for-react": "^3.0.3",
-		"echarts-wordcloud": "^2.1.0",
-		"react-activity-calendar": "^2.7.10",
-		"react-aria-components": "^1.4.1",
-		"react-aria": "^3.35.1",
-		"lucide-react": "^0.456.0",
-		"motion": "^12.4.10",
 		"clsx": "^2.1.1",
-		"tailwind-merge": "^2.5.4",
-		"tailwind-variants": "^0.3.0",
-		"@tieba/api": "workspace:*"
+		"zod": "^3",
+		"@tieba/api": "workspace:*",
+		"@visactor/vchart": "^1",
+		"@visactor/react-vchart": "^1",
+		"react-activity-calendar": "^2",
+		"@tanstack/react-virtual": "^3",
+		"zustand": "^5"
 	},
 	"devDependencies": {
 		"vite": "^6",
 		"@vitejs/plugin-react": "^4",
+		"@tanstack/router-plugin": "^1",
+		"@tanstack/router-zod-adapter": "^1",
 		"@types/react": "^19",
-		"@types/react-dom": "^19",
-		"tailwindcss": "^4",
-		"@tailwindcss/vite": "^4",
-		"autoprefixer": "^10"
+		"@types/react-dom": "^19"
 	}
 }

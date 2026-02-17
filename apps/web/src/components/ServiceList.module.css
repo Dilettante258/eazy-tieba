@@ -1,0 +1,292 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  overflow: clip;
+}
+
+/* ── 统计区域（浅色背景） ── */
+
+.statsSection {
+  position: relative;
+  background-color: #f8f9fa;
+  padding: 5rem 0;
+  overflow: clip;
+  border-top: 1px solid #e8e8ec;
+}
+
+[data-color-mode="dark"] .statsSection {
+  background-color: #0d1117;
+  border-top-color: #21262d;
+}
+
+.content {
+  max-width: 850px;
+  padding: 0 1.5rem;
+  margin: 0 auto;
+  position: relative;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  letter-spacing: 0.05rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 3.5rem;
+  color: #1c2024;
+
+  animation: fadeSlideUp linear both;
+  animation-timeline: view();
+  animation-range: entry 10% entry 50%;
+}
+
+[data-color-mode="dark"] .sectionTitle {
+  color: #e6edf3;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 2.5rem;
+    column-gap: 1rem;
+  }
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  /* 滚动驱动入场动画 */
+  animation: fadeSlideUp linear both;
+  animation-timeline: view();
+  animation-range: entry 20% entry 60%;
+}
+
+.statItem:nth-child(2) {
+  animation-delay: 60ms;
+}
+.statItem:nth-child(3) {
+  animation-delay: 120ms;
+}
+.statItem:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.statIcon {
+  border-radius: 12px;
+  border: #e0e1e6 1px solid;
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.06),
+    0 1px 2px -1px rgb(0 0 0 / 0.06);
+  padding: 0.75rem;
+  background-color: white;
+  width: fit-content;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-color-mode="dark"] .statIcon {
+  background-color: #161b22;
+  border-color: #30363d;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2);
+}
+
+.statIcon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.statValue {
+  color: #1c2024;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+[data-color-mode="dark"] .statValue {
+  color: #e6edf3;
+}
+
+.statLabel {
+  color: #60646c;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  max-width: 10rem;
+}
+
+[data-color-mode="dark"] .statLabel {
+  color: #8b949e;
+}
+
+/* ── 工具列表区域（深色背景） ── */
+
+.toolsSection {
+  position: relative;
+  background-color: #111214;
+  padding: 5rem 0;
+  overflow: clip;
+}
+
+.toolsSectionTitle {
+  font-size: 1.75rem;
+  letter-spacing: 0.05rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #fff;
+
+  animation: fadeSlideUp linear both;
+  animation-timeline: view();
+  animation-range: entry 10% entry 50%;
+}
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .toolsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.toolItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #1a1d20;
+  border: 1px solid #2d3138;
+  color: #edeef0;
+  border-radius: 12px;
+  position: relative;
+  overflow: clip;
+  padding: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  /* 滚动驱动入场动画 */
+  animation: fadeScaleIn linear both;
+  animation-timeline: view();
+  animation-range: entry 10% entry 35%;
+}
+
+.toolItem:nth-child(2) {
+  animation-delay: 50ms;
+}
+.toolItem:nth-child(3) {
+  animation-delay: 100ms;
+}
+.toolItem:nth-child(4) {
+  animation-delay: 150ms;
+}
+.toolItem:nth-child(5) {
+  animation-delay: 200ms;
+}
+.toolItem:nth-child(6) {
+  animation-delay: 250ms;
+}
+
+.toolItem:hover {
+  border-color: #7c3aed;
+  background-color: #1e2025;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px rgb(124 58 237 / 0.15);
+}
+
+@media (min-width: 769px) {
+  .toolItem {
+    aspect-ratio: 1.05;
+  }
+}
+
+.toolItemContent {
+  position: relative;
+  z-index: 1;
+}
+
+.toolItem h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #edeef0;
+  margin-bottom: 0.375rem;
+}
+
+.toolItem p {
+  color: #8b8f96;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.toolIcon {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+  color: #a0a4ab;
+}
+
+.toolBgIcon {
+  position: absolute;
+  bottom: -1.5rem;
+  right: -1.5rem;
+  width: 9rem;
+  height: 9rem;
+  opacity: 0.06;
+  color: #fff;
+  transition: opacity 0.25s;
+}
+
+.toolItem:hover .toolBgIcon {
+  opacity: 0.1;
+}
+
+/* ── 滚动驱动动画 ── */
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── 圆点 SVG 背景 ── */
+
+.dotsBg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}

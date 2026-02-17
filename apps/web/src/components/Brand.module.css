@@ -1,0 +1,136 @@
+.section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 5%;
+	gap: 1.25rem;
+	min-height: 24rem;
+}
+
+.news {
+	color: #fff;
+	background-color: rgba(255, 255, 255, 0.18);
+	border: rgba(255, 255, 255, 0.3) 1px solid;
+	border-radius: 10rem;
+	font-size: 0.75rem;
+	width: fit-content;
+	transition: background-color 0.3s ease;
+	text-decoration: none;
+	cursor: pointer;
+	backdrop-filter: blur(8px);
+}
+
+.news:hover {
+	background-color: rgba(255, 255, 255, 0.28);
+}
+
+.newsTip {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 5px 20px 5px 16px;
+}
+
+.textContainer {
+	font-size: 3rem;
+	font-weight: 800;
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	color: #fff;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width: 1024px) {
+	.textContainer {
+		font-size: 3.5rem;
+	}
+}
+
+.textContainer span {
+	display: inline-block;
+	opacity: 0;
+	animation: staggerUp 0.4s ease-out forwards;
+}
+
+@keyframes staggerUp {
+	from {
+		transform: translateY(400%);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+/* eztb 贴吧 工具箱 <br> 为 更 方便 调查 成分 而生 */
+.textContainer span:nth-child(1) { animation-delay: 0s; margin-right: 0.4rem; }
+.textContainer span:nth-child(2) { animation-delay: 0.1s; }
+.textContainer span:nth-child(3) { animation-delay: 0.2s; }
+.textContainer span:nth-child(5) { animation-delay: 0.3s; }
+.textContainer span:nth-child(6) { animation-delay: 0.35s; }
+.textContainer span:nth-child(7) { animation-delay: 0.4s; }
+.textContainer span:nth-child(8) { animation-delay: 0.45s; }
+.textContainer span:nth-child(9) { animation-delay: 0.5s; }
+.textContainer span:nth-child(10) { animation-delay: 0.55s; }
+
+.description {
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 1.125rem;
+	line-height: 1.75;
+	max-width: 28rem;
+}
+
+.btnContainer {
+	display: flex;
+	gap: 1rem;
+	margin-top: 0.5rem;
+}
+
+.btnSolid {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	border-radius: 12px;
+	height: 3.25rem;
+	padding: 0 1.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	background-color: #fff;
+	color: #1a1a2e;
+	cursor: pointer;
+	transition: all 0.2s;
+	text-decoration: none;
+	border: none;
+}
+
+.btnSolid:hover {
+	background-color: #f0f0f0;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	transform: translateY(-1px);
+}
+
+.btnBordered {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	border-radius: 12px;
+	height: 3.25rem;
+	padding: 0 1.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	background-color: rgba(255, 255, 255, 0.12);
+	color: #fff;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	cursor: pointer;
+	transition: all 0.2s;
+	text-decoration: none;
+	backdrop-filter: blur(8px);
+}
+
+.btnBordered:hover {
+	background-color: rgba(255, 255, 255, 0.22);
+	border-color: rgba(255, 255, 255, 0.5);
+	transform: translateY(-1px);
+}
