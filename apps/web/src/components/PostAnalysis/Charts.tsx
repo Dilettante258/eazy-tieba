@@ -1,11 +1,12 @@
 import { useMemo, useCallback, forwardRef } from "react";
 import type { ISpec } from "@visactor/vchart";
-import { registerMosaicChart } from "@visactor/vchart";
+import { registerMosaicChart, registerWordCloudChart } from "@visactor/vchart";
 import { useColorMode } from "../../lib/color-mode.tsx";
 import { getChartColors } from "../../lib/chart-colors.ts";
 import { ChartWrapper, type ChartWrapperHandle } from "./ChartWrapper.tsx";
 
 registerMosaicChart();
+registerWordCloudChart();
 
 const dateFmt = new Intl.DateTimeFormat("zh-CN", {
 	month: "long",
@@ -476,6 +477,57 @@ export const MosaicChart = forwardRef<ChartWrapperHandle, MosaicChartProps>(
 			[mosaicData, isDark, palette],
 		);
 
+		return <ChartWrapper ref={ref} spec={spec} style={style} />;
+	},
+);
+
+// ── 词云图 ──
+
+interface WordCloudChartProps {
+	data: Array<{ name: string; value: number }>;
+	style?: React.CSSProperties;
+}
+
+export const WordCloudChart = forwardRef<ChartWrapperHandle, WordCloudChartProps>(
+	function WordCloudChart({ data, style }, ref) {
+		const spec = useMemo<ISpec>(
+			() => ({
+				type: "wordCloud",
+				maskShape: "rect",
+				nameField: "name",
+				valueField: "value",
+				seriesField: "name",
+				fontSizeRange: [10, 56],
+				fontWeightRange: [400, 700],
+				rotateAngles: [0],
+				padding: 1,
+				wordCloudConfig: {
+					drawOutOfBound: "ellipsis",
+					layoutMode: "ensureMapping",
+					zoomToFit: {
+						enlarge: true,
+						fontSizeLimitMax: 72,
+						shrink: true,
+						fontSizeLimitMin: 6,
+					},
+				},
+				tooltip: {
+					trigger: "hover",
+					mark: {
+						content: [
+							{
+								key: (datum) => (datum ? String(datum.name) : ""),
+								value: (datum) => (datum ? `${datum.value} 次` : ""),
+							},
+						],
+					},
+				},
+				data: [{ id: "wordCloud", values: data }],
+			}),
+			[data],
+		);
+
+		if (data.length === 0) return <div style={style} />;
 		return <ChartWrapper ref={ref} spec={spec} style={style} />;
 	},
 );

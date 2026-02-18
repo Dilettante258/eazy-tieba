@@ -80,27 +80,16 @@
   min-width: 0;
 }
 
-/* 图表区域 */
+/* 图表区域：两列网格 */
 .chartRow {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.chartRow > div {
-  flex: 1;
-  min-width: 280px;
-}
-
 @media (max-width: 768px) {
   .chartRow {
-    flex-direction: column;
-  }
-
-  .chartRow > div {
-    min-width: 100%;
+    grid-template-columns: 1fr;
   }
 }

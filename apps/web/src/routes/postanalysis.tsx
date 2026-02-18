@@ -15,16 +15,14 @@ import {
 } from "@primer/octicons-react";
 import { useMemo, useState, useCallback, useRef } from "react";
 import { QueryForm } from "../components/QueryForm.tsx";
-import {
-	usePostsBatchInfinite,
-	useProfile,
-} from "../hooks/queries.ts";
+import { usePostsBatchInfinite } from "../hooks/queries.ts";
 import { userSearchSchema } from "../lib/search-schemas.ts";
 import {
 	UserPostClass,
 	type UserPost,
 } from "../lib/user-post.ts";
 import { useUPSelectorStore } from "../lib/store.ts";
+import { useSettingsStore } from "../lib/settings-store.ts";
 import { useVChartThemeSync } from "../lib/vchart-theme.ts";
 import {
 	Module,
@@ -34,6 +32,7 @@ import {
 	ForumScatterChart,
 	SankeyChart,
 	MosaicChart,
+	WordCloudChart,
 	ChartActionBar,
 	type ChartWrapperHandle,
 	DataIndicator,
@@ -142,7 +141,7 @@ function ScatterChartModule({
 	yearRangeStr,
 }: ScatterChartModuleProps) {
 	const chartRef = useRef<ChartWrapperHandle>(null);
-	const [mode, setMode] = useState<"basic" | "forum">("basic");
+	const [mode, setMode] = useState<"basic" | "forum">("forum");
 
 	return (
 		<Module>
@@ -230,6 +229,34 @@ function FlowChartModule({ sankeyData, yearRange }: FlowChartModuleProps) {
 	);
 }
 
+// ── 高频词云模块 ──
+
+interface WordCloudModuleProps {
+	data: Array<{ name: string; value: number }>;
+	yearRangeStr: string;
+}
+
+function WordCloudModule({ data, yearRangeStr }: WordCloudModuleProps) {
+	const chartRef = useRef<ChartWrapperHandle>(null);
+
+	return (
+		<Module>
+			<div className={styles.moduleHeader}>
+				<div>
+					<Module.Title>高频词云</Module.Title>
+					<Module.Description>{yearRangeStr}</Module.Description>
+				</div>
+				<ChartActionBar chartRef={chartRef} name="高频词云" />
+			</div>
+			<WordCloudChart
+				ref={chartRef}
+				data={data}
+				style={{ height: "300px" }}
+			/>
+		</Module>
+	);
+}
+
 // ── 主页面 ──
 
 function PostAnalysisPage() {
@@ -245,10 +272,10 @@ function PostAnalysisPage() {
 		status,
 	} = usePostsBatchInfinite(method, id);
 
-	const { data: profile, isLoading: profileLoading } = useProfile(
-		method,
-		id,
-	);
+	// 设置
+	const panels = useSettingsStore((s) => s.panelVisibility);
+	const blockedForums = useSettingsStore((s) => s.blockedForums);
+	const blockedWords = useSettingsStore((s) => s.blockedWordCloudKeywords);
 
 	// Zustand 状态
 	const year = useUPSelectorStore((s) => s.selectedYear);
@@ -266,8 +293,11 @@ function PostAnalysisPage() {
 
 	const allPosts = useMemo(() => {
 		if (!data) return [];
-		return data.pages.flat();
-	}, [pageCount, data]);
+		const flat = data.pages.flat();
+		if (blockedForums.length === 0) return flat;
+		const blocked = new Set(blockedForums);
+		return flat.filter((p) => !blocked.has(p.forumName));
+	}, [pageCount, data, blockedForums]);
 
 	const up = useMemo(() => {
 		if (allPosts.length === 0) return null;
@@ -324,6 +354,14 @@ function PostAnalysisPage() {
 			}) ?? { nodes: [], links: [] },
 		[up],
 	);
+
+	// 词云数据
+	const wordCloudData = useMemo(() => {
+		const raw = up?.getWordCloud(year) ?? [];
+		if (blockedWords.length === 0) return raw;
+		const blocked = new Set(blockedWords);
+		return raw.filter((d) => !blocked.has(d.name));
+	}, [up, year, blockedWords]);
 
 	// 根据最后操作类型过滤帖子列表
 	const filteredPosts = useMemo((): UserPost[] => {
@@ -432,19 +470,21 @@ function PostAnalysisPage() {
 				<>
 					{/* 顶部区域：热力图 + 数据控制器 + 年份选择 */}
 					<div className={styles.calendarRow}>
-						<Module>
-							<Module.Title>发帖热力图</Module.Title>
-							<Module.Description>{yearRangeStr}</Module.Description>
-							<PostActivityCalendar
-								data={up.postList2HeatMap(year)}
-								eventHandlers={calendarEventHandlers}
-							/>
-						</Module>
+						{panels.heatmap && (
+							<Module>
+								<Module.Title>发帖热力图</Module.Title>
+								<Module.Description>
+									{yearRangeStr}
+								</Module.Description>
+								<PostActivityCalendar
+									data={up.postList2HeatMap(year)}
+									eventHandlers={calendarEventHandlers}
+								/>
+							</Module>
+						)}
 						<Module>
 							<Module.Title>数据控制器</Module.Title>
 							<DataIndicator
-								profile={profile}
-								profileLoading={profileLoading}
 								pageParams={
 									(data?.pageParams as Array<[number, number]>) ?? []
 								}
@@ -468,27 +508,46 @@ function PostAnalysisPage() {
 					</div>
 
 					{/* 帖子列表 */}
-					<PostListModule
-						data={filteredPosts}
-						listDescription={listDescription}
-					/>
+					{panels.postList && (
+						<PostListModule
+							data={filteredPosts}
+							listDescription={listDescription}
+						/>
+					)}
 
 					{/* 图表区域 */}
-					<div className={styles.chartRow}>
-						<PieChartModule
-							data={forumDistribution}
-							yearRangeStr={yearRangeStr}
-						/>
-						<ScatterChartModule
-							timeDistribution={timeDistribution}
-							topForumNames={topForumNames}
-							yearRangeStr={yearRangeStr}
-						/>
-						<FlowChartModule
-							sankeyData={sankeyData}
-							yearRange={yearRange}
-						/>
-					</div>
+					{(panels.pieChart ||
+						panels.scatterChart ||
+						panels.flowChart ||
+						panels.wordCloud) && (
+						<div className={styles.chartRow}>
+							{panels.pieChart && (
+								<PieChartModule
+									data={forumDistribution}
+									yearRangeStr={yearRangeStr}
+								/>
+							)}
+							{panels.scatterChart && (
+								<ScatterChartModule
+									timeDistribution={timeDistribution}
+									topForumNames={topForumNames}
+									yearRangeStr={yearRangeStr}
+								/>
+							)}
+							{panels.flowChart && (
+								<FlowChartModule
+									sankeyData={sankeyData}
+									yearRange={yearRange}
+								/>
+							)}
+							{panels.wordCloud && (
+								<WordCloudModule
+									data={wordCloudData}
+									yearRangeStr={yearRangeStr}
+								/>
+							)}
+						</div>
+					)}
 				</>
 			)}
 		</div>

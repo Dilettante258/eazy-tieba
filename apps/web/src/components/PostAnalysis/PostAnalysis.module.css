@@ -37,47 +37,6 @@
   gap: 0.625rem;
 }
 
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
-}
-
-[data-color-mode="dark"] .userProfile {
-  border-bottom-color: var(--borderColor-muted, #21262d);
-}
-
-.avatarSkeleton {
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.userProfileInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  min-width: 0;
-}
-
-.userName {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--fgColor-default, #1f2328);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-[data-color-mode="dark"] .userName {
-  color: var(--fgColor-default, #e6edf3);
-}
-
-.userStats {
-  font-size: 0.75rem;
-  color: var(--fgColor-muted, #656d76);
-}
-
 .dataList {
   display: grid;
   grid-template-columns: auto 1fr;

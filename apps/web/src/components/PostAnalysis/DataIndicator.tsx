@@ -1,28 +1,7 @@
-import { Avatar, Button, SkeletonBox } from "@primer/react";
-import { portraitUrl } from "../../lib/portrait.ts";
+import { Button, FormControl, SkeletonBox } from "@primer/react";
 import styles from "./PostAnalysis.module.css";
 
-interface ProfileData {
-	user?: {
-		name: string;
-		nameShow: string;
-		portrait: string;
-		fansNum: number;
-		concernNum: number;
-		postNum: number;
-		sex: number;
-		ipAddress: string;
-	};
-	antiStat?: {
-		blockStat: number;
-	};
-}
-
 interface DataIndicatorProps {
-	/** 用户资料 */
-	profile: ProfileData | undefined;
-	/** 资料是否加载中 */
-	profileLoading: boolean;
 	/** 页码参数列表 */
 	pageParams: Array<[number, number]>;
 	/** 总数据条数 */
@@ -44,8 +23,6 @@ interface DataIndicatorProps {
 }
 
 export function DataIndicator({
-	profile,
-	profileLoading,
 	pageParams,
 	totalCount,
 	lastBatchCount,
@@ -55,55 +32,11 @@ export function DataIndicator({
 	fetchNextPage,
 	status,
 }: DataIndicatorProps) {
-	const user = profile?.user;
-	const displayName = user?.nameShow || user?.name;
-	const avatarUrl = user?.portrait ? portraitUrl(user.portrait) : "";
-	const blocked = (profile?.antiStat?.blockStat ?? 0) > 0;
-
 	const pageFrom = pageParams[0]?.[0] ?? 1;
 	const pageTo = pageParams[pageParams.length - 1]?.[1] ?? 10;
 
 	return (
 		<div className={styles.dataIndicator}>
-			{/* 用户简介 */}
-			<div className={styles.userProfile}>
-				{profileLoading ? (
-					<>
-						<SkeletonBox
-							height="40px"
-							width="40px"
-							className={styles.avatarSkeleton}
-						/>
-						<div className={styles.userProfileInfo}>
-							<SkeletonBox height="1rem" width="5rem" />
-							<SkeletonBox height="0.75rem" width="9rem" />
-						</div>
-					</>
-				) : displayName ? (
-					<>
-						<Avatar
-							src={avatarUrl}
-							size={40}
-							alt={displayName}
-							square
-						/>
-						<div className={styles.userProfileInfo}>
-							<span className={styles.userName}>
-								{displayName}
-								{blocked && " · 已封禁"}
-							</span>
-							<span className={styles.userStats}>
-								{[
-									`发帖 ${user?.postNum ?? 0}`,
-									`关注 ${user?.concernNum ?? 0}`,
-									`粉丝 ${user?.fansNum ?? 0}`,
-								].join(" · ")}
-							</span>
-						</div>
-					</>
-				) : null}
-			</div>
-
 			{/* 数据范围 */}
 			{status === "success" && (
 				<dl className={styles.dataList}>
@@ -132,18 +65,24 @@ export function DataIndicator({
 			)}
 
 			{/* 加载更多 */}
-			<Button
-				size="small"
-				block
-				onClick={() => fetchNextPage()}
-				disabled={!hasNextPage || isFetchingNextPage}
-			>
-				{isFetchingNextPage
-					? "正在加载..."
-					: hasNextPage
-						? "加载更多"
-						: "已加载全部"}
-			</Button>
+			<FormControl>
+				<FormControl.Label>数据加载</FormControl.Label>
+				<Button
+					size="small"
+					block
+					onClick={() => fetchNextPage()}
+					disabled={!hasNextPage || isFetchingNextPage}
+				>
+					{isFetchingNextPage
+						? "正在加载..."
+						: hasNextPage
+							? "加载更多"
+							: "已加载全部"}
+				</Button>
+				<FormControl.Caption>
+					加载更多页数据以扩大分析范围
+				</FormControl.Caption>
+			</FormControl>
 		</div>
 	);
 }

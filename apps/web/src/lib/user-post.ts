@@ -1,5 +1,31 @@
 // ── 用户发帖分析数据处理 ──
 
+// ── 中文分词（词云用） ──
+
+const segmenter = new Intl.Segmenter("zh", { granularity: "word" });
+
+const STOP_WORDS = new Set([
+	"的", "了", "是", "在", "我", "有", "和", "就", "不", "人",
+	"都", "一", "一个", "上", "也", "很", "到", "说", "要", "去",
+	"你", "会", "着", "没有", "看", "好", "自己", "这", "他", "她",
+	"吗", "那", "它", "被", "从", "把", "让", "用", "对", "为",
+	"这个", "那个", "什么", "怎么", "可以", "没", "能", "但", "而",
+	"与", "或", "如", "因为", "所以", "但是", "如果", "虽然", "还是",
+	"已经", "还", "又", "再", "才", "只", "啊", "吧", "呢", "嗯",
+	"哦", "哈", "哈哈", "真的", "知道", "觉得", "然后", "这样",
+]);
+
+/** 对文本分词并累加词频 */
+function countWords(text: string, counts: Map<string, number>) {
+	for (const { segment, isWordLike } of segmenter.segment(text)) {
+		if (!isWordLike) continue;
+		const word = segment.trim();
+		if (word.length <= 1 || STOP_WORDS.has(word)) continue;
+		if (/^\d+$/.test(word)) continue;
+		counts.set(word, (counts.get(word) ?? 0) + 1);
+	}
+}
+
 /** 展平后的用户发帖记录（与 SDK UserPost 对齐） */
 export interface UserPost {
 	forumId: number;
@@ -308,5 +334,23 @@ export class UserPostClass {
 			),
 			links: filteredLinks,
 		};
+	}
+
+	/** 获取词云数据（对帖子标题 + 回复内容分词统计） */
+	public getWordCloud(
+		year: number | "ALL",
+		maxWords = 400,
+	): Array<{ name: string; value: number }> {
+		const postList =
+			year === "ALL" ? this.upData : this.getPostListFromYear(year);
+		const counts = new Map<string, number>();
+		for (const post of postList) {
+			if (post.title) countWords(post.title, counts);
+			if (post.content) countWords(post.content, counts);
+		}
+		return [...counts.entries()]
+			.map(([name, value]) => ({ name, value }))
+			.sort((a, b) => b.value - a.value)
+			.slice(0, maxWords);
 	}
 }

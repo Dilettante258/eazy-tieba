@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Button, SelectPanel } from "@primer/react";
+import { Button, FormControl, SelectPanel } from "@primer/react";
 import type { SelectPanelItemInput } from "@primer/react";
 import { TriangleDownIcon } from "@primer/octicons-react";
 import { useUPSelectorStore } from "../../lib/store.ts";
@@ -87,69 +87,75 @@ export function DataSelector({
 
 	return (
 		<div className={styles.dataSelector}>
-			<SelectPanel
-				title="选择年份"
-				placeholder="搜索年份…"
-				renderAnchor={({ children, ...anchorProps }) => (
-					<Button
-						{...anchorProps}
-						size="small"
-						trailingAction={TriangleDownIcon}
-					>
-						{children ?? selectedYearItem?.text ?? "选择年份"}
-					</Button>
-				)}
-				open={yearOpen}
-				onOpenChange={(open) => {
-					setYearOpen(open);
-					if (!open) setYearFilter("");
-				}}
-				items={filteredYearItems}
-				selected={selectedYearItem}
-				onSelectedChange={(selected: SelectPanelItemInput | undefined) => {
-					if (!selected) return;
-					setSelectedYear(selected.id === "ALL" ? "ALL" : Number(selected.id));
-					setYearOpen(false);
-				}}
-				onFilterChange={(value) => setYearFilter(value)}
-			/>
-			{forumItems.length > 0 && (
+			<FormControl>
+				<FormControl.Label>年份筛选</FormControl.Label>
 				<SelectPanel
-					title="选择贴吧"
-					placeholder="筛选贴吧…"
+					title="选择年份"
+					placeholder="搜索年份…"
 					renderAnchor={({ children, ...anchorProps }) => (
 						<Button
 							{...anchorProps}
 							size="small"
 							trailingAction={TriangleDownIcon}
 						>
-							{children ?? forumAnchorText}
+							{children ?? selectedYearItem?.text ?? "选择年份"}
 						</Button>
 					)}
-					open={forumOpen}
+					open={yearOpen}
 					onOpenChange={(open) => {
-						setForumOpen(open);
-						if (!open) setForumFilter("");
+						setYearOpen(open);
+						if (!open) setYearFilter("");
 					}}
-					items={filteredForumItems}
-					selected={selectedForumItems}
-					onSelectedChange={(selected: SelectPanelItemInput[]) => {
-						setSelectedForums(selected.map((item) => item.id as string));
+					items={filteredYearItems}
+					selected={selectedYearItem}
+					onSelectedChange={(selected: SelectPanelItemInput | undefined) => {
+						if (!selected) return;
+						setSelectedYear(selected.id === "ALL" ? "ALL" : Number(selected.id));
+						setYearOpen(false);
 					}}
-					onFilterChange={(value) => setForumFilter(value)}
-					secondaryAction={
-						<Button
-							size="small"
-							block
-							onClick={() => {
-								clearForumFilter();
-								setForumOpen(false);
-							}}
-						>
-							清空选择
-						</Button>
-					}
+					onFilterChange={(value) => setYearFilter(value)}
 				/>
+			</FormControl>
+			{forumItems.length > 0 && (
+				<FormControl>
+					<FormControl.Label>贴吧筛选</FormControl.Label>
+					<SelectPanel
+						title="选择贴吧"
+						placeholder="筛选贴吧…"
+						renderAnchor={({ children, ...anchorProps }) => (
+							<Button
+								{...anchorProps}
+								size="small"
+								trailingAction={TriangleDownIcon}
+							>
+								{children ?? forumAnchorText}
+							</Button>
+						)}
+						open={forumOpen}
+						onOpenChange={(open) => {
+							setForumOpen(open);
+							if (!open) setForumFilter("");
+						}}
+						items={filteredForumItems}
+						selected={selectedForumItems}
+						onSelectedChange={(selected: SelectPanelItemInput[]) => {
+							setSelectedForums(selected.map((item) => item.id as string));
+						}}
+						onFilterChange={(value) => setForumFilter(value)}
+						secondaryAction={
+							<Button
+								size="small"
+								block
+								onClick={() => {
+									clearForumFilter();
+									setForumOpen(false);
+								}}
+							>
+								清空选择
+							</Button>
+						}
+					/>
+				</FormControl>
 			)}
 		</div>
 	);
