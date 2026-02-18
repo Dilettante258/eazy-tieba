@@ -1,0 +1,107 @@
+/* ── 进度 ── */
+
+.progress {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem 0;
+	font-size: 0.875rem;
+	color: var(--fgColor-muted);
+}
+
+.progressBar {
+	flex: 1;
+	max-width: 400px;
+}
+
+/* ── 图表卡片 ── */
+
+.chartModule {
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+	padding: 1rem;
+	background: var(--bgColor-default);
+}
+
+.chartModuleHeader {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin-bottom: 0.75rem;
+}
+
+.chartTitle {
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--fgColor-default);
+	margin: 0;
+}
+
+.chartDescription {
+	font-size: 0.75rem;
+	color: var(--fgColor-muted);
+	margin: 0.125rem 0 0;
+}
+
+/* ── 境外地区 Overlay ── */
+
+.overseasTrigger {
+	display: inline-block;
+	padding: 0;
+	font: inherit;
+	color: var(--fgColor-accent);
+	cursor: pointer;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+}
+
+.overseasListWarp {
+	width: 2rem;
+}
+
+.overseasList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 8px;
+	font-size: 0.75rem;
+}
+
+.overseasItem {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.overseasCount {
+	color: var(--fgColor-muted);
+}
+
+.overseasUsers {
+	color: var(--fgColor-muted);
+	font-size: 0.6875rem;
+	margin-top: 2px;
+}
+
+/* ── 覆盖模式：标题浮于图表之上 ── */
+
+.chartModuleOverlay {
+	position: relative;
+	padding: 0;
+	overflow: hidden;
+
+	& > .chartModuleHeader {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		margin: 0;
+		padding: 0.75rem 1rem;
+		pointer-events: none;
+
+		& > * {
+			pointer-events: auto;
+		}
+	}
+}
