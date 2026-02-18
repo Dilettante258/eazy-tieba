@@ -18,7 +18,7 @@ function ProfilePage() {
 
 	const avatarUrl = data?.portrait ? portraitUrl(data.portrait) : "";
 	const displayName = data?.nickname || data?.name || "未知";
-	const sexLabel = data?.sex === 1 ? "男" : data?.sex === 0 ? "女" : undefined;
+	const sexLabel = data?.sex === 1 ? "男" : data?.sex === 2 ? "女" : undefined;
 
 	return (
 		<div>
@@ -56,42 +56,30 @@ function ProfilePage() {
 					{/* 头部：头像 + 名称 + 标签 */}
 					<div className={styles.cardHeader}>
 						{avatarUrl && (
-							<Avatar
-								src={avatarUrl}
-								size={96}
-								alt={displayName}
-								square
-							/>
+							<Avatar src={avatarUrl} size={96} alt={displayName} square />
 						)}
 						<div className={styles.cardHeaderInfo}>
 							<h3 className={styles.name}>{displayName}</h3>
-							{data.intro && (
-								<p className={styles.intro}>{data.intro}</p>
-							)}
+							{data.intro && <p className={styles.intro}>{data.intro}</p>}
 							<div className={styles.labels}>
 								{sexLabel && (
 									<Label variant={data.sex === 1 ? "accent" : "done"}>
 										{sexLabel}
 									</Label>
 								)}
-								{data.tbAge && (
-									<Label>吧龄 {data.tbAge} 年</Label>
-								)}
+								{data.tbAge && <Label>吧龄 {data.tbAge} 年</Label>}
 								{data.userGrowth != null && data.userGrowth > 0 && (
 									<Label variant="attention">
 										成长等级 Lv.{data.userGrowth}
 									</Label>
 								)}
-								{data.tbVip && (
-									<Label variant="sponsors">VIP</Label>
+								{data.levelId != null && data.levelId > 0 && (
+									<Label>等级 Lv.{data.levelId}</Label>
 								)}
-								{data.godData && (
-									<Label variant="severe">{data.godData}</Label>
-								)}
+								{data.tbVip && <Label variant="sponsors">贴吧 VIP</Label>}
+								{data.godData && <Label variant="severe">{data.godData}</Label>}
 								{data.ipAddress && (
-									<Label variant="accent">
-										IP 属地: {data.ipAddress}
-									</Label>
+									<Label variant="accent">IP 属地: {data.ipAddress}</Label>
 								)}
 							</div>
 						</div>
@@ -103,7 +91,7 @@ function ProfilePage() {
 						<StatItem label="关注" value={data.follow} />
 						<StatItem label="粉丝" value={data.fan} />
 						<StatItem label="获赞" value={data.totalAgreeNum} />
-						<StatItem label="发出的赞" value={data.myLikeNum} />
+						<StatItem label="关注贴吧" value={data.myLikeNum} />
 					</div>
 
 					{/* 基本信息 */}
@@ -118,7 +106,9 @@ function ProfilePage() {
 							{data.ageTimestamp != null && data.ageTimestamp > 0 && (
 								<InfoRow
 									label="头像上传时间"
-									value={new Date(data.ageTimestamp * 1000).toLocaleString("zh-CN")}
+									value={new Date(data.ageTimestamp * 1000).toLocaleString(
+										"zh-CN",
+									)}
 								/>
 							)}
 						</div>
@@ -137,7 +127,9 @@ function ProfilePage() {
 								{data.vip.expireTime > 0 && (
 									<InfoRow
 										label="到期时间"
-										value={new Date(data.vip.expireTime * 1000).toLocaleDateString("zh-CN")}
+										value={new Date(
+											data.vip.expireTime * 1000,
+										).toLocaleDateString("zh-CN")}
 									/>
 								)}
 							</div>
@@ -166,6 +158,88 @@ function ProfilePage() {
 							<p className={styles.emptyHint}>暂无吧务信息</p>
 						)}
 					</div>
+
+					{/* 等级头衔 */}
+					{data.gradeInfo && data.gradeInfo.length > 0 && (
+						<div className={styles.section}>
+							<h4 className={styles.sectionTitle}>等级头衔</h4>
+							<div className={styles.managerList}>
+								{data.gradeInfo.map((item) => (
+									<div key={item.level} className={styles.managerItem}>
+										<span className={styles.managerRole}>Lv.{item.level}</span>
+										<div className={styles.managerForums}>
+											{item.forums.map((forum) => (
+												<Label key={forum}>{forum}吧</Label>
+											))}
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					)}
+
+					{/* 常逛的吧 */}
+					{data.likeForum && data.likeForum.length > 0 && (
+						<div className={styles.section}>
+							<h4 className={styles.sectionTitle}>常逛的吧</h4>
+							<div className={styles.managerForums}>
+								{data.likeForum.map((f) => (
+									<Label key={f.id}>{f.name}吧</Label>
+								))}
+							</div>
+						</div>
+					)}
+
+					{/* 最近主题贴 */}
+					{data.recentPosts && data.recentPosts.length > 0 && (
+						<div className={styles.section}>
+							<h4 className={styles.sectionTitle}>最近主题贴</h4>
+							<div className={styles.recentPosts}>
+								{data.recentPosts.map((p) => (
+									<a
+										key={p.threadId}
+										className={styles.recentPostItem}
+										href={`https://tieba.baidu.com/p/${p.threadId}`}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<span className={styles.recentPostTitle}>
+											{p.title || "（无标题）"}
+										</span>
+										<span className={styles.recentPostMeta}>
+											<Label size="small">{p.forumName}吧</Label>
+											<span>回复 {p.replyNum}</span>
+											{p.agreeNum > 0 && <span>赞 {p.agreeNum}</span>}
+											<span>
+												{new Date(p.createTime * 1000).toLocaleDateString("zh-CN")}
+											</span>
+										</span>
+									</a>
+								))}
+							</div>
+						</div>
+					)}
+
+					{/* 隐私设置 */}
+					{data.privacy && (
+						<div className={styles.section}>
+							<h4 className={styles.sectionTitle}>隐私设置</h4>
+							<div className={styles.infoGrid}>
+								<InfoRow
+									label="动态可见"
+									value={data.privacy.post === 0 ? "公开" : "隐藏"}
+								/>
+								<InfoRow
+									label="关注贴吧可见"
+									value={data.privacy.like !== 0 ? "公开" : "隐藏"}
+								/>
+								<InfoRow
+									label="关注/粉丝可见"
+									value={data.privacy.friend !== 0 ? "公开" : "隐藏"}
+								/>
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 		</div>

@@ -23,6 +23,19 @@ const TABS: { label: string; content: ReactNode }[] = [
     ),
   },
   {
+    label: "用户名",
+    content: (
+      <p className={styles.desc}>
+        传统的身份标识，不可更改且唯一。但 2019
+        年后通过手机号快速注册的用户可能没有百度用户名（为空字符串）。
+        <br />
+        可在用户个人主页 URL 中找到，格式如：
+        <br />
+        <code>tieba.baidu.com/home/main?un=用户名</code>
+      </p>
+    ),
+  },
+  {
     label: "用户 ID",
     content: (
       <>
@@ -59,19 +72,6 @@ const TABS: { label: string; content: ReactNode }[] = [
           广泛运用在各接口中，可从接口返回数据中找到。
         </p>
       </>
-    ),
-  },
-  {
-    label: "用户名",
-    content: (
-      <p className={styles.desc}>
-        传统的身份标识，不可更改且唯一。但 2019
-        年后通过手机号快速注册的用户可能没有百度用户名（为空字符串）。
-        <br />
-        可在用户个人主页 URL 中找到，格式如：
-        <br />
-        <code>tieba.baidu.com/home/main?un=用户名</code>
-      </p>
     ),
   },
 ];

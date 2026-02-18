@@ -1,14 +1,38 @@
 .wrapper {
-  max-width: 560px;
+  max-width: 720px;
   margin: 0 auto 2rem;
 }
+
+/* ── 左右布局容器 ── */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 0fr;
+  gap: 0;
+  transition: grid-template-columns 0.35s ease, gap 0.35s ease;
+}
+
+.layout[data-has-profile="true"] {
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formSide {
+  min-width: 0;
+}
+
+.profileSide {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── 表单 ── */
 
 .form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
 .searchRow {
@@ -20,4 +44,14 @@
 .inputWrap {
   flex: 1;
   min-width: 0;
+}
+
+/* ── 响应式：窄屏回退为上下结构 ── */
+
+@media (max-width: 600px) {
+  .layout,
+  .layout[data-has-profile="true"] {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
 }

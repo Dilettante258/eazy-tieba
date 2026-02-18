@@ -9,6 +9,7 @@ import {
   OrganizationIcon,
   IdBadgeIcon,
   GraphIcon,
+  DownloadIcon,
 } from "@primer/octicons-react";
 import { Link } from "@tanstack/react-router";
 import styles from "./ServiceList.module.css";
@@ -134,6 +135,12 @@ const TOOLS = [
     description: "对用户历史发言进行数据分析",
     href: "/postanalysis",
   },
+  {
+    icon: DownloadIcon,
+    title: "数据导出",
+    description: "导出用户数据为 JSON 或 CSV 格式",
+    href: "/export",
+  },
 ];
 
 function ToolsSection() {
@@ -144,7 +151,7 @@ function ToolsSection() {
         <h2 className={styles.toolsSectionTitle}>功能列表</h2>
         <div className={styles.toolsGrid}>
           {TOOLS.map((t) => (
-            <Link key={t.title} className={styles.toolItem} to={t.href}>
+            <Link key={t.title} className={styles.toolItem} to={t.href} viewTransition={{ types: ["slide-left"] }}>
               <t.icon size={128} className={styles.toolBgIcon} />
               <div className={styles.toolItemContent}>
                 <t.icon size={32} className={styles.toolIcon} />
@@ -159,11 +166,74 @@ function ToolsSection() {
   );
 }
 
+// ── 页脚 ──
+
+const FOOTER_NAV = [
+  { label: "用户资料", to: "/profile" },
+  { label: "发言查询", to: "/userpost" },
+  { label: "发帖分析", to: "/postanalysis" },
+  { label: "关注查询", to: "/follow" },
+  { label: "粉丝查询", to: "/fan" },
+  { label: "关注贴吧", to: "/likeforum" },
+  { label: "导出数据", to: "/export" },
+] as const;
+
+function FooterSection() {
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.footerInner}>
+        <div className={styles.footerTop}>
+          <div className={styles.footerBrand}>
+            <span className={styles.footerLogo}>
+              <span className={styles.footerLogoAccent}>ez</span>tb
+            </span>
+            <p className={styles.footerDesc}>
+              开源的百度贴吧工具箱，为更方便调查成分而生。
+            </p>
+          </div>
+
+          <div className={styles.footerLinks}>
+            <div className={styles.footerCol}>
+              <h4 className={styles.footerColTitle}>功能</h4>
+              {FOOTER_NAV.map((item) => (
+                <Link key={item.to} className={styles.footerLink} to={item.to} viewTransition={{ types: ["slide-left"] }}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <div className={styles.footerCol}>
+              <h4 className={styles.footerColTitle}>资源</h4>
+              <a
+                className={styles.footerLink}
+                href="https://github.com/Dilettante258/tieba-toolbox"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <Link className={styles.footerLink} to="/about" viewTransition={{ types: ["slide-left"] }}>
+                关于
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.footerBottom}>
+          <span>© 2024–2026 eztb</span>
+          <span className={styles.footerDot}>·</span>
+          <span>Powered by React + Hono</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export function ServiceList() {
   return (
     <div className={styles.container}>
       <StatsSection />
       <ToolsSection />
+      <FooterSection />
     </div>
   );
 }

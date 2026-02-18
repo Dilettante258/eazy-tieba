@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodSearchValidator } from "@tanstack/router-zod-adapter";
-import { Avatar, Banner, Spinner } from "@primer/react";
+import { Banner, Spinner } from "@primer/react";
 import { Blankslate } from "@primer/react/experimental";
 import { LinkExternalIcon, PeopleIcon } from "@primer/octicons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +8,7 @@ import { QueryForm } from "../components/QueryForm.tsx";
 import { followOptions } from "../hooks/queries.ts";
 import { userSearchSchema } from "../lib/search-schemas.ts";
 import { portraitUrl } from "../lib/portrait.ts";
+import { ConcurrentImage } from "../components/ConcurrentImage.tsx";
 import styles from "./page.module.css";
 
 function tiebaHomeUrl(portrait: string) {
@@ -35,7 +36,9 @@ function FollowPage() {
 				<Banner
 					variant="critical"
 					title="查询失败"
-					description={error instanceof Error ? error.message : String(error)}
+					description={
+						error instanceof Error ? error.message : String(error)
+					}
 				/>
 			)}
 
@@ -56,53 +59,65 @@ function FollowPage() {
 					<p className={styles.listCount}>
 						共关注 <strong>{list.length}</strong> 人
 					</p>
-					<div className={styles.userList}>
-						{list.map((user, i) => (
-							<div
-								key={user.id || i}
-								className={styles.userItem}
-							>
-								{user.portrait && (
-									<a
-										href={tiebaHomeUrl(user.portrait)}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<Avatar
+					<div className={styles.userGrid}>
+						{list.map((user, i) => {
+							const homeUrl = user.portrait
+								? tiebaHomeUrl(user.portrait)
+								: undefined;
+							return (
+								<a
+									key={user.id || i}
+									href={homeUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className={styles.userCard}
+								>
+									{user.portrait && (
+										<ConcurrentImage
 											src={portraitUrl(user.portrait)}
-											size={40}
 											alt={user.name_show || user.name}
+											referrerPolicy="no-referrer"
+											className={styles.userAvatar}
+											width={44}
+											height={44}
 										/>
-									</a>
-								)}
-								<div className={styles.userInfo}>
-									<div className={styles.userNameRow}>
-										<a
-											href={tiebaHomeUrl(user.portrait)}
-											target="_blank"
-											rel="noopener noreferrer"
-											className={styles.userName}
-										>
-											{user.name_show || user.name}
-										</a>
-										<a
-											href={tiebaHomeUrl(user.portrait)}
-											target="_blank"
-											rel="noopener noreferrer"
-											className={styles.userExternalLink}
-											aria-label="查看贴吧主页"
-										>
-											<LinkExternalIcon size={14} />
-										</a>
-									</div>
-									{user.intro && (
-										<p className={styles.userIntro}>
-											{user.intro}
-										</p>
 									)}
-								</div>
-							</div>
-						))}
+									<div className={styles.userCardBody}>
+										<div className={styles.userCardNameRow}>
+											<span
+												className={
+													styles.userCardName
+												}
+											>
+												{user.name_show || user.name}
+											</span>
+											<LinkExternalIcon
+												size={12}
+												className={
+													styles.userCardExtIcon
+												}
+											/>
+										</div>
+										{user.name &&
+											user.name_show &&
+											user.name !== user.name_show && (
+												<span
+													className={
+														styles.userCardUsername
+													}
+												>
+													@{user.name}
+												</span>
+											)}
+										{user.intro && (
+											<p className={styles.userCardIntro}>
+												{user.intro}
+											</p>
+										)}
+									</div>
+								</a>
+							);
+						})}
 					</div>
 				</>
 			)}

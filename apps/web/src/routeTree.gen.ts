@@ -11,10 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UserpostRouteImport } from './routes/userpost'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PostsearchRouteImport } from './routes/postsearch'
 import { Route as PostanalysisRouteImport } from './routes/postanalysis'
 import { Route as LikeforumRouteImport } from './routes/likeforum'
+import { Route as ForumpostRouteImport } from './routes/forumpost'
 import { Route as FollowRouteImport } from './routes/follow'
 import { Route as FanRouteImport } from './routes/fan'
+import { Route as ExportRouteImport } from './routes/export'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
 const UserpostRoute = UserpostRouteImport.update({
@@ -27,6 +31,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostsearchRoute = PostsearchRouteImport.update({
+  id: '/postsearch',
+  path: '/postsearch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostanalysisRoute = PostanalysisRouteImport.update({
   id: '/postanalysis',
   path: '/postanalysis',
@@ -35,6 +44,11 @@ const PostanalysisRoute = PostanalysisRouteImport.update({
 const LikeforumRoute = LikeforumRouteImport.update({
   id: '/likeforum',
   path: '/likeforum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForumpostRoute = ForumpostRouteImport.update({
+  id: '/forumpost',
+  path: '/forumpost',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FollowRoute = FollowRouteImport.update({
@@ -47,6 +61,16 @@ const FanRoute = FanRouteImport.update({
   path: '/fan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExportRoute = ExportRouteImport.update({
+  id: '/export',
+  path: '/export',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,29 +79,41 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/export': typeof ExportRoute
   '/fan': typeof FanRoute
   '/follow': typeof FollowRoute
+  '/forumpost': typeof ForumpostRoute
   '/likeforum': typeof LikeforumRoute
   '/postanalysis': typeof PostanalysisRoute
+  '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/export': typeof ExportRoute
   '/fan': typeof FanRoute
   '/follow': typeof FollowRoute
+  '/forumpost': typeof ForumpostRoute
   '/likeforum': typeof LikeforumRoute
   '/postanalysis': typeof PostanalysisRoute
+  '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/export': typeof ExportRoute
   '/fan': typeof FanRoute
   '/follow': typeof FollowRoute
+  '/forumpost': typeof ForumpostRoute
   '/likeforum': typeof LikeforumRoute
   '/postanalysis': typeof PostanalysisRoute
+  '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
 }
@@ -85,38 +121,54 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/export'
     | '/fan'
     | '/follow'
+    | '/forumpost'
     | '/likeforum'
     | '/postanalysis'
+    | '/postsearch'
     | '/profile'
     | '/userpost'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/export'
     | '/fan'
     | '/follow'
+    | '/forumpost'
     | '/likeforum'
     | '/postanalysis'
+    | '/postsearch'
     | '/profile'
     | '/userpost'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/export'
     | '/fan'
     | '/follow'
+    | '/forumpost'
     | '/likeforum'
     | '/postanalysis'
+    | '/postsearch'
     | '/profile'
     | '/userpost'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ExportRoute: typeof ExportRoute
   FanRoute: typeof FanRoute
   FollowRoute: typeof FollowRoute
+  ForumpostRoute: typeof ForumpostRoute
   LikeforumRoute: typeof LikeforumRoute
   PostanalysisRoute: typeof PostanalysisRoute
+  PostsearchRoute: typeof PostsearchRoute
   ProfileRoute: typeof ProfileRoute
   UserpostRoute: typeof UserpostRoute
 }
@@ -137,6 +189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/postsearch': {
+      id: '/postsearch'
+      path: '/postsearch'
+      fullPath: '/postsearch'
+      preLoaderRoute: typeof PostsearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/postanalysis': {
       id: '/postanalysis'
       path: '/postanalysis'
@@ -149,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/likeforum'
       fullPath: '/likeforum'
       preLoaderRoute: typeof LikeforumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forumpost': {
+      id: '/forumpost'
+      path: '/forumpost'
+      fullPath: '/forumpost'
+      preLoaderRoute: typeof ForumpostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/follow': {
@@ -165,6 +231,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/export': {
+      id: '/export'
+      path: '/export'
+      fullPath: '/export'
+      preLoaderRoute: typeof ExportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -177,10 +257,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ExportRoute: ExportRoute,
   FanRoute: FanRoute,
   FollowRoute: FollowRoute,
+  ForumpostRoute: ForumpostRoute,
   LikeforumRoute: LikeforumRoute,
   PostanalysisRoute: PostanalysisRoute,
+  PostsearchRoute: PostsearchRoute,
   ProfileRoute: ProfileRoute,
   UserpostRoute: UserpostRoute,
 }

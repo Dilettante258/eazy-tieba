@@ -2,11 +2,22 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodSearchValidator } from "@tanstack/router-zod-adapter";
 import { Banner, Button, Label, Spinner } from "@primer/react";
 import { Blankslate } from "@primer/react/experimental";
-import { LinkExternalIcon, NoteIcon } from "@primer/octicons-react";
+import {
+	ArrowRightIcon,
+	ChevronLeftIcon,
+	LinkExternalIcon,
+	NoteIcon,
+} from "@primer/octicons-react";
 import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useTransition } from "react";
 import { QueryForm } from "../components/QueryForm.tsx";
+import {
+	applyColoredHighlights,
+	clearColoredHighlights,
+} from "../lib/highlight.ts";
 import { userPostsOptions } from "../hooks/queries.ts";
 import { userPostSearchSchema } from "../lib/search-schemas.ts";
+import { useSettingsStore } from "../lib/settings-store.ts";
 import styles from "./page.module.css";
 
 const dateFormat = new Intl.DateTimeFormat("zh-CN", {
@@ -17,21 +28,62 @@ const dateFormat = new Intl.DateTimeFormat("zh-CN", {
 function UserPostPage() {
 	const { method, id, page } = Route.useSearch();
 	const navigate = useNavigate();
+	const [isPending, startTransition] = useTransition();
 	const { data, isLoading, error } = useQuery(
 		userPostsOptions(method, id, page),
 	);
 
 	const posts = data ?? [];
+	const listRef = useRef<HTMLDivElement>(null);
+	const prevPageRef = useRef(page);
+
+	// 标记高亮设置
+	const highlightedForums = useSettingsStore((s) => s.highlightedForums);
+	const highlightedUsers = useSettingsStore((s) => s.highlightedUsers);
+	const highlightedKeywords = useSettingsStore((s) => s.highlightedKeywords);
+	const forumMap = new Map(highlightedForums.map((f) => [f.name, f.color]));
+	const userMap = new Map(highlightedUsers.map((u) => [u.name, u.color]));
 
 	const goToPage = (p: number) =>
-		navigate({ to: "/userpost", search: { method, id, page: p } });
+		startTransition(() => {
+			navigate({ to: "/userpost", search: { method, id, page: p } });
+		});
+
+	// 翻页后自动滚动：如果列表底部在视口底部附近，滚回列表顶部
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (prevPageRef.current === page) return;
+		prevPageRef.current = page;
+		const el = listRef.current;
+		if (!el) return;
+		const rect = el.getBoundingClientRect();
+		// 如果列表顶部已在视口上方（已滚过列表顶部）
+		if (rect.top < 0) {
+			el.scrollIntoView({ behavior: "smooth", block: "start" });
+		}
+	}, [page, data]);
+
+	// 关键词高亮（CSS Custom Highlight API — 多色）
+	const runKeywordHighlight = useCallback(() => {
+		applyColoredHighlights(
+			"keyword-highlight",
+			listRef.current,
+			highlightedKeywords.map((k) => ({ term: k.keyword, color: k.color })),
+		);
+	}, [highlightedKeywords]);
+
+	useEffect(() => {
+		runKeywordHighlight();
+		return () => clearColoredHighlights("keyword-highlight");
+	}, [runKeywordHighlight, data]);
 
 	return (
 		<div>
 			<h2 className={styles.heading}>用户帖子</h2>
 			<QueryForm />
 
-			{isLoading && (
+			{/* 仅首次加载显示 Spinner */}
+			{!data && isLoading && (
 				<div className={styles.center}>
 					<Spinner size="large" />
 				</div>
@@ -58,35 +110,29 @@ function UserPostPage() {
 			)}
 
 			{posts.length > 0 && (
-				<div className={styles.postList}>
+				<div
+					ref={listRef}
+					className={styles.postList}
+					data-pending={isPending || undefined}
+				>
 					{posts.map((post, i) => {
 						const threadUrl = `https://tieba.baidu.com/p/${post.threadId}?fid=${post.forumId}&pid=${post.postId}&cid=${post.cid}#${post.postId}`;
 						const forumUrl = `https://tieba.baidu.com/f?kw=${encodeURIComponent(post.forumName)}`;
 						const time = post.createTime
 							? dateFormat.format(new Date(post.createTime * 1000))
 							: "";
+						// 贴吧标记优先，其次用户标记
+						const highlightColor =
+							forumMap.get(post.forumName) ??
+							(post.replyTo ? userMap.get(post.replyTo) : undefined);
 
 						return (
 							<div
 								key={`${post.threadId}-${post.cid}-${i}`}
 								className={styles.postItem}
+								data-highlight-color={highlightColor}
 							>
 								<div className={styles.postHeader}>
-									{post.forumName && (
-										<a
-											href={forumUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											className={styles.postForumLink}
-										>
-											<Label variant="accent">
-												{post.forumName}吧
-											</Label>
-										</a>
-									)}
-									{post.affiliated && (
-										<Label variant="attention">楼中楼</Label>
-									)}
 									<a
 										href={threadUrl}
 										target="_blank"
@@ -109,11 +155,18 @@ function UserPostPage() {
 									</p>
 								)}
 								<div className={styles.postFooter}>
-									{time && (
-										<span className={styles.postTime}>
-											{time}
-										</span>
+									{time && <span className={styles.postTime}>{time}</span>}
+									{post.forumName && (
+										<a
+											href={forumUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											className={styles.postForumLink}
+										>
+											<Label variant="accent">{post.forumName}吧</Label>
+										</a>
 									)}
+									{post.affiliated && <Label variant="attention">楼中楼</Label>}
 									<a
 										href={threadUrl}
 										target="_blank"
@@ -133,6 +186,8 @@ function UserPostPage() {
 			{data && (
 				<div className={styles.paginationWrap}>
 					<Button
+						variant="invisible"
+						leadingVisual={ChevronLeftIcon}
 						disabled={page <= 1}
 						onClick={() => goToPage(page - 1)}
 					>
@@ -140,7 +195,9 @@ function UserPostPage() {
 					</Button>
 					<span>第 {page} 页</span>
 					<Button
-						disabled={posts.length === 0}
+						variant="invisible"
+						trailingVisual={ArrowRightIcon}
+						disabled={posts.length < 30}
 						onClick={() => goToPage(page + 1)}
 					>
 						下一页

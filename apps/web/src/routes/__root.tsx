@@ -2,15 +2,17 @@ import {
 	Outlet,
 	Link,
 	createRootRouteWithContext,
+	useNavigate,
 	useRouterState,
 } from "@tanstack/react-router";
-import { PageLayout } from "@primer/react";
+import { ActionList, ActionMenu, PageLayout } from "@primer/react";
 import {
 	GearIcon,
 	MarkGithubIcon,
 	MoonIcon,
 	StarIcon,
 	SunIcon,
+	ThreeBarsIcon,
 } from "@primer/octicons-react";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { useSettingsStore } from "../lib/settings-store.ts";
@@ -23,10 +25,26 @@ const NAV_ITEMS = [
 	{ label: "用户资料", to: "/profile" },
 	{ label: "用户帖子", to: "/userpost" },
 	{ label: "发帖分析", to: "/postanalysis" },
+	{ label: "贴吧分析", to: "/forumpost" },
+	{ label: "发言搜索", to: "/postsearch" },
 	{ label: "关注", to: "/follow" },
 	{ label: "粉丝", to: "/fan" },
 	{ label: "关注的吧", to: "/likeforum" },
+	{ label: "导出数据", to: "/export" },
 ] as const;
+
+// 根据导航栏顺序判断滑动方向
+const NAV_ORDER = new Map<string, number>(NAV_ITEMS.map((item, i) => [item.to, i]));
+
+const viewTransitionSlide = {
+	types: ({ fromLocation, toLocation }: { fromLocation?: { pathname: string }; toLocation: { pathname: string } }) => {
+		// 涉及首页时跳过动画
+		if (fromLocation?.pathname === "/" || toLocation.pathname === "/") return false;
+		const from = NAV_ORDER.get(fromLocation?.pathname ?? "/") ?? -1;
+		const to = NAV_ORDER.get(toLocation.pathname) ?? -1;
+		return to >= from ? ["slide-left"] : ["slide-right"];
+	},
+};
 
 function ThemeToggle() {
 	const { isDark, toggleColorMode } = useColorMode();
@@ -42,6 +60,40 @@ function ThemeToggle() {
 	);
 }
 
+function MobileNav() {
+	const navigate = useNavigate();
+	const pathname = useRouterState({ select: (s) => s.location.pathname });
+	return (
+		<ActionMenu>
+			<ActionMenu.Anchor>
+				<button type="button" className={styles.menuBtn}>
+					<ThreeBarsIcon size={16} />
+				</button>
+			</ActionMenu.Anchor>
+			<ActionMenu.Overlay>
+				<ActionList>
+					{NAV_ITEMS.map((item) => (
+						<ActionList.LinkItem
+							key={item.to}
+							href={item.to}
+							active={pathname === item.to}
+							onClick={(e) => {
+								e.preventDefault();
+								navigate({
+									to: item.to,
+									viewTransition: viewTransitionSlide,
+								});
+							}}
+						>
+							{item.label}
+						</ActionList.LinkItem>
+					))}
+				</ActionList>
+			</ActionMenu.Overlay>
+		</ActionMenu>
+	);
+}
+
 function RootLayout() {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 	const isHome = pathname === "/";
@@ -53,9 +105,11 @@ function RootLayout() {
 				className={styles.navbar}
 				data-transparent={isHome || undefined}
 			>
-				<Link className={styles.logo} to="/">
+				<Link className={styles.logo} to="/" viewTransition={viewTransitionSlide}>
 					<span className={styles.logoAccent}>ez</span>tb
 				</Link>
+
+				<MobileNav />
 
 				<ul className={styles.navLinks}>
 					{NAV_ITEMS.map((item) => (
@@ -64,6 +118,7 @@ function RootLayout() {
 								className={styles.navLink}
 								to={item.to}
 								data-active={pathname === item.to || undefined}
+								viewTransition={viewTransitionSlide}
 							>
 								{item.label}
 							</Link>
@@ -98,11 +153,15 @@ function RootLayout() {
 			</nav>
 
 			{isHome ? (
-				<Outlet />
+				<div style={{ viewTransitionName: "main-content" }}>
+					<Outlet />
+				</div>
 			) : (
 				<PageLayout>
 					<PageLayout.Content>
-						<Outlet />
+						<div style={{ viewTransitionName: "main-content" }}>
+							<Outlet />
+						</div>
 					</PageLayout.Content>
 				</PageLayout>
 			)}

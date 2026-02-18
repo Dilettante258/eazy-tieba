@@ -9,7 +9,7 @@ import styles from "./Brand.module.css";
 export function Brand() {
 	return (
 		<div className={styles.section}>
-			<Link className={styles.news} to="/profile">
+			<Link className={styles.news} to="/about">
 				<div className={styles.newsTip}>
 					<SparkleIcon size={16} />
 					了解最近更新！
@@ -37,7 +37,7 @@ export function Brand() {
 			</div>
 
 			<div className={styles.btnContainer}>
-				<Link className={styles.btnSolid} to="/profile">
+				<Link className={styles.btnSolid} to="/about" viewTransition>
 					关于本项目
 					<ArrowRightIcon size={16} />
 				</Link>

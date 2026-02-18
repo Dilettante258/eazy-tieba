@@ -290,3 +290,104 @@
   width: 100%;
   pointer-events: none;
 }
+
+/* ── 页脚 ── */
+
+.footer {
+  background-color: #0a0c0e;
+  border-top: 1px solid #1e2228;
+  padding: 3rem 0 2rem;
+}
+
+.footerInner {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.footerTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #1e2228;
+}
+
+@media (max-width: 600px) {
+  .footerTop {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.footerBrand {
+  max-width: 280px;
+}
+
+.footerLogo {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #e6edf3;
+}
+
+.footerLogoAccent {
+  color: #58a6ff;
+}
+
+.footerDesc {
+  font-size: 0.8125rem;
+  color: #8b949e;
+  line-height: 1.6;
+  margin: 0.5rem 0 0;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 4rem;
+}
+
+@media (max-width: 600px) {
+  .footerLinks {
+    gap: 3rem;
+  }
+}
+
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.footerColTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e6edf3;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.375rem;
+}
+
+.footerLink {
+  font-size: 0.8125rem;
+  color: #8b949e;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footerLink:hover {
+  color: #e6edf3;
+}
+
+.footerBottom {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding-top: 1.5rem;
+  font-size: 0.75rem;
+  color: #484f58;
+}
+
+.footerDot {
+  color: #30363d;
+}
