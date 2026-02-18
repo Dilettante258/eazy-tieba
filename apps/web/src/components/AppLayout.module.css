@@ -112,7 +112,6 @@ html {
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -229,6 +228,27 @@ html {
   color: var(--_text-strong);
 }
 
+/* ── 汉堡菜单按钮（移动端） ── */
+
+.menuBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--_text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.menuBtn:hover {
+  background-color: var(--_icon-hover-bg);
+  color: var(--_text-strong);
+}
+
 /* ── 移动端 ── */
 
 @media (max-width: 768px) {
@@ -237,17 +257,11 @@ html {
   }
 
   .navLinks {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .navLinks::-webkit-scrollbar {
     display: none;
   }
 
-  .navLink {
-    padding: 0 0.5rem;
-    font-size: 0.8125rem;
+  .menuBtn {
+    display: flex;
   }
 
   .githubLink span {

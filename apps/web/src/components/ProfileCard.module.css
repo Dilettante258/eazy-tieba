@@ -1,0 +1,54 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 8px;
+}
+
+[data-color-mode="dark"] .card {
+  border-color: var(--borderColor-default, #30363d);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--fgColor-muted, #656d76);
+}
+
+/* ── 错误提示 ── */
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--borderColor-danger-muted, #ffcecb);
+  border-radius: 8px;
+  background: var(--bgColor-danger-muted, #ffebe9);
+  color: var(--fgColor-danger, #d1242f);
+  font-size: 0.8125rem;
+}
+
+[data-color-mode="dark"] .error {
+  border-color: var(--borderColor-danger-muted, #6e2d2d);
+  background: var(--bgColor-danger-muted, #3a1a1a);
+}

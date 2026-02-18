@@ -10,10 +10,121 @@ body {
 	min-height: 100vh;
 }
 
+/* ── 路由切换动画（View Transition API） ── */
+
+/* 禁用 root 层默认的整页交叉淡出，避免拖影 */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+/* 内容区域裁剪溢出，防止滑动时超出边界 */
+::view-transition-group(main-content) {
+	overflow: hidden;
+}
+
+html:active-view-transition-type(slide-left) {
+	&::view-transition-old(main-content) {
+		animation: slide-out-left 0.2s ease-in both;
+	}
+	&::view-transition-new(main-content) {
+		animation: slide-in-left 0.2s ease-out both;
+	}
+}
+
+html:active-view-transition-type(slide-right) {
+	&::view-transition-old(main-content) {
+		animation: slide-out-right 0.2s ease-in both;
+	}
+	&::view-transition-new(main-content) {
+		animation: slide-in-right 0.2s ease-out both;
+	}
+}
+
+@keyframes slide-out-left {
+	0%   { opacity: 1; transform: translateX(0); }
+	40%  { opacity: 0; }
+	100% { opacity: 0; transform: translateX(-8vw); }
+}
+
+@keyframes slide-in-left {
+	from { opacity: 0; transform: translateX(8vw); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-out-right {
+	0%   { opacity: 1; transform: translateX(0); }
+	40%  { opacity: 0; }
+	100% { opacity: 0; transform: translateX(8vw); }
+}
+
+@keyframes slide-in-right {
+	from { opacity: 0; transform: translateX(-8vw); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(main-content),
+	::view-transition-new(main-content) {
+		animation: none;
+	}
+}
+
 /* 搜索高亮（CSS Custom Highlight API） */
 ::highlight(search-highlight) {
 	background-color: var(--bgColor-accent-emphasis, #0969da);
 	color: var(--fgColor-onEmphasis, #fff);
 	text-decoration: underline wavy var(--fgColor-accent, #0969da);
+	text-underline-offset: 3px;
+}
+
+/* 关键词高亮 — 按颜色分组（CSS Custom Highlight API） */
+::highlight(keyword-highlight-accent) {
+	background-color: var(--bgColor-accent-muted, #ddf4ff);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-accent, #0969da);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-success) {
+	background-color: var(--bgColor-success-muted, #dafbe1);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-success, #1a7f37);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-attention) {
+	background-color: var(--bgColor-attention-muted, #fff8c5);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-attention, #9a6700);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-severe) {
+	background-color: var(--bgColor-severe-muted, #fff1e5);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-severe, #bc4c00);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-danger) {
+	background-color: var(--bgColor-danger-muted, #ffebe9);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-danger, #d1242f);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-done) {
+	background-color: var(--bgColor-done-muted, #fbefff);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-done, #8250df);
+	text-underline-offset: 3px;
+}
+
+::highlight(keyword-highlight-sponsors) {
+	background-color: var(--bgColor-sponsors-muted, #ffeff7);
+	color: inherit;
+	text-decoration: underline wavy var(--fgColor-sponsors, #bf3989);
 	text-underline-offset: 3px;
 }
