@@ -52,7 +52,10 @@ export type ForumPanelId =
 	| "wordCloud"
 	| "levelChart"
 	| "timeScatter"
-	| "ipChanged";
+	| "ipChanged"
+	| "topLikedPosts"
+	| "topRepliedThreads"
+	| "hotUsers";
 
 export const FORUM_PANEL_LABELS: Record<ForumPanelId, string> = {
 	ipMap: "IP 属地分布",
@@ -62,6 +65,9 @@ export const FORUM_PANEL_LABELS: Record<ForumPanelId, string> = {
 	levelChart: "用户等级分布",
 	timeScatter: "发帖时间分布",
 	ipChanged: "IP 属地变动用户",
+	topLikedPosts: "点赞最多的帖子",
+	topRepliedThreads: "回复最多的帖子",
+	hotUsers: "热门吧友",
 };
 
 interface SettingsStore {
@@ -117,6 +123,10 @@ interface SettingsStore {
 	forumMergeHighLevels: boolean;
 	toggleForumMergeHighLevels: () => void;
 
+	// 热门吧友权重（持久化）
+	hotUserWeights: { thread: number; reply: number; agree: number };
+	setHotUserWeights: (weights: { thread: number; reply: number; agree: number }) => void;
+
 	// 外链图片并发数（持久化）
 	maxImageConcurrency: number;
 	setMaxImageConcurrency: (n: number) => void;
@@ -139,6 +149,9 @@ const DEFAULT_FORUM_VISIBILITY: Record<ForumPanelId, boolean> = {
 	levelChart: true,
 	timeScatter: true,
 	ipChanged: true,
+	topLikedPosts: true,
+	topRepliedThreads: true,
+	hotUsers: true,
 };
 
 /** 迁移辅助：将 string[] 转为带默认颜色的对象数组 */
@@ -262,6 +275,9 @@ export const useSettingsStore = create<SettingsStore>()(
 			toggleForumMergeHighLevels: () =>
 				set((s) => ({ forumMergeHighLevels: !s.forumMergeHighLevels })),
 
+			hotUserWeights: { thread: 5, reply: 1, agree: 0.5 },
+			setHotUserWeights: (weights) => set({ hotUserWeights: weights }),
+
 			maxImageConcurrency: 20,
 			setMaxImageConcurrency: (n) => {
 				const clamped = Math.max(1, Math.min(100, n));
@@ -283,6 +299,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				blockedWordCloudKeywords: state.blockedWordCloudKeywords,
 				forumTopUsersCount: state.forumTopUsersCount,
 				forumMergeHighLevels: state.forumMergeHighLevels,
+				hotUserWeights: state.hotUserWeights,
 				maxImageConcurrency: state.maxImageConcurrency,
 			}),
 			migrate: (persisted, version) => {

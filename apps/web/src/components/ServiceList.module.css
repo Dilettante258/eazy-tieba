@@ -185,7 +185,7 @@
   /* 滚动驱动入场动画 */
   animation: fadeScaleIn linear both;
   animation-timeline: view();
-  animation-range: entry 10% entry 35%;
+  animation-range: entry 20% entry 85%;
 }
 
 .toolItem:nth-child(2) {
@@ -202,6 +202,15 @@
 }
 .toolItem:nth-child(6) {
   animation-delay: 250ms;
+}
+.toolItem:nth-child(7) {
+  animation-delay: 300ms;
+}
+.toolItem:nth-child(8) {
+  animation-delay: 350ms;
+}
+.toolItem:nth-child(9) {
+  animation-delay: 400ms;
 }
 
 .toolItem:hover {

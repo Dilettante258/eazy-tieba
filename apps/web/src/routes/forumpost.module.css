@@ -78,33 +78,6 @@
 	}
 }
 
-/* ── IP 变动列表 ── */
-
-.ipChangeTable {
-	width: 100%;
-	margin-top: 0.75rem;
-	border-collapse: collapse;
-	font-size: 0.8125rem;
-}
-
-.ipChangeTable th {
-	text-align: left;
-	font-weight: 600;
-	color: var(--fgColor-muted);
-	padding: 0.375rem 0.5rem;
-	border-bottom: 1px solid var(--borderColor-default, #d0d7de);
-}
-
-.ipChangeTable td {
-	padding: 0.375rem 0.5rem;
-	border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
-	color: var(--fgColor-default);
-}
-
-.ipChangeTable tr:last-child td {
-	border-bottom: none;
-}
-
 /* ── 空状态 ── */
 
 .center {

@@ -8,6 +8,23 @@ import {
 	type ChartWrapperHandle,
 } from "../PostAnalysis/ChartWrapper.tsx";
 
+const HOUR_WINDOW_MS = 72 * 60 * 60 * 1000;
+
+function formatMonthDay(ts: number): string {
+	const d = new Date(ts);
+	return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function formatDayHour(ts: number): string {
+	const d = new Date(ts);
+	return `${formatMonthDay(ts)} ${String(d.getHours()).padStart(2, "0")}时`;
+}
+
+function formatAxisDayHour(ts: number): string {
+	const d = new Date(ts);
+	return `${d.getDate()}日${String(d.getHours()).padStart(2, "0")}时`;
+}
+
 // ── IP 属地地图 ──
 
 interface IpMapChartProps {
@@ -151,10 +168,13 @@ export const LevelChart = forwardRef<ChartWrapperHandle, LevelChartProps>(
 	},
 );
 
-// ── 发帖时间散点图 ──
+// ── 发帖时间分布（堆叠散点图） ──
 
 interface TimeScatterChartProps {
-	data: Array<{ date: number; hour: number }>;
+	data: {
+		mode: "hour" | "day";
+		data: Array<{ time: number; type: string; value: number }>;
+	};
 	style?: React.CSSProperties;
 }
 
@@ -163,66 +183,130 @@ export const TimeScatterChart = forwardRef<
 	TimeScatterChartProps
 >(function TimeScatterChart({ data, style }, ref) {
 	const { isDark } = useColorMode();
-	const { scatter } = getChartColors(isDark);
 
 	const spec = useMemo<ISpec>(() => {
-		// 使用日期范围
-		const timestamps = data.map((d) => d.date * 1000);
-		const minDate = Math.min(...timestamps);
-		const maxDate = Math.max(...timestamps);
+		const { mode, data: rawData } = data;
+		// 参考官网示例：每条点值固定为 ±1，由 stack 自动堆叠
+		const sortedRaw = [...rawData].sort(
+			(a, b) => a.time - b.time || a.type.localeCompare(b.type),
+		);
+		const countByKey = new Map<string, number>();
+		for (const item of sortedRaw) {
+			const key = `${item.time}|${item.type}`;
+			const delta = Math.max(Math.abs(item.value), 1);
+			countByKey.set(key, (countByKey.get(key) ?? 0) + delta);
+		}
+		const chartData: Array<{
+			time: number;
+			type: string;
+			count: number;
+			value: number;
+		}> = [];
+		for (const item of sortedRaw) {
+			const key = `${item.time}|${item.type}`;
+			const delta = Math.max(Math.abs(item.value), 1);
+			const total = countByKey.get(key) ?? delta;
+			const sign = item.type === "主题贴" ? -1 : 1;
+			for (let i = 0; i < delta; i++) {
+				chartData.push({
+					time: item.time,
+					type: item.type,
+					count: total,
+					value: sign,
+				});
+			}
+		}
 
-		const formatDate = (v: number) => {
-			const d = new Date(v);
-			return `${d.getMonth() + 1}/${d.getDate()}`;
+		const bottomAxis: Record<string, unknown> = {
+			orient: "bottom",
+			type: "linear",
+			domainLine: {
+				onZero: true,
+				style: { stroke: isDark ? "#adbac7" : "#212121" },
+			},
+			title: {
+				visible: true,
+				text: mode === "hour" ? "时间 →" : "日期 →",
+			},
 		};
+		if (mode === "hour") {
+			const now = new Date();
+			now.setMinutes(0, 0, 0);
+			const max = now.getTime();
+			const minDataTime =
+				chartData.length > 0
+					? Math.min(...chartData.map((d) => d.time))
+					: max - HOUR_WINDOW_MS;
+			bottomAxis.range = {
+				min: Math.min(max - HOUR_WINDOW_MS, minDataTime),
+				max,
+			};
+			bottomAxis.label = {
+				formatMethod: (v: string) => formatAxisDayHour(Number(v)),
+			};
+		} else {
+			bottomAxis.label = {
+				formatMethod: (v: string) => formatMonthDay(Number(v)),
+			};
+		}
 
 		return {
 			type: "common",
-			data: [
-				{
-					id: "time",
-					values: data.map((d) => ({
-						date: d.date * 1000,
-						hour: d.hour,
-					})),
-				},
-			],
+			data: [{ id: "time", values: chartData }],
 			series: [
 				{
 					type: "scatter",
-					xField: "date",
-					yField: "hour",
+					xField: "time",
+					yField: "value",
+					seriesField: "type",
+					stack: true,
 					point: {
 						style: {
-							fill: scatter,
-							size: 3,
-							fillOpacity: 0.6,
+							size: 3.5,
+							fillOpacity: 0.8,
 						},
 					},
 				},
 			],
 			axes: [
-				{
-					orient: "bottom",
-					type: "linear",
-					range: { min: minDate, max: maxDate },
-					label: { formatMethod: formatDate },
-				},
+				bottomAxis,
 				{
 					orient: "left",
-					type: "linear",
-					range: { min: 0, max: 24 },
-					title: { visible: true, text: "小时" },
+					domainLine: { visible: false },
+					title: { visible: true, text: "← 主题贴 · 回复 →" },
+					grid: { style: { lineDash: [0] } },
+					label: {
+						formatMethod: (v: string) => `${Math.abs(Number(v))}`,
+					},
 				},
 			],
-			crosshair: {
-				xField: { visible: true, line: { type: "line" } },
-				yField: { visible: true, line: { type: "line" } },
+			tooltip: {
+				mark: {
+					title: {
+						value: (datum: Record<string, unknown> | undefined) => {
+							if (!datum) return "";
+							const ts = Number(datum["time"]);
+							return mode === "hour" ? formatDayHour(ts) : formatMonthDay(ts);
+						},
+					},
+					content: [
+						{
+							key: "类型",
+							value: (datum: Record<string, unknown> | undefined) =>
+								datum ? String(datum["type"]) : "",
+						},
+						{
+							key: "数量",
+							value: (datum: Record<string, unknown> | undefined) =>
+								datum ? `${datum["count"]} 条` : "",
+						},
+					],
+				},
 			},
 		};
-	}, [data, scatter]);
+	}, [data, isDark]);
 
-	if (data.length === 0) return <div style={style} />;
+	if (data.data.length === 0) return <div style={style} />;
 	return <ChartWrapper ref={ref} spec={spec} style={style} />;
 });
 
@@ -237,15 +321,36 @@ export const TopUsersChart = forwardRef<ChartWrapperHandle, TopUsersChartProps>(
 	function TopUsersChart({ data, style }, ref) {
 		const { isDark } = useColorMode();
 		const { palette } = getChartColors(isDark);
+		const sortedData = useMemo(
+			() => [...data].sort((a, b) => b.value - a.value),
+			[data],
+		);
 
 		const spec = useMemo<ISpec>(
 			() => ({
 				type: "bar",
-				data: [{ id: "users", values: [...data].reverse() }],
+				data: [{ id: "users", values: sortedData }],
 				direction: "horizontal",
 				xField: "value",
 				yField: "name",
 				color: [palette[0]],
+				axes: [
+					{
+						orient: "bottom",
+						type: "linear",
+						title: { visible: true, text: "发帖数" },
+					},
+					{
+						orient: "left",
+						type: "band",
+						domainLine: { visible: false },
+						label: {
+							visible: true,
+							autoHide: false,
+							autoLimit: false,
+						},
+					},
+				],
 				label: {
 					visible: true,
 					position: "right",
@@ -264,7 +369,7 @@ export const TopUsersChart = forwardRef<ChartWrapperHandle, TopUsersChartProps>(
 					},
 				},
 			}),
-			[data, palette],
+			[palette, sortedData],
 		);
 
 		if (data.length === 0) return <div style={style} />;

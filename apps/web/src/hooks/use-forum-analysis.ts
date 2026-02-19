@@ -13,9 +13,13 @@ export interface ForumAnalysisResult {
 		name: string;
 		value: number;
 		topUsers: string[];
+		userCount: number;
 	}>;
 	levelDistribution: Array<{ name: string; value: number }>;
-	timeDistribution: Array<{ date: number; hour: number }>;
+	timeDistribution: {
+		mode: "hour" | "day";
+		data: Array<{ time: number; type: string; value: number }>;
+	};
 	topUsers: Array<{ name: string; value: number; portrait: string }>;
 	threadHeat: Array<{
 		title: string;
@@ -24,6 +28,30 @@ export interface ForumAnalysisResult {
 		replyNum: number;
 		viewNum: number;
 		agreeNum: number;
+	}>;
+	topLikedPosts: Array<{
+		tid: string;
+		title: string;
+		floor: number;
+		author: string;
+		content: string;
+		agreeNum: number;
+	}>;
+	topRepliedReplies: Array<{
+		tid: string;
+		title: string;
+		floor: number;
+		author: string;
+		content: string;
+		subPostNumber: number;
+	}>;
+	hotUsers: Array<{
+		name: string;
+		portrait: string;
+		threadCount: number;
+		replyCount: number;
+		totalAgrees: number;
+		score: number;
 	}>;
 	wordCloud: Array<{ name: string; value: number }>;
 	ipChangedUsers: Array<{
@@ -62,7 +90,13 @@ export function useForumAnalysis() {
 	const esRef = useRef<EventSource | null>(null);
 
 	const start = useCallback(
-		(fname: string, sort: number, count: number, depth: string) => {
+		(
+			fname: string,
+			sort: number,
+			count: number,
+			depth: string,
+			weights?: { thread: number; reply: number; agree: number },
+		) => {
 			// 关闭之前的连接
 			esRef.current?.close();
 
@@ -80,6 +114,11 @@ export function useForumAnalysis() {
 				count: String(count),
 				depth,
 			});
+			if (weights) {
+				params.set("tw", String(weights.thread));
+				params.set("rw", String(weights.reply));
+				params.set("aw", String(weights.agree));
+			}
 			const es = new EventSource(`${API_BASE}/forum/analyze?${params}`);
 			esRef.current = es;
 

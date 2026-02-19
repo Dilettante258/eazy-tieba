@@ -551,7 +551,7 @@ function BlockedWordCloudSection() {
 		<section className={styles.section}>
 			<h4 className={styles.sectionTitle}>词云屏蔽关键词</h4>
 			<p className={styles.sectionDesc}>
-				被屏蔽的关键词将从所有词云图中过滤（发帖分析、贴吧分析）
+				被屏蔽的关键词将从所有词云图中过滤（发帖分析、贴吧分析），后端已提前过滤常见停用词（单字虚词、标点等）
 			</p>
 			<div className={styles.addRow}>
 				<TextInput
@@ -659,6 +659,91 @@ function ForumLevelMergeSection() {
 	);
 }
 
+function HotUserWeightsSection() {
+	const weights = useSettingsStore((s) => s.hotUserWeights);
+	const setWeights = useSettingsStore((s) => s.setHotUserWeights);
+	const [local, setLocal] = useState(weights);
+
+	const handleBlur = useCallback(() => {
+		const clamped = {
+			thread: Math.max(0, local.thread),
+			reply: Math.max(0, local.reply),
+			agree: Math.max(0, local.agree),
+		};
+		setLocal(clamped);
+		setWeights(clamped);
+	}, [local, setWeights]);
+
+	const handleKey = useCallback(
+		(e: React.KeyboardEvent) => {
+			if (e.key === "Enter") handleBlur();
+		},
+		[handleBlur],
+	);
+
+	return (
+		<section className={styles.section}>
+			<h4 className={styles.sectionTitle}>热门吧友权重</h4>
+			<p className={styles.sectionDesc}>
+				热度分 = 主题贴×权重 + 回复×权重 + 获赞×权重，按 Enter 或失焦确认
+			</p>
+			<div className={styles.weightsRow}>
+				<span className={styles.weightItem}>
+					主题贴
+					<TextInput
+						size="small"
+						type="number"
+						min={0}
+						step={0.5}
+						value={String(local.thread)}
+						onChange={(e) =>
+							setLocal((p) => ({ ...p, thread: Number(e.target.value) || 0 }))
+						}
+						onBlur={handleBlur}
+						onKeyDown={handleKey}
+						className={styles.weightInput}
+						aria-label="主题贴权重"
+					/>
+				</span>
+				<span className={styles.weightItem}>
+					回复
+					<TextInput
+						size="small"
+						type="number"
+						min={0}
+						step={0.5}
+						value={String(local.reply)}
+						onChange={(e) =>
+							setLocal((p) => ({ ...p, reply: Number(e.target.value) || 0 }))
+						}
+						onBlur={handleBlur}
+						onKeyDown={handleKey}
+						className={styles.weightInput}
+						aria-label="回复权重"
+					/>
+				</span>
+				<span className={styles.weightItem}>
+					获赞
+					<TextInput
+						size="small"
+						type="number"
+						min={0}
+						step={0.1}
+						value={String(local.agree)}
+						onChange={(e) =>
+							setLocal((p) => ({ ...p, agree: Number(e.target.value) || 0 }))
+						}
+						onBlur={handleBlur}
+						onKeyDown={handleKey}
+						className={styles.weightInput}
+						aria-label="获赞权重"
+					/>
+				</span>
+			</div>
+		</section>
+	);
+}
+
 function ForumAnalysisSettings() {
 	return (
 		<div className={styles.settingsPanel}>
@@ -666,6 +751,7 @@ function ForumAnalysisSettings() {
 			<ForumPanelVisibilitySection />
 			<ForumTopUsersSection />
 			<ForumLevelMergeSection />
+			<HotUserWeightsSection />
 		</div>
 	);
 }

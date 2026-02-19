@@ -21,6 +21,7 @@
 		"@visactor/react-vchart": "^1",
 		"@visactor/vchart": "^1",
 		"clsx": "^2.1.1",
+		"exceljs": "^4.4.0",
 		"hono": "^4.6.8",
 		"react": "^19.3.0-canary-47d1ad14-20260216",
 		"react-activity-calendar": "^2",

@@ -11,24 +11,65 @@ import { SearchIcon } from "@primer/octicons-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { MAINLAND_PROVINCES, HMT_NAMES } from "../lib/china-geo.ts";
 import { forumPostSearchSchema } from "../lib/search-schemas.ts";
-import { useForumAnalysis } from "../hooks/use-forum-analysis.ts";
+import {
+	useForumAnalysis,
+	type ForumAnalysisResult,
+} from "../hooks/use-forum-analysis.ts";
 import { useVChartThemeSync } from "../lib/vchart-theme.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
 import {
 	FetchProgress,
+	HotUsersTable,
+	IpChangedUsersTable,
 	IpMapChart,
 	LevelChart,
 	TimeScatterChart,
+	TopLikedPostsTable,
+	TopRepliedThreadsTable,
 	TopUsersChart,
 	ThreadHeatChart,
 	WordCloudChart,
 } from "../components/ForumPostAnalysis/index.ts";
 import {
 	ChartActionBar,
+	type ChartMenuItem,
 	type ChartWrapperHandle,
 } from "../components/PostAnalysis/ChartWrapper.tsx";
 import styles from "./forumpost.module.css";
 import moduleStyles from "../components/ForumPostAnalysis/ForumPostAnalysis.module.css";
+
+type TimeGranularity = "auto" | "5m" | "15m" | "1h" | "1d";
+type ResolvedTimeGranularity = Exclude<TimeGranularity, "auto">;
+
+const TIME_GRANULARITY_LABELS: Record<TimeGranularity, string> = {
+	auto: "自动",
+	"5m": "5分钟",
+	"15m": "15分钟",
+	"1h": "1小时",
+	"1d": "1天",
+};
+
+const TIME_BUCKET_MS: Record<Exclude<ResolvedTimeGranularity, "1d">, number> = {
+	"5m": 5 * 60 * 1000,
+	"15m": 15 * 60 * 1000,
+	"1h": 60 * 60 * 1000,
+};
+
+function resolveAutoGranularity(mode: "hour" | "day"): ResolvedTimeGranularity {
+	return mode === "hour" ? "15m" : "1d";
+}
+
+function bucketTime(
+	timestamp: number,
+	granularity: ResolvedTimeGranularity,
+): number {
+	if (granularity === "1d") {
+		const d = new Date(timestamp);
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+	}
+	const size = TIME_BUCKET_MS[granularity];
+	return Math.floor(timestamp / size) * size;
+}
 
 // ── 查询表单 ──
 
@@ -131,6 +172,8 @@ function ChartModule({
 	description,
 	chartRef,
 	name,
+	menuItems,
+	menuLabel,
 	className,
 	overlay,
 	children,
@@ -139,6 +182,8 @@ function ChartModule({
 	description?: React.ReactNode;
 	chartRef: React.RefObject<ChartWrapperHandle | null>;
 	name: string;
+	menuItems?: ChartMenuItem[];
+	menuLabel?: string;
 	className?: string;
 	overlay?: boolean;
 	children: React.ReactNode;
@@ -154,7 +199,12 @@ function ChartModule({
 						<p className={moduleStyles.chartDescription}>{description}</p>
 					)}
 				</div>
-				<ChartActionBar chartRef={chartRef} name={name} />
+				<ChartActionBar
+					chartRef={chartRef}
+					name={name}
+					menuItems={menuItems}
+					menuLabel={menuLabel}
+				/>
 			</div>
 			{children}
 		</div>
@@ -166,7 +216,7 @@ function ChartModule({
 function IpDescription({
 	data,
 }: {
-	data: Array<{ name: string; value: number; topUsers: string[] }>;
+	data: Array<{ name: string; value: number; topUsers: string[]; userCount: number }>;
 }) {
 	const [open, setOpen] = useState(false);
 	const { overseas, total } = useMemo(() => {
@@ -209,7 +259,7 @@ function IpDescription({
 								<span>{HMT_NAMES.has(r.name) ? `🇨🇳 ${r.name}` : r.name}</span>
 								<span className={moduleStyles.overseasCount}>
 									{" "}
-									{r.value} 人
+									{r.userCount} 人
 								</span>
 								{r.topUsers.length > 0 && (
 									<div className={moduleStyles.overseasUsers}>
@@ -225,42 +275,81 @@ function IpDescription({
 	);
 }
 
-// ── IP 变动用户表格 ──
+// ── 发帖时间分布模块（含粒度切换） ──
 
-function IpChangedUsersTable({
-	users,
+function TimeScatterModule({
+	data,
+	chartRef,
 }: {
-	users: Array<{ name: string; portrait: string; ips: string[]; postCount: number }>;
+	data: ForumAnalysisResult["timeDistribution"];
+	chartRef: React.RefObject<ChartWrapperHandle | null>;
 }) {
+	const [granularity, setGranularity] = useState<TimeGranularity>("auto");
+
+	const resolvedGranularity = useMemo<ResolvedTimeGranularity>(
+		() =>
+			granularity === "auto"
+				? resolveAutoGranularity(data.mode)
+				: granularity,
+		[granularity, data.mode],
+	);
+
+	const chartData = useMemo(() => {
+		const grouped = new Map<string, { time: number; type: string; value: number }>();
+		for (const point of data.data) {
+			const bucketedTime = bucketTime(point.time, resolvedGranularity);
+			const delta = Math.max(Math.abs(point.value), 1);
+			const sign = point.value < 0 ? -1 : 1;
+			const key = `${bucketedTime}|${point.type}`;
+			const existing = grouped.get(key);
+			if (existing) {
+				existing.value += sign * delta;
+			} else {
+				grouped.set(key, {
+					time: bucketedTime,
+					type: point.type,
+					value: sign * delta,
+				});
+			}
+		}
+		return [...grouped.values()].sort(
+			(a, b) => a.time - b.time || a.type.localeCompare(b.type),
+		);
+	}, [data.data, resolvedGranularity]);
+
+	const mode: "hour" | "day" =
+		resolvedGranularity === "1d" ? "day" : "hour";
+	const granularityLabel =
+		granularity === "auto"
+			? `自动（${TIME_GRANULARITY_LABELS[resolvedGranularity]}）`
+			: TIME_GRANULARITY_LABELS[granularity];
+
+	const menuItems = useMemo<ChartMenuItem[]>(
+		() => [
+			{ label: "自动", onClick: () => setGranularity("auto") },
+			{ label: "5分钟", onClick: () => setGranularity("5m") },
+			{ label: "15分钟", onClick: () => setGranularity("15m") },
+			{ label: "1小时", onClick: () => setGranularity("1h") },
+			{ label: "1天", onClick: () => setGranularity("1d") },
+		],
+		[],
+	);
+
 	return (
-		<div className={moduleStyles.chartModule}>
-			<h3 className={moduleStyles.chartTitle}>IP 属地变动用户</h3>
-			<p className={moduleStyles.chartDescription}>
-				以下用户在不同帖子中使用了不同 IP 属地
-			</p>
-			{users.length === 0 ? (
-				<p className={moduleStyles.chartDescription}>暂无数据</p>
-			) : (
-				<table className={styles.ipChangeTable}>
-					<thead>
-						<tr>
-							<th>用户</th>
-							<th>IP 属地</th>
-							<th>发帖数</th>
-						</tr>
-					</thead>
-					<tbody>
-						{users.map((u) => (
-							<tr key={u.name}>
-								<td>{u.name}</td>
-								<td>{u.ips.join("、")}</td>
-								<td>{u.postCount}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			)}
-		</div>
+		<ChartModule
+			title="发帖时间分布"
+			description={`按${mode === "hour" ? "时间" : "日期"}（粒度：${granularityLabel}）的回复与主题贴量分布`}
+			chartRef={chartRef}
+			name="发帖时间分布"
+			menuItems={menuItems}
+			menuLabel="切换时间粒度"
+		>
+			<TimeScatterChart
+				ref={chartRef}
+				data={{ mode, data: chartData }}
+				style={{ height: "300px" }}
+			/>
+		</ChartModule>
 	);
 }
 
@@ -276,6 +365,7 @@ function ForumPostPage() {
 	const topUsersCount = useSettingsStore((s) => s.forumTopUsersCount);
 	const mergeHighLevels = useSettingsStore((s) => s.forumMergeHighLevels);
 	const blockedWords = useSettingsStore((s) => s.blockedWordCloudKeywords);
+	const hotUserWeights = useSettingsStore((s) => s.hotUserWeights);
 
 	const ipMapRef = useRef<ChartWrapperHandle>(null);
 	const levelRef = useRef<ChartWrapperHandle>(null);
@@ -286,14 +376,19 @@ function ForumPostPage() {
 
 	const handleSubmit = useCallback(
 		(fname: string, sort: number, count: number, depth: "first" | "all") => {
-			start(fname, sort, count, depth);
+			start(fname, sort, count, depth, hotUserWeights);
 		},
-		[start],
+		[start, hotUserWeights],
 	);
 
 	// 根据设置处理数据
 	const topUsersData = useMemo(
-		() => data?.topUsers.slice(0, topUsersCount),
+		() =>
+			data
+				? [...data.topUsers]
+						.sort((a, b) => b.value - a.value)
+						.slice(0, topUsersCount)
+				: undefined,
 		[data, topUsersCount],
 	);
 
@@ -309,6 +404,16 @@ function ForumPostPage() {
 		}
 		return [...merged.entries()].map(([name, value]) => ({ name, value }));
 	}, [data, mergeHighLevels]);
+
+	const topRepliedThreads = useMemo(
+		() =>
+			data
+				? [...data.threadHeat]
+						.sort((a, b) => b.replyNum - a.replyNum)
+						.slice(0, 20)
+				: undefined,
+		[data],
+	);
 
 	const wordCloudData = useMemo(() => {
 		if (!data || blockedWords.length === 0) return data?.wordCloud;
@@ -430,25 +535,31 @@ function ForumPostPage() {
 						)}
 
 						{panels.timeScatter && (
-							<ChartModule
-								title="发帖时间分布"
+							<TimeScatterModule
+								data={data.timeDistribution}
 								chartRef={timeRef}
-								name="发帖时间分布"
-							>
-								<TimeScatterChart
-									ref={timeRef}
-									data={data.timeDistribution}
-									style={{ height: "300px" }}
-								/>
-							</ChartModule>
+							/>
+						)}
+						{panels.ipChanged && (
+							<IpChangedUsersTable data={data.ipChangedUsers} />
+						)}
+
+						{panels.topLikedPosts && (
+							<TopLikedPostsTable data={data.topLikedPosts} />
+						)}
+
+						{panels.topRepliedThreads && topRepliedThreads && (
+							<TopRepliedThreadsTable
+								threadData={topRepliedThreads}
+								replyData={data.topRepliedReplies}
+							/>
+						)}
+
+						{panels.hotUsers && (
+							<HotUsersTable data={data.hotUsers} />
 						)}
 					</div>
 				</>
-			)}
-
-			{/* IP 变动用户列表 */}
-			{data && panels.ipChanged && (
-				<IpChangedUsersTable users={data.ipChangedUsers} />
 			)}
 		</div>
 	);

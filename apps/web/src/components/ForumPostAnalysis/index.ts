@@ -7,3 +7,9 @@ export {
 	ThreadHeatChart,
 	WordCloudChart,
 } from "./Charts.tsx";
+export {
+	IpChangedUsersTable,
+	TopLikedPostsTable,
+	TopRepliedThreadsTable,
+	HotUsersTable,
+} from "./Tables.tsx";

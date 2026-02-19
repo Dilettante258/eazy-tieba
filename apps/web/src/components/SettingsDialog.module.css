@@ -154,6 +154,27 @@
 	flex-shrink: 0;
 }
 
+/* ── 权重设置 ── */
+
+.weightsRow {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.weightItem {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 0.8125rem;
+	color: var(--fgColor-default);
+}
+
+.weightInput {
+	width: 60px;
+}
+
 /* ── 缓存管理 ── */
 
 .cacheInfo {

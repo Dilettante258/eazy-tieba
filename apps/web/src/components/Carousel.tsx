@@ -1,98 +1,94 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./Carousel.module.css";
 
-type CarouselState = {
-	direction: "left" | "right";
-	value: number;
-};
-
-function reducer(
-	state: CarouselState,
-	action: { type: string },
-): CarouselState {
-	switch (action.type) {
-		case "left":
-			return { direction: "left", value: (state.value - 1 + 3) % 3 };
-		case "right":
-			return { direction: "right", value: (state.value + 1) % 3 };
-	}
-	throw Error(`Unknown action: ${action.type}`);
-}
-
-const CARDS = [
-	{ className: styles.card1, label: "便捷查询" },
-	{ className: styles.card2, label: "数据分析" },
-	{ className: styles.card3, label: "开源免费" },
-];
+const AUTO_SCROLL_INTERVAL = 4000;
 
 export function Carousel() {
-	const [state, dispatch] = useReducer(reducer, {
-		direction: "right",
-		value: 0,
-	});
+	const ref = useRef<HTMLDivElement>(null);
 
-	const startXRef = useRef(0);
-	const isDraggingRef = useRef(false);
-
-	const handlePointerDown = useCallback((e: React.PointerEvent) => {
-		startXRef.current = e.clientX;
-		isDraggingRef.current = true;
-	}, []);
-
-	const handlePointerUp = useCallback((e: React.PointerEvent) => {
-		if (!isDraggingRef.current) return;
-		isDraggingRef.current = false;
-		const diff = e.clientX - startXRef.current;
-		if (Math.abs(diff) > 50) {
-			dispatch({ type: diff > 0 ? "left" : "right" });
-		}
-	}, []);
-
-	// 自动轮播
 	useEffect(() => {
-		const timer = setInterval(() => {
-			dispatch({ type: "right" });
-		}, 4000);
-		return () => clearInterval(timer);
-	}, []);
+		const el = ref.current;
+		if (!el) return;
 
-	const animClass =
-		state.direction === "right" ? styles.slideRight : styles.slideLeft;
-	const current = CARDS[state.value];
+		let paused = false;
+		const pause = () => {
+			paused = true;
+		};
+		const resume = () => {
+			paused = false;
+		};
+
+		const timer = setInterval(() => {
+			if (paused) return;
+			const maxScroll = el.scrollWidth - el.clientWidth;
+			if (el.scrollLeft >= maxScroll - 2) {
+				el.scrollTo({ left: 0, behavior: "smooth" });
+				return;
+			}
+			el.scrollBy({ left: el.clientWidth, behavior: "smooth" });
+		}, AUTO_SCROLL_INTERVAL);
+
+		el.addEventListener("pointerenter", pause);
+		el.addEventListener("pointerleave", resume);
+		el.addEventListener("focusin", pause);
+		el.addEventListener("focusout", resume);
+		el.addEventListener("touchstart", pause, { passive: true });
+		el.addEventListener("touchend", resume, { passive: true });
+
+		return () => {
+			clearInterval(timer);
+			el.removeEventListener("pointerenter", pause);
+			el.removeEventListener("pointerleave", resume);
+			el.removeEventListener("focusin", pause);
+			el.removeEventListener("focusout", resume);
+			el.removeEventListener("touchstart", pause);
+			el.removeEventListener("touchend", resume);
+		};
+	}, []);
 
 	return (
-		<div className={styles.container}>
-			<div
-				className={styles.cardWrapper}
-				onPointerDown={handlePointerDown}
-				onPointerUp={handlePointerUp}
-				style={{ touchAction: "pan-y" }}
+		<div className={styles.carouselShell}>
+			<button
+				type="button"
+				className={`${styles.arrow} ${styles.arrowLeft}`}
+				aria-label="上一张"
+				onClick={() =>
+					ref.current?.scrollBy({
+						left: -(ref.current?.clientWidth ?? 0),
+						behavior: "smooth",
+					})}
 			>
-				<div
-					key={state.value}
-					className={`${current.className} ${animClass}`}
-				>
-					<span className={styles.cardLabel}>{current.label}</span>
+				‹
+			</button>
+			<div ref={ref} className={styles.carousel}>
+				<div className={`${styles.slide} ${styles.slide1}`}>
+					<div className={styles.slideContent}>
+						<span className={styles.cardLabel}>便捷查询</span>
+					</div>
+				</div>
+				<div className={`${styles.slide} ${styles.slide2}`}>
+					<div className={styles.slideContent}>
+						<span className={styles.cardLabel}>数据分析</span>
+					</div>
+				</div>
+				<div className={`${styles.slide} ${styles.slide3}`}>
+					<div className={styles.slideContent}>
+						<span className={styles.cardLabel}>开源免费</span>
+					</div>
 				</div>
 			</div>
-
-			<div className={styles.processBar}>
-				{[0, 1, 2].map((i) => (
-					<button
-						key={i}
-						type="button"
-						className={styles.dot}
-						data-active={state.value === i}
-						onClick={() => {
-							if (i !== state.value) {
-								dispatch({
-									type: i > state.value ? "right" : "left",
-								});
-							}
-						}}
-					/>
-				))}
-			</div>
+			<button
+				type="button"
+				className={`${styles.arrow} ${styles.arrowRight}`}
+				aria-label="下一张"
+				onClick={() =>
+					ref.current?.scrollBy({
+						left: ref.current?.clientWidth ?? 0,
+						behavior: "smooth",
+					})}
+			>
+				›
+			</button>
 		</div>
 	);
 }

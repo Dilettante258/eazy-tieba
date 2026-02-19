@@ -53,25 +53,25 @@ function DotsBg({ fill, id }: { fill: string; id: string }) {
 // ── 统计区域 ──
 
 const STATS = [
-  { icon: ZapIcon, value: "90+", label: "人次日均访问量", color: "#1d8ae7" },
-  {
-    icon: SearchIcon,
-    value: "2nd",
-    label: "Bing搜索关键词中曾排行第二",
-    color: "#f76b15",
-  },
-  {
-    icon: ToolsIcon,
-    value: "6+",
-    label: "常用功能并持续更新中",
-    color: "#e75054",
-  },
-  {
-    icon: PeopleIcon,
-    value: "3000+",
-    label: "累计独立使用者",
-    color: "#d6409f",
-  },
+	{ icon: ZapIcon, value: "90+", label: "人次日均访问量", color: "#1d8ae7" },
+	{
+		icon: SearchIcon,
+		value: "2nd",
+		label: "Bing搜索关键词中曾排行第二",
+		color: "#f76b15",
+	},
+	{
+		icon: ToolsIcon,
+		value: "9+",
+		label: "核心功能并持续更新中",
+		color: "#e75054",
+	},
+	{
+		icon: PeopleIcon,
+		value: "3000+",
+		label: "累计独立使用者",
+		color: "#d6409f",
+	},
 ];
 
 function StatsSection() {
@@ -99,48 +99,60 @@ function StatsSection() {
 // ── 工具列表区域 ──
 
 const TOOLS = [
-  {
-    icon: ListUnorderedIcon,
-    title: "发言查询",
-    description: "查询用户发言",
-    href: "/userpost",
-  },
-  {
-    icon: PersonAddIcon,
-    title: "关注查询",
-    description: "查询用户关注了哪些用户",
-    href: "/follow",
-  },
-  {
-    icon: MentionIcon,
-    title: "粉丝查询",
-    description: "查询用户的粉丝",
-    href: "/fan",
-  },
-  {
-    icon: OrganizationIcon,
-    title: "关注贴吧查询",
-    description: "查询用户关注了哪些贴吧",
-    href: "/likeforum",
-  },
-  {
-    icon: IdBadgeIcon,
-    title: "个人资料查询",
-    description: "查询用户个人资料",
-    href: "/profile",
-  },
-  {
-    icon: GraphIcon,
-    title: "用户发帖分析",
-    description: "对用户历史发言进行数据分析",
-    href: "/postanalysis",
-  },
-  {
-    icon: DownloadIcon,
-    title: "数据导出",
-    description: "导出用户数据为 JSON 或 CSV 格式",
-    href: "/export",
-  },
+	{
+		icon: ListUnorderedIcon,
+		title: "发言查询",
+		description: "查询用户发言",
+		href: "/userpost",
+	},
+	{
+		icon: PersonAddIcon,
+		title: "关注查询",
+		description: "查询用户关注了哪些用户",
+		href: "/follow",
+	},
+	{
+		icon: MentionIcon,
+		title: "粉丝查询",
+		description: "查询用户的粉丝",
+		href: "/fan",
+	},
+	{
+		icon: OrganizationIcon,
+		title: "关注贴吧查询",
+		description: "查询用户关注了哪些贴吧",
+		href: "/likeforum",
+	},
+	{
+		icon: IdBadgeIcon,
+		title: "个人资料查询",
+		description: "查询用户个人资料",
+		href: "/profile",
+	},
+	{
+		icon: GraphIcon,
+		title: "用户发帖分析",
+		description: "对用户历史发言进行数据分析",
+		href: "/postanalysis",
+	},
+	{
+		icon: ToolsIcon,
+		title: "贴吧分析",
+		description: "分析贴吧内帖子与用户活跃分布",
+		href: "/forumpost",
+	},
+	{
+		icon: SearchIcon,
+		title: "发言搜索",
+		description: "按用户与关键词检索贴吧发言",
+		href: "/postsearch",
+	},
+	{
+		icon: DownloadIcon,
+		title: "数据导出",
+		description: "导出为 JSON 或 XLSX 格式",
+		href: "/export",
+	},
 ];
 
 function ToolsSection() {
@@ -169,13 +181,15 @@ function ToolsSection() {
 // ── 页脚 ──
 
 const FOOTER_NAV = [
-  { label: "用户资料", to: "/profile" },
-  { label: "发言查询", to: "/userpost" },
-  { label: "发帖分析", to: "/postanalysis" },
-  { label: "关注查询", to: "/follow" },
-  { label: "粉丝查询", to: "/fan" },
-  { label: "关注贴吧", to: "/likeforum" },
-  { label: "导出数据", to: "/export" },
+	{ label: "用户资料", to: "/profile" },
+	{ label: "发言查询", to: "/userpost" },
+	{ label: "发帖分析", to: "/postanalysis" },
+	{ label: "贴吧分析", to: "/forumpost" },
+	{ label: "发言搜索", to: "/postsearch" },
+	{ label: "关注查询", to: "/follow" },
+	{ label: "粉丝查询", to: "/fan" },
+	{ label: "关注贴吧", to: "/likeforum" },
+	{ label: "导出数据", to: "/export" },
 ] as const;
 
 function FooterSection() {
