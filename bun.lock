@@ -19,7 +19,7 @@
         "@hono/zod-validator": "^0.4",
         "@scalar/hono-api-reference": "^0.5.172",
         "@tieba/db": "workspace:*",
-        "@tieba/sdk": "workspace:*",
+        "tieba.js": "workspace:*",
         "dotenv": "^16.4.5",
         "effect": "^3.14.11",
         "hono": "^4.6.8",
@@ -76,7 +76,7 @@
       },
     },
     "packages/sdk": {
-      "name": "@tieba/sdk",
+      "name": "tieba.js",
       "version": "3.0.0",
       "dependencies": {
         "@bufbuild/protobuf": "^2.11.0",
@@ -391,7 +391,7 @@
 
     "@tieba/db": ["@tieba/db@workspace:packages/db"],
 
-    "@tieba/sdk": ["@tieba/sdk@workspace:packages/sdk"],
+    "tieba.js": ["tieba.js@workspace:packages/sdk"],
 
     "@tieba/web": ["@tieba/web@workspace:apps/web"],
 
