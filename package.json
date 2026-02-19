@@ -11,6 +11,7 @@
 		"build": "turbo build",
 		"typecheck": "turbo typecheck",
 		"proto:gen": "turbo proto:gen",
+		"tsconfig:sync": "bun scripts/sync-tsconfig.mjs",
 		"format": "biome format --write .",
 		"check": "biome check --write .",
 		"lint": "biome check ."
