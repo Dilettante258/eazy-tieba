@@ -42,15 +42,11 @@ export const BaChart = forwardRef<ChartWrapperHandle, BaChartProps>(
 					mark: {
 						content: [
 							{
-								key: (datum) =>
-									datum ? `${datum["name"]}吧` : "",
+								key: (datum) => (datum ? `${datum["name"]}吧` : ""),
 								value: (datum) => {
 									if (!datum) return "";
 									const v = datum["value"] as number;
-									const sum = data.reduce(
-										(s, d) => s + d.value,
-										0,
-									);
+									const sum = data.reduce((s, d) => s + d.value, 0);
 									return `${v} 帖 (${((v / sum) * 100).toFixed(1)}%)`;
 								},
 							},
@@ -71,12 +67,7 @@ export const BaChart = forwardRef<ChartWrapperHandle, BaChartProps>(
 		);
 
 		return (
-			<ChartWrapper
-				ref={ref}
-				spec={spec}
-				style={style}
-				onClick={handleClick}
-			/>
+			<ChartWrapper ref={ref} spec={spec} style={style} onClick={handleClick} />
 		);
 	},
 );
@@ -141,14 +132,11 @@ export const ScatterChart = forwardRef<ChartWrapperHandle, ScatterChartProps>(
 							{
 								key: "日期",
 								value: (datum) =>
-									datum
-										? dateFmt.format(datum["date"] as number)
-										: "",
+									datum ? dateFmt.format(datum["date"] as number) : "",
 							},
 							{
 								key: "时间",
-								value: (datum) =>
-									datum ? `${datum["hour"]}:00` : "",
+								value: (datum) => (datum ? `${datum["hour"]}:00` : ""),
 							},
 						],
 					},
@@ -234,21 +222,17 @@ export const ForumScatterChart = forwardRef<
 			tooltip: {
 				mark: {
 					title: {
-						value: (datum) =>
-							datum ? `${datum["forumName"]}吧` : "",
+						value: (datum) => (datum ? `${datum["forumName"]}吧` : ""),
 					},
 					content: [
 						{
 							key: "日期",
 							value: (datum) =>
-								datum
-									? dateFmt.format(datum["date"] as number)
-									: "",
+								datum ? dateFmt.format(datum["date"] as number) : "",
 						},
 						{
 							key: "时间",
-							value: (datum) =>
-								datum ? `${datum["hour"]}:00` : "",
+							value: (datum) => (datum ? `${datum["hour"]}:00` : ""),
 						},
 					],
 				},
@@ -294,9 +278,7 @@ export const SankeyChart = forwardRef<ChartWrapperHandle, SankeyChartProps>(
 					{
 						id: "sankey",
 						// biome-ignore lint/suspicious/noExplicitAny: 桑基图 values 为 {nodes,links} 对象，与通用 Datum[] 类型不兼容
-						values: [
-							{ nodes: data.nodes, links: data.links },
-						] as any,
+						values: [{ nodes: data.nodes, links: data.links }] as any,
 					},
 				],
 				categoryField: "name",
@@ -360,11 +342,7 @@ export const SankeyChart = forwardRef<ChartWrapperHandle, SankeyChartProps>(
 								key: "帖子数",
 								value: (datum) =>
 									datum
-										? String(
-												datum["value"] ??
-													datum["node_value"] ??
-													"",
-											)
+										? String(datum["value"] ?? datum["node_value"] ?? "")
 										: "",
 							},
 						],
@@ -426,10 +404,8 @@ export const MosaicChart = forwardRef<ChartWrapperHandle, MosaicChartProps>(
 						},
 						filterByGroup: { field: "year", type: "min" },
 						overlap: false,
-						formatMethod: (
-							_value: unknown,
-							datum: Record<string, unknown>,
-						) => datum["year"] as string,
+						formatMethod: (_value: unknown, datum: Record<string, unknown>) =>
+							datum["year"] as string,
 					},
 					{
 						visible: true,
@@ -454,21 +430,14 @@ export const MosaicChart = forwardRef<ChartWrapperHandle, MosaicChartProps>(
 				tooltip: {
 					mark: {
 						title: {
-							value: (
-								datum: Record<string, unknown> | undefined,
-							) =>
-								datum
-									? `${datum["year"]}年 · ${datum["forum"]}吧`
-									: "",
+							value: (datum: Record<string, unknown> | undefined) =>
+								datum ? `${datum["year"]}年 · ${datum["forum"]}吧` : "",
 						},
 						content: [
 							{
 								key: "帖子数",
-								value: (
-									datum:
-										| Record<string, unknown>
-										| undefined,
-								) => (datum ? `${datum["count"]}` : ""),
+								value: (datum: Record<string, unknown> | undefined) =>
+									datum ? `${datum["count"]}` : "",
 							},
 						],
 					},
@@ -488,46 +457,47 @@ interface WordCloudChartProps {
 	style?: React.CSSProperties;
 }
 
-export const WordCloudChart = forwardRef<ChartWrapperHandle, WordCloudChartProps>(
-	function WordCloudChart({ data, style }, ref) {
-		const spec = useMemo<ISpec>(
-			() => ({
-				type: "wordCloud",
-				maskShape: "rect",
-				nameField: "name",
-				valueField: "value",
-				seriesField: "name",
-				fontSizeRange: [10, 56],
-				fontWeightRange: [400, 700],
-				rotateAngles: [0],
-				padding: 1,
-				wordCloudConfig: {
-					drawOutOfBound: "ellipsis",
-					layoutMode: "ensureMapping",
-					zoomToFit: {
-						enlarge: true,
-						fontSizeLimitMax: 72,
-						shrink: true,
-						fontSizeLimitMin: 6,
-					},
+export const WordCloudChart = forwardRef<
+	ChartWrapperHandle,
+	WordCloudChartProps
+>(function WordCloudChart({ data, style }, ref) {
+	const spec = useMemo<ISpec>(
+		() => ({
+			type: "wordCloud",
+			maskShape: "rect",
+			nameField: "name",
+			valueField: "value",
+			seriesField: "name",
+			fontSizeRange: [10, 56],
+			fontWeightRange: [400, 700],
+			rotateAngles: [0],
+			padding: 1,
+			wordCloudConfig: {
+				drawOutOfBound: "ellipsis",
+				layoutMode: "ensureMapping",
+				zoomToFit: {
+					enlarge: true,
+					fontSizeLimitMax: 72,
+					shrink: true,
+					fontSizeLimitMin: 6,
 				},
-				tooltip: {
-					trigger: "hover",
-					mark: {
-						content: [
-							{
-								key: (datum) => (datum ? String(datum.name) : ""),
-								value: (datum) => (datum ? `${datum.value} 次` : ""),
-							},
-						],
-					},
+			},
+			tooltip: {
+				trigger: "hover",
+				mark: {
+					content: [
+						{
+							key: (datum) => (datum ? String(datum.name) : ""),
+							value: (datum) => (datum ? `${datum.value} 次` : ""),
+						},
+					],
 				},
-				data: [{ id: "wordCloud", values: data }],
-			}),
-			[data],
-		);
+			},
+			data: [{ id: "wordCloud", values: data }],
+		}),
+		[data],
+	);
 
-		if (data.length === 0) return <div style={style} />;
-		return <ChartWrapper ref={ref} spec={spec} style={style} />;
-	},
-);
+	if (data.length === 0) return <div style={style} />;
+	return <ChartWrapper ref={ref} spec={spec} style={style} />;
+});

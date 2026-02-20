@@ -66,7 +66,11 @@ const USER_TYPES: ExportDataType[] = [
 ];
 const FORUM_TYPES: ExportDataType[] = ["forumThreads"];
 const THREAD_TYPES: ExportDataType[] = ["threadPosts"];
-const USER_METHOD_OPTIONS: Array<{ value: Method; label: string; hint: string }> = [
+const USER_METHOD_OPTIONS: Array<{
+	value: Method;
+	label: string;
+	hint: string;
+}> = [
 	{ value: "uid", label: "贴吧 UID", hint: "10 位数字" },
 	{ value: "un", label: "用户名", hint: "请输入用户名" },
 	{ value: "id", label: "用户 ID", hint: "纯数字" },
@@ -348,7 +352,9 @@ type ThreadPostRow = RowFromColumns<typeof THREAD_POST_COLUMNS> & {
 };
 type ThreadUserRow = RowFromColumns<typeof THREAD_USER_COLUMNS>;
 type ForumThreadPostRow = RowFromColumns<typeof FORUM_THREAD_POST_COLUMNS>;
-type ForumThreadCommentRow = RowFromColumns<typeof FORUM_THREAD_COMMENT_COLUMNS>;
+type ForumThreadCommentRow = RowFromColumns<
+	typeof FORUM_THREAD_COMMENT_COLUMNS
+>;
 
 function splitThreadPostRows(posts: ThreadPostRow[]) {
 	const comments: ThreadCommentRow[] = [];
@@ -414,7 +420,9 @@ function parseForumThreadsPayload(data: unknown): {
 } {
 	if (Array.isArray(data)) {
 		return {
-			threads: data.filter((row): row is Record<string, unknown> => isRecord(row)),
+			threads: data.filter((row): row is Record<string, unknown> =>
+				isRecord(row),
+			),
 			users: [],
 		};
 	}
@@ -433,7 +441,9 @@ function parseForumThreadsPayload(data: unknown): {
 		}))
 		.filter((row) => row.id);
 	return {
-		threads: threadsRaw.filter((row): row is Record<string, unknown> => isRecord(row)),
+		threads: threadsRaw.filter((row): row is Record<string, unknown> =>
+			isRecord(row),
+		),
 		users,
 	};
 }
@@ -479,17 +489,16 @@ function buildExportRows(task: ExportTask): ExportSheet[] {
 					{ name: "forums", rows: mapRowsByColumns(rows, FORUM_COLUMNS) },
 				];
 			}
-			case "forumThreads":
-				{
-					const payload = parseForumThreadsPayload(data);
-					const rows = payload.threads as RowFromColumns<typeof THREAD_COLUMNS>[];
-					return [
-						{
-							name: "threads",
-							rows: mapRowsByColumns(rows, THREAD_COLUMNS),
-						},
-					];
-				}
+			case "forumThreads": {
+				const payload = parseForumThreadsPayload(data);
+				const rows = payload.threads as RowFromColumns<typeof THREAD_COLUMNS>[];
+				return [
+					{
+						name: "threads",
+						rows: mapRowsByColumns(rows, THREAD_COLUMNS),
+					},
+				];
+			}
 			case "threadPosts": {
 				const rows =
 					(
@@ -993,7 +1002,9 @@ function ExportPage() {
 									))}
 								</Select.OptGroup>
 							</Select>
-							<FormControl.Caption>{DATA_TYPE_HINTS[dataType]}</FormControl.Caption>
+							<FormControl.Caption>
+								{DATA_TYPE_HINTS[dataType]}
+							</FormControl.Caption>
 						</FormControl>
 					</div>
 
@@ -1088,7 +1099,9 @@ function ExportPage() {
 												placeholder="例如：原神"
 												block
 											/>
-											<FormControl.Caption>用于定位要导出的目标贴吧</FormControl.Caption>
+											<FormControl.Caption>
+												用于定位要导出的目标贴吧
+											</FormControl.Caption>
 										</FormControl>
 									</div>
 									<div className={styles.exportCheckboxRow}>
@@ -1117,7 +1130,9 @@ function ExportPage() {
 												<Select.Option value="2">按发帖时间</Select.Option>
 												<Select.Option value="3">按回复时间</Select.Option>
 											</Select>
-											<FormControl.Caption>影响抓取线程列表的顺序</FormControl.Caption>
+											<FormControl.Caption>
+												影响抓取线程列表的顺序
+											</FormControl.Caption>
 										</FormControl>
 									</div>
 									<div className={styles.exportCheckboxRow}>
@@ -1148,9 +1163,7 @@ function ExportPage() {
 															setForumWithComments(e.target.checked)
 														}
 													/>
-													<FormControl.Label>
-														包含楼中楼
-													</FormControl.Label>
+													<FormControl.Label>包含楼中楼</FormControl.Label>
 												</FormControl>
 											</div>
 											<div className={styles.exportCheckboxRow}>
@@ -1161,12 +1174,12 @@ function ExportPage() {
 														min={1}
 														max={20}
 														value={forumMaxPages}
-														onChange={(e) =>
-															setForumMaxPages(e.target.value)
-														}
+														onChange={(e) => setForumMaxPages(e.target.value)}
 														className={styles.exportPageInput}
 													/>
-													<FormControl.Caption>范围 1-20，默认 5</FormControl.Caption>
+													<FormControl.Caption>
+														范围 1-20，默认 5
+													</FormControl.Caption>
 												</FormControl>
 											</div>
 										</>

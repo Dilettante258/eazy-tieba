@@ -1,4 +1,8 @@
-import { queryOptions, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+	queryOptions,
+	useInfiniteQuery,
+	useQuery,
+} from "@tanstack/react-query";
 import { api } from "../lib/api-client.ts";
 import type { ClientResponse } from "hono/client";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
@@ -6,7 +10,9 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 export type Method = "id" | "uid" | "un";
 
 /** 检查响应状态码，非 2xx 抛出错误以触发 TanStack Query 的 error 状态 */
-async function unwrap<T extends Record<string, unknown> | Record<string, unknown>[]>(res: ClientResponse<T, ContentfulStatusCode, "json">): Promise<T> {
+async function unwrap<
+	T extends Record<string, unknown> | Record<string, unknown>[],
+>(res: ClientResponse<T, ContentfulStatusCode, "json">): Promise<T> {
 	if (!res.ok) {
 		let message = `请求失败 (${res.status})`;
 		try {
@@ -28,17 +34,14 @@ export const condenseProfileOptions = (method: Method, id: string) =>
 	queryOptions({
 		queryKey: ["condenseProfile", method, id] as const,
 		queryFn: () =>
-			api.user.condenseProfile
-				.$get({ query: { method, id } })
-				.then(unwrap),
+			api.user.condenseProfile.$get({ query: { method, id } }).then(unwrap),
 		enabled: !!method && !!id,
 	});
 
 export const userInfoOptions = (method: Method, id: string) =>
 	queryOptions({
 		queryKey: ["userInfo", method, id] as const,
-		queryFn: () =>
-			api.user.info.$get({ query: { method, id } }).then(unwrap),
+		queryFn: () => api.user.info.$get({ query: { method, id } }).then(unwrap),
 		enabled: !!method && !!id,
 	});
 
@@ -64,9 +67,7 @@ export const followOptions = (method: Method, id: string) =>
 	queryOptions({
 		queryKey: ["follow", method, id] as const,
 		queryFn: () =>
-			api.user.follow
-				.$get({ query: { method, id, page: "ALL" } })
-				.then(unwrap),
+			api.user.follow.$get({ query: { method, id, page: "ALL" } }).then(unwrap),
 		enabled: !!method && !!id,
 	});
 
@@ -74,9 +75,7 @@ export const fansOptions = (method: Method, id: string) =>
 	queryOptions({
 		queryKey: ["fans", method, id] as const,
 		queryFn: () =>
-			api.user.fan
-				.$get({ query: { method, id, page: "ALL" } })
-				.then(unwrap),
+			api.user.fan.$get({ query: { method, id, page: "ALL" } }).then(unwrap),
 		enabled: !!method && !!id,
 	});
 
@@ -84,9 +83,7 @@ export const likeForumsOptions = (method: Method, id: string) =>
 	queryOptions({
 		queryKey: ["likeForum", method, id] as const,
 		queryFn: () =>
-			api.user.likeForum
-				.$get({ query: { method, id } })
-				.then(unwrap),
+			api.user.likeForum.$get({ query: { method, id } }).then(unwrap),
 		enabled: !!method && !!id,
 	});
 

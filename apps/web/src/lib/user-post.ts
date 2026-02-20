@@ -5,14 +5,82 @@
 const segmenter = new Intl.Segmenter("zh", { granularity: "word" });
 
 const STOP_WORDS = new Set([
-	"的", "了", "是", "在", "我", "有", "和", "就", "不", "人",
-	"都", "一", "一个", "上", "也", "很", "到", "说", "要", "去",
-	"你", "会", "着", "没有", "看", "好", "自己", "这", "他", "她",
-	"吗", "那", "它", "被", "从", "把", "让", "用", "对", "为",
-	"这个", "那个", "什么", "怎么", "可以", "没", "能", "但", "而",
-	"与", "或", "如", "因为", "所以", "但是", "如果", "虽然", "还是",
-	"已经", "还", "又", "再", "才", "只", "啊", "吧", "呢", "嗯",
-	"哦", "哈", "哈哈", "真的", "知道", "觉得", "然后", "这样",
+	"的",
+	"了",
+	"是",
+	"在",
+	"我",
+	"有",
+	"和",
+	"就",
+	"不",
+	"人",
+	"都",
+	"一",
+	"一个",
+	"上",
+	"也",
+	"很",
+	"到",
+	"说",
+	"要",
+	"去",
+	"你",
+	"会",
+	"着",
+	"没有",
+	"看",
+	"好",
+	"自己",
+	"这",
+	"他",
+	"她",
+	"吗",
+	"那",
+	"它",
+	"被",
+	"从",
+	"把",
+	"让",
+	"用",
+	"对",
+	"为",
+	"这个",
+	"那个",
+	"什么",
+	"怎么",
+	"可以",
+	"没",
+	"能",
+	"但",
+	"而",
+	"与",
+	"或",
+	"如",
+	"因为",
+	"所以",
+	"但是",
+	"如果",
+	"虽然",
+	"还是",
+	"已经",
+	"还",
+	"又",
+	"再",
+	"才",
+	"只",
+	"啊",
+	"吧",
+	"呢",
+	"嗯",
+	"哦",
+	"哈",
+	"哈哈",
+	"真的",
+	"知道",
+	"觉得",
+	"然后",
+	"这样",
 ]);
 
 /** 对文本分词并累加词频 */
@@ -193,11 +261,7 @@ export class UserPostClass {
 			.sort((a, b) => b.value - a.value);
 
 		if (cleanData) {
-			const {
-				threshold = 0.9,
-				maxItems = 10,
-				othersName = "其他",
-			} = cleanData;
+			const { threshold = 0.9, maxItems = 10, othersName = "其他" } = cleanData;
 			const total = result.reduce((sum, item) => sum + item.value, 0);
 			let currentSum = 0;
 			const filtered: typeof result = [];
@@ -271,11 +335,7 @@ export class UserPostClass {
 		if (!cleanData) return { nodes, links };
 
 		// 数据清洗：只保留占比高的贴吧
-		const {
-			threshold = 0.9,
-			maxItems = 10,
-			othersName = "其他",
-		} = cleanData;
+		const { threshold = 0.9, maxItems = 10, othersName = "其他" } = cleanData;
 		const forumTotalMap = new Map<string, number>();
 		for (const link of links) {
 			forumTotalMap.set(

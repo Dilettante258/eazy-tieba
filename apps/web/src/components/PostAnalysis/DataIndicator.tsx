@@ -79,9 +79,7 @@ export function DataIndicator({
 							? "加载更多"
 							: "已加载全部"}
 				</Button>
-				<FormControl.Caption>
-					加载更多页数据以扩大分析范围
-				</FormControl.Caption>
+				<FormControl.Caption>加载更多页数据以扩大分析范围</FormControl.Caption>
 			</FormControl>
 		</div>
 	);

@@ -56,7 +56,8 @@ export function Carousel() {
 					ref.current?.scrollBy({
 						left: -(ref.current?.clientWidth ?? 0),
 						behavior: "smooth",
-					})}
+					})
+				}
 			>
 				‹
 			</button>
@@ -85,7 +86,8 @@ export function Carousel() {
 					ref.current?.scrollBy({
 						left: ref.current?.clientWidth ?? 0,
 						behavior: "smooth",
-					})}
+					})
+				}
 			>
 				›
 			</button>

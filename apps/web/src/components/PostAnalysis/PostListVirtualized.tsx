@@ -1,4 +1,10 @@
-import { useRef, useMemo, useDeferredValue, useEffect, useCallback } from "react";
+import {
+	useRef,
+	useMemo,
+	useDeferredValue,
+	useEffect,
+	useCallback,
+} from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Label } from "@primer/react";
 import { LinkExternalIcon } from "@primer/octicons-react";
@@ -47,7 +53,11 @@ export function PostListVirtualized({ data, search, asc }: PostListProps) {
 
 	// 搜索词变化或可见项变化时重新高亮
 	const runHighlight = useCallback(() => {
-		applyHighlight("search-highlight", parentRef.current, deferredSearch ? [deferredSearch] : []);
+		applyHighlight(
+			"search-highlight",
+			parentRef.current,
+			deferredSearch ? [deferredSearch] : [],
+		);
 	}, [deferredSearch]);
 
 	// 渲染后高亮 + 清理
@@ -82,9 +92,7 @@ export function PostListVirtualized({ data, search, asc }: PostListProps) {
 						<div
 							key={virtualRow.index}
 							className={
-								virtualRow.index % 2
-									? styles.listItemOdd
-									: styles.listItemEven
+								virtualRow.index % 2 ? styles.listItemOdd : styles.listItemEven
 							}
 							style={{
 								position: "absolute",
@@ -120,10 +128,7 @@ export function PostListVirtualized({ data, search, asc }: PostListProps) {
 								{post.replyTo && (
 									<>
 										回复
-										<span className={styles.replyTarget}>
-											{post.replyTo}
-										</span>
-										：
+										<span className={styles.replyTarget}>{post.replyTo}</span>：
 									</>
 								)}
 								{post.content}

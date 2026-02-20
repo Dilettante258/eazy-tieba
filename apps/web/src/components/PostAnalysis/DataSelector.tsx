@@ -110,7 +110,9 @@ export function DataSelector({
 					selected={selectedYearItem}
 					onSelectedChange={(selected: SelectPanelItemInput | undefined) => {
 						if (!selected) return;
-						setSelectedYear(selected.id === "ALL" ? "ALL" : Number(selected.id));
+						setSelectedYear(
+							selected.id === "ALL" ? "ALL" : Number(selected.id),
+						);
 						setYearOpen(false);
 					}}
 					onFilterChange={(value) => setYearFilter(value)}

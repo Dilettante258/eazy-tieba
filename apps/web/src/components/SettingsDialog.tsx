@@ -283,9 +283,7 @@ function HighlightedForumsSection() {
 	return (
 		<section className={styles.section}>
 			<h4 className={styles.sectionTitle}>标记贴吧</h4>
-			<p className={styles.sectionDesc}>
-				标记的贴吧在用户帖子列表中会高亮显示
-			</p>
+			<p className={styles.sectionDesc}>标记的贴吧在用户帖子列表中会高亮显示</p>
 			<div className={styles.addRow}>
 				<TextInput
 					size="small"
@@ -305,10 +303,7 @@ function HighlightedForumsSection() {
 			{highlightedForums.length === 0 ? (
 				<p className={styles.emptyHint}>暂无标记贴吧</p>
 			) : (
-				<ul
-					className={styles.tagList}
-					style={{ opacity: isPending ? 0.6 : 1 }}
-				>
+				<ul className={styles.tagList} style={{ opacity: isPending ? 0.6 : 1 }}>
 					{highlightedForums.map(({ name, color }) => (
 						<li key={name} className={styles.tag}>
 							<ColorDot color={color} />
@@ -378,10 +373,7 @@ function HighlightedUsersSection() {
 			{highlightedUsers.length === 0 ? (
 				<p className={styles.emptyHint}>暂无标记用户</p>
 			) : (
-				<ul
-					className={styles.tagList}
-					style={{ opacity: isPending ? 0.6 : 1 }}
-				>
+				<ul className={styles.tagList} style={{ opacity: isPending ? 0.6 : 1 }}>
 					{highlightedUsers.map(({ name, color }) => (
 						<li key={name} className={styles.tag}>
 							<ColorDot color={color} />
@@ -411,7 +403,8 @@ function HighlightedKeywordsSection() {
 		(s) => s.removeHighlightedKeyword,
 	);
 	const [input, setInput] = useState("");
-	const [selectedColor, setSelectedColor] = useState<HighlightColor>("attention");
+	const [selectedColor, setSelectedColor] =
+		useState<HighlightColor>("attention");
 	const [isPending, startTransition] = useTransition();
 
 	const handleAdd = useCallback(() => {
@@ -445,7 +438,11 @@ function HighlightedKeywordsSection() {
 					}}
 					className={styles.addInput}
 				/>
-				<ColorPickerMenu selected={selectedColor} onChange={setSelectedColor} side="outside-top" />
+				<ColorPickerMenu
+					selected={selectedColor}
+					onChange={setSelectedColor}
+					side="outside-top"
+				/>
 				<Button size="small" onClick={handleAdd}>
 					添加
 				</Button>
@@ -453,10 +450,7 @@ function HighlightedKeywordsSection() {
 			{highlightedKeywords.length === 0 ? (
 				<p className={styles.emptyHint}>暂无高亮关键词</p>
 			) : (
-				<ul
-					className={styles.tagList}
-					style={{ opacity: isPending ? 0.6 : 1 }}
-				>
+				<ul className={styles.tagList} style={{ opacity: isPending ? 0.6 : 1 }}>
 					{highlightedKeywords.map(({ keyword, color }) => (
 						<li key={keyword} className={styles.tag}>
 							<ColorDot color={color} />
@@ -759,9 +753,7 @@ function ForumAnalysisSettings() {
 // ── 全局设置 ──
 
 function ImageConcurrencySection() {
-	const maxImageConcurrency = useSettingsStore(
-		(s) => s.maxImageConcurrency,
-	);
+	const maxImageConcurrency = useSettingsStore((s) => s.maxImageConcurrency);
 	const setMaxImageConcurrency = useSettingsStore(
 		(s) => s.setMaxImageConcurrency,
 	);
@@ -779,15 +771,11 @@ function ImageConcurrencySection() {
 					min={1}
 					max={100}
 					value={String(maxImageConcurrency)}
-					onChange={(e) =>
-						setMaxImageConcurrency(Number(e.target.value) || 20)
-					}
+					onChange={(e) => setMaxImageConcurrency(Number(e.target.value) || 20)}
 					className={styles.addInput}
 					aria-label="最大并发数"
 				/>
-				<Text className={styles.cacheLabel}>
-					（默认 20，范围 1–100）
-				</Text>
+				<Text className={styles.cacheLabel}>（默认 20，范围 1–100）</Text>
 			</div>
 		</section>
 	);

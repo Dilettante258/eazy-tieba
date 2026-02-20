@@ -36,9 +36,7 @@ function FollowPage() {
 				<Banner
 					variant="critical"
 					title="查询失败"
-					description={
-						error instanceof Error ? error.message : String(error)
-					}
+					description={error instanceof Error ? error.message : String(error)}
 				/>
 			)}
 
@@ -84,35 +82,23 @@ function FollowPage() {
 									)}
 									<div className={styles.userCardBody}>
 										<div className={styles.userCardNameRow}>
-											<span
-												className={
-													styles.userCardName
-												}
-											>
+											<span className={styles.userCardName}>
 												{user.name_show || user.name}
 											</span>
 											<LinkExternalIcon
 												size={12}
-												className={
-													styles.userCardExtIcon
-												}
+												className={styles.userCardExtIcon}
 											/>
 										</div>
 										{user.name &&
 											user.name_show &&
 											user.name !== user.name_show && (
-												<span
-													className={
-														styles.userCardUsername
-													}
-												>
+												<span className={styles.userCardUsername}>
 													@{user.name}
 												</span>
 											)}
 										{user.intro && (
-											<p className={styles.userCardIntro}>
-												{user.intro}
-											</p>
+											<p className={styles.userCardIntro}>{user.intro}</p>
 										)}
 									</div>
 								</a>

@@ -80,16 +80,18 @@ function UserTagList({
 					<li
 						key={`${tag.type}-${tag.value}`}
 						className={`${styles.userCard} ${isError ? styles.userCardError : ""}`}
-						title={isError ? (error instanceof Error ? error.message : "查询失败") : undefined}
+						title={
+							isError
+								? error instanceof Error
+									? error.message
+									: "查询失败"
+								: undefined
+						}
 					>
 						{isLoading ? (
 							<Spinner size="small" />
 						) : avatar ? (
-							<img
-								src={avatar}
-								alt=""
-								className={styles.userAvatar}
-							/>
+							<img src={avatar} alt="" className={styles.userAvatar} />
 						) : (
 							<div className={styles.userAvatarPlaceholder} />
 						)}
@@ -97,9 +99,15 @@ function UserTagList({
 							<span className={styles.userCardName}>
 								{displayName || tag.value}
 							</span>
-							<span className={isError ? styles.userCardError_text : styles.userCardId}>
+							<span
+								className={
+									isError ? styles.userCardError_text : styles.userCardId
+								}
+							>
 								{isError
-									? (error instanceof Error ? error.message : "查询失败")
+									? error instanceof Error
+										? error.message
+										: "查询失败"
 									: `${USER_TYPE_LABELS[tag.type]}: ${tag.value}`}
 							</span>
 						</div>
@@ -555,22 +563,32 @@ function PostSearchPage() {
 					<h3 className={styles.guideTitle}>使用说明</h3>
 					<dl className={styles.guideList}>
 						<dt>基本流程</dt>
-						<dd>输入贴吧名称，添加筛选用户或关键词条件，点击开始搜索。程序会批量抓取该吧帖子并逐帖过滤匹配内容。</dd>
+						<dd>
+							输入贴吧名称，添加筛选用户或关键词条件，点击开始搜索。程序会批量抓取该吧帖子并逐帖过滤匹配内容。
+						</dd>
 						<dt>筛选用户</dt>
 						<dd>
 							选择用户标识类型后输入对应值，点击「加入」添加。支持三种标识：
 							<strong>UID</strong>（贴吧用户 ID）、
-							<strong>用户名</strong>、
-							<strong>ID</strong>（百度用户 portrait）。可同时添加多个用户。
+							<strong>用户名</strong>、<strong>ID</strong>（百度用户
+							portrait）。可同时添加多个用户。
 						</dd>
 						<dt>筛选关键词</dt>
-						<dd>输入关键词后点击「加入」，匹配帖子标题和回复正文内容。支持添加多个关键词，结果中会高亮显示。</dd>
+						<dd>
+							输入关键词后点击「加入」，匹配帖子标题和回复正文内容。支持添加多个关键词，结果中会高亮显示。
+						</dd>
 						<dt>匹配逻辑</dt>
-						<dd>用户条件与关键词条件之间为<strong>或（OR）</strong>关系——命中任一条件的发言都会被返回。</dd>
+						<dd>
+							用户条件与关键词条件之间为<strong>或（OR）</strong>
+							关系——命中任一条件的发言都会被返回。
+						</dd>
 						<dt>扫描帖数</dt>
 						<dd>指定要扫描的帖子数量，最多 300 个。数量越多耗时越长。</dd>
 						<dt>抓取深度</dt>
-						<dd>「仅首页」只看每个帖子的第一页回复；「全部」会抓取最多 10 页回复，覆盖更全但速度较慢。</dd>
+						<dd>
+							「仅首页」只看每个帖子的第一页回复；「全部」会抓取最多 10
+							页回复，覆盖更全但速度较慢。
+						</dd>
 					</dl>
 				</aside>
 			</div>

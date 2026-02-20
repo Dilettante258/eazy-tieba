@@ -24,8 +24,7 @@ type MethodValue = (typeof METHODS)[number]["value"];
 function validate(method: MethodValue, value: string): string | null {
 	const v = value.trim();
 	if (!v) return null;
-	if (method === "uid" && !/^\d{10}$/.test(v))
-		return "贴吧 UID 应为 10 位数字";
+	if (method === "uid" && !/^\d{10}$/.test(v)) return "贴吧 UID 应为 10 位数字";
 	if (method === "id" && !/^\d+$/.test(v)) return "用户 ID 应为纯数字";
 	return null;
 }
@@ -74,9 +73,9 @@ export function QueryForm() {
 						<SegmentedControl
 							aria-label="查询方式"
 							onChange={(index) => {
-							setMethod(METHODS[index].value);
-							setError(null);
-						}}
+								setMethod(METHODS[index].value);
+								setError(null);
+							}}
 						>
 							{METHODS.map((m) => (
 								<SegmentedControl.Button
@@ -100,9 +99,9 @@ export function QueryForm() {
 								<TextInput
 									value={value}
 									onChange={(e) => {
-									setValue(e.target.value);
-									if (error) setError(null);
-								}}
+										setValue(e.target.value);
+										if (error) setError(null);
+									}}
 									placeholder={
 										method === "uid"
 											? "请输入贴吧 UID"
@@ -130,11 +129,7 @@ export function QueryForm() {
 									</FormControl.Validation>
 								)}
 							</FormControl>
-							<Button
-								type="submit"
-								variant="primary"
-								disabled={!value.trim()}
-							>
+							<Button type="submit" variant="primary" disabled={!value.trim()}>
 								查询
 							</Button>
 						</div>

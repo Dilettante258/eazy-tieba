@@ -44,10 +44,7 @@ export function applyHighlight(
 	if (validTerms.length === 0) return;
 
 	const highlight = new Highlight();
-	const walker = document.createTreeWalker(
-		container,
-		NodeFilter.SHOW_TEXT,
-	);
+	const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
 	let node: Text | null;
 	while ((node = walker.nextNode() as Text | null)) {
 		const text = node.textContent ?? "";
@@ -96,10 +93,7 @@ export function applyColoredHighlights(
 
 	// 遍历一次 DOM 树，收集各颜色的 Range
 	const highlights = new Map<HighlightColor, Highlight>();
-	const walker = document.createTreeWalker(
-		container,
-		NodeFilter.SHOW_TEXT,
-	);
+	const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
 	let node: Text | null;
 	while ((node = walker.nextNode() as Text | null)) {
 		const text = node.textContent ?? "";
@@ -110,8 +104,7 @@ export function applyColoredHighlights(
 					const range = new Range();
 					range.setStart(node, idx);
 					range.setEnd(node, idx + term.length);
-					if (!highlights.has(color))
-						highlights.set(color, new Highlight());
+					if (!highlights.has(color)) highlights.set(color, new Highlight());
 					highlights.get(color)!.add(range);
 					idx = text.indexOf(term, idx + term.length);
 				}

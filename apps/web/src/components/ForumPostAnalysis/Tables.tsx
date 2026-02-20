@@ -310,9 +310,7 @@ export function HotUsersTable({ data }: HotUsersTableProps) {
 	return (
 		<div className={styles.chartModule}>
 			<h3 className={styles.chartTitle}>热门吧友</h3>
-			<p className={styles.chartDescription}>
-				综合发帖、回复、点赞的用户排名
-			</p>
+			<p className={styles.chartDescription}>综合发帖、回复、点赞的用户排名</p>
 			{data.length === 0 ? (
 				<p className={styles.chartDescription}>暂无数据</p>
 			) : (

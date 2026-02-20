@@ -64,15 +64,34 @@
 }
 
 /* eztb 贴吧 工具箱 <br> 为 更 方便 调查 成分 而生 */
-.textContainer span:nth-child(1) { animation-delay: 0s; margin-right: 0.4rem; }
-.textContainer span:nth-child(2) { animation-delay: 0.1s; }
-.textContainer span:nth-child(3) { animation-delay: 0.2s; }
-.textContainer span:nth-child(5) { animation-delay: 0.3s; }
-.textContainer span:nth-child(6) { animation-delay: 0.35s; }
-.textContainer span:nth-child(7) { animation-delay: 0.4s; }
-.textContainer span:nth-child(8) { animation-delay: 0.45s; }
-.textContainer span:nth-child(9) { animation-delay: 0.5s; }
-.textContainer span:nth-child(10) { animation-delay: 0.55s; }
+.textContainer span:nth-child(1) {
+	animation-delay: 0s;
+	margin-right: 0.4rem;
+}
+.textContainer span:nth-child(2) {
+	animation-delay: 0.1s;
+}
+.textContainer span:nth-child(3) {
+	animation-delay: 0.2s;
+}
+.textContainer span:nth-child(5) {
+	animation-delay: 0.3s;
+}
+.textContainer span:nth-child(6) {
+	animation-delay: 0.35s;
+}
+.textContainer span:nth-child(7) {
+	animation-delay: 0.4s;
+}
+.textContainer span:nth-child(8) {
+	animation-delay: 0.45s;
+}
+.textContainer span:nth-child(9) {
+	animation-delay: 0.5s;
+}
+.textContainer span:nth-child(10) {
+	animation-delay: 0.55s;
+}
 
 .description {
 	color: rgba(255, 255, 255, 0.8);

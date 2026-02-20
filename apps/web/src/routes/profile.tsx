@@ -211,7 +211,9 @@ function ProfilePage() {
 											<span>回复 {p.replyNum}</span>
 											{p.agreeNum > 0 && <span>赞 {p.agreeNum}</span>}
 											<span>
-												{new Date(p.createTime * 1000).toLocaleDateString("zh-CN")}
+												{new Date(p.createTime * 1000).toLocaleDateString(
+													"zh-CN",
+												)}
 											</span>
 										</span>
 									</a>
@@ -253,7 +255,8 @@ function StatItem({
 	label: string;
 	value: string | number | undefined | null;
 }) {
-	if (value == null || value === "" || value === 0 || value === "0") return null;
+	if (value == null || value === "" || value === 0 || value === "0")
+		return null;
 	return (
 		<div className={styles.statItem}>
 			<p className={styles.statValue}>{String(value)}</p>

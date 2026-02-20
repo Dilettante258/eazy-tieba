@@ -1,53 +1,53 @@
 import {
-  ZapIcon,
-  SearchIcon,
-  ToolsIcon,
-  PeopleIcon,
-  ListUnorderedIcon,
-  PersonAddIcon,
-  MentionIcon,
-  OrganizationIcon,
-  IdBadgeIcon,
-  GraphIcon,
-  DownloadIcon,
+	ZapIcon,
+	SearchIcon,
+	ToolsIcon,
+	PeopleIcon,
+	ListUnorderedIcon,
+	PersonAddIcon,
+	MentionIcon,
+	OrganizationIcon,
+	IdBadgeIcon,
+	GraphIcon,
+	DownloadIcon,
 } from "@primer/octicons-react";
 import { Link } from "@tanstack/react-router";
 import styles from "./ServiceList.module.css";
 
 function DotsBg({ fill, id }: { fill: string; id: string }) {
-  return (
-    <svg
-      className={styles.dotsBg}
-      style={{ fill }}
-      width="100%"
-      height="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <pattern
-          id={id}
-          patternUnits="userSpaceOnUse"
-          width="60"
-          height="60"
-          patternTransform="scale(0.4) rotate(0)"
-        >
-          <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
-          <path
-            d="M 4.95 2.7 a 2.25 2.25 90 0 1 -2.25 2.25 a 2.25 2.25 90 0 1 -2.25 -2.25 a 2.25 2.25 90 0 1 2.25 -2.25 a 2.25 2.25 90 0 1 2.25 2.25"
-            strokeWidth="1"
-            stroke="none"
-            fill="inherit"
-          />
-        </pattern>
-      </defs>
-      <rect
-        width="800%"
-        height="400%"
-        transform="translate(15,20)"
-        fill={`url(#${id})`}
-      />
-    </svg>
-  );
+	return (
+		<svg
+			className={styles.dotsBg}
+			style={{ fill }}
+			width="100%"
+			height="100%"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<defs>
+				<pattern
+					id={id}
+					patternUnits="userSpaceOnUse"
+					width="60"
+					height="60"
+					patternTransform="scale(0.4) rotate(0)"
+				>
+					<rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+					<path
+						d="M 4.95 2.7 a 2.25 2.25 90 0 1 -2.25 2.25 a 2.25 2.25 90 0 1 -2.25 -2.25 a 2.25 2.25 90 0 1 2.25 -2.25 a 2.25 2.25 90 0 1 2.25 2.25"
+						strokeWidth="1"
+						stroke="none"
+						fill="inherit"
+					/>
+				</pattern>
+			</defs>
+			<rect
+				width="800%"
+				height="400%"
+				transform="translate(15,20)"
+				fill={`url(#${id})`}
+			/>
+		</svg>
+	);
 }
 
 // ── 统计区域 ──
@@ -75,25 +75,25 @@ const STATS = [
 ];
 
 function StatsSection() {
-  return (
-    <div className={styles.statsSection}>
-      <DotsBg fill="#CDCED6" id="dots-stats" />
-      <div className={styles.content}>
-        <h2 className={styles.sectionTitle}>一个饱受欢迎的工具箱</h2>
-        <div className={styles.statsGrid}>
-          {STATS.map((s) => (
-            <div key={s.label} className={styles.statItem}>
-              <div className={styles.statIcon}>
-                <s.icon size={28} fill={s.color} />
-              </div>
-              <div className={styles.statValue}>{s.value}</div>
-              <div className={styles.statLabel}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className={styles.statsSection}>
+			<DotsBg fill="#CDCED6" id="dots-stats" />
+			<div className={styles.content}>
+				<h2 className={styles.sectionTitle}>一个饱受欢迎的工具箱</h2>
+				<div className={styles.statsGrid}>
+					{STATS.map((s) => (
+						<div key={s.label} className={styles.statItem}>
+							<div className={styles.statIcon}>
+								<s.icon size={28} fill={s.color} />
+							</div>
+							<div className={styles.statValue}>{s.value}</div>
+							<div className={styles.statLabel}>{s.label}</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
 }
 
 // ── 工具列表区域 ──
@@ -156,26 +156,31 @@ const TOOLS = [
 ];
 
 function ToolsSection() {
-  return (
-    <div className={styles.toolsSection}>
-      <DotsBg fill="#5A6169" id="dots-tools" />
-      <div className={styles.content}>
-        <h2 className={styles.toolsSectionTitle}>功能列表</h2>
-        <div className={styles.toolsGrid}>
-          {TOOLS.map((t) => (
-            <Link key={t.title} className={styles.toolItem} to={t.href} viewTransition={{ types: ["slide-left"] }}>
-              <t.icon size={128} className={styles.toolBgIcon} />
-              <div className={styles.toolItemContent}>
-                <t.icon size={32} className={styles.toolIcon} />
-                <h3>{t.title}</h3>
-                <p>{t.description}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className={styles.toolsSection}>
+			<DotsBg fill="#5A6169" id="dots-tools" />
+			<div className={styles.content}>
+				<h2 className={styles.toolsSectionTitle}>功能列表</h2>
+				<div className={styles.toolsGrid}>
+					{TOOLS.map((t) => (
+						<Link
+							key={t.title}
+							className={styles.toolItem}
+							to={t.href}
+							viewTransition={{ types: ["slide-left"] }}
+						>
+							<t.icon size={128} className={styles.toolBgIcon} />
+							<div className={styles.toolItemContent}>
+								<t.icon size={32} className={styles.toolIcon} />
+								<h3>{t.title}</h3>
+								<p>{t.description}</p>
+							</div>
+						</Link>
+					))}
+				</div>
+			</div>
+		</div>
+	);
 }
 
 // ── 页脚 ──
@@ -193,61 +198,70 @@ const FOOTER_NAV = [
 ] as const;
 
 function FooterSection() {
-  return (
-    <footer className={styles.footer}>
-      <div className={styles.footerInner}>
-        <div className={styles.footerTop}>
-          <div className={styles.footerBrand}>
-            <span className={styles.footerLogo}>
-              <span className={styles.footerLogoAccent}>ez</span>tb
-            </span>
-            <p className={styles.footerDesc}>
-              开源的百度贴吧工具箱，为更方便调查成分而生。
-            </p>
-          </div>
+	return (
+		<footer className={styles.footer}>
+			<div className={styles.footerInner}>
+				<div className={styles.footerTop}>
+					<div className={styles.footerBrand}>
+						<span className={styles.footerLogo}>
+							<span className={styles.footerLogoAccent}>ez</span>tb
+						</span>
+						<p className={styles.footerDesc}>
+							开源的百度贴吧工具箱，为更方便调查成分而生。
+						</p>
+					</div>
 
-          <div className={styles.footerLinks}>
-            <div className={styles.footerCol}>
-              <h4 className={styles.footerColTitle}>功能</h4>
-              {FOOTER_NAV.map((item) => (
-                <Link key={item.to} className={styles.footerLink} to={item.to} viewTransition={{ types: ["slide-left"] }}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <div className={styles.footerCol}>
-              <h4 className={styles.footerColTitle}>资源</h4>
-              <a
-                className={styles.footerLink}
-                href="https://github.com/Dilettante258/tieba-toolbox"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>
-              <Link className={styles.footerLink} to="/about" viewTransition={{ types: ["slide-left"] }}>
-                关于
-              </Link>
-            </div>
-          </div>
-        </div>
+					<div className={styles.footerLinks}>
+						<div className={styles.footerCol}>
+							<h4 className={styles.footerColTitle}>功能</h4>
+							{FOOTER_NAV.map((item) => (
+								<Link
+									key={item.to}
+									className={styles.footerLink}
+									to={item.to}
+									viewTransition={{ types: ["slide-left"] }}
+								>
+									{item.label}
+								</Link>
+							))}
+						</div>
+						<div className={styles.footerCol}>
+							<h4 className={styles.footerColTitle}>资源</h4>
+							<a
+								className={styles.footerLink}
+								href="https://github.com/Dilettante258/tieba-toolbox"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								GitHub
+							</a>
+							<Link
+								className={styles.footerLink}
+								to="/about"
+								viewTransition={{ types: ["slide-left"] }}
+							>
+								关于
+							</Link>
+						</div>
+					</div>
+				</div>
 
-        <div className={styles.footerBottom}>
-          <span>© 2024–2026 eztb</span>
-          <span className={styles.footerDot}>·</span>
-          <span>Powered by React + Hono</span>
-        </div>
-      </div>
-    </footer>
-  );
+				<div className={styles.footerBottom}>
+					<span>© 2024–2026 eztb</span>
+					<span className={styles.footerDot}>·</span>
+					<span>Powered by React + Hono</span>
+				</div>
+			</div>
+		</footer>
+	);
 }
 
 export function ServiceList() {
-  return (
-    <div className={styles.container}>
-      <StatsSection />
-      <ToolsSection />
-      <FooterSection />
-    </div>
-  );
+	return (
+		<div className={styles.container}>
+			<StatsSection />
+			<ToolsSection />
+			<FooterSection />
+		</div>
+	);
 }

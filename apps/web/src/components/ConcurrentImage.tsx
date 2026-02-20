@@ -79,9 +79,7 @@ export function ConcurrentImage({
 			height={height}
 			style={{
 				...style,
-				...(activeSrc
-					? {}
-					: { background: "var(--bgColor-muted, #f6f8fa)" }),
+				...(activeSrc ? {} : { background: "var(--bgColor-muted, #f6f8fa)" }),
 			}}
 			onLoad={(e) => {
 				handleComplete();

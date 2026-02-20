@@ -34,12 +34,21 @@ const NAV_ITEMS = [
 ] as const;
 
 // 根据导航栏顺序判断滑动方向
-const NAV_ORDER = new Map<string, number>(NAV_ITEMS.map((item, i) => [item.to, i]));
+const NAV_ORDER = new Map<string, number>(
+	NAV_ITEMS.map((item, i) => [item.to, i]),
+);
 
 const viewTransitionSlide = {
-	types: ({ fromLocation, toLocation }: { fromLocation?: { pathname: string }; toLocation: { pathname: string } }) => {
+	types: ({
+		fromLocation,
+		toLocation,
+	}: {
+		fromLocation?: { pathname: string };
+		toLocation: { pathname: string };
+	}) => {
 		// 涉及首页时跳过动画
-		if (fromLocation?.pathname === "/" || toLocation.pathname === "/") return false;
+		if (fromLocation?.pathname === "/" || toLocation.pathname === "/")
+			return false;
 		const from = NAV_ORDER.get(fromLocation?.pathname ?? "/") ?? -1;
 		const to = NAV_ORDER.get(toLocation.pathname) ?? -1;
 		return to >= from ? ["slide-left"] : ["slide-right"];
@@ -101,11 +110,12 @@ function RootLayout() {
 	return (
 		<>
 			<SettingsDialog />
-			<nav
-				className={styles.navbar}
-				data-transparent={isHome || undefined}
-			>
-				<Link className={styles.logo} to="/" viewTransition={viewTransitionSlide}>
+			<nav className={styles.navbar} data-transparent={isHome || undefined}>
+				<Link
+					className={styles.logo}
+					to="/"
+					viewTransition={viewTransitionSlide}
+				>
 					<span className={styles.logoAccent}>ez</span>tb
 				</Link>
 

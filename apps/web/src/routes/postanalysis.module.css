@@ -1,95 +1,95 @@
 /* ── 发帖分析页面布局 ── */
 
 .heading {
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-align: center;
-  margin: 0.5rem 0 1.25rem;
-  color: var(--fgColor-default, #1f2328);
+	font-size: 1.25rem;
+	font-weight: 600;
+	text-align: center;
+	margin: 0.5rem 0 1.25rem;
+	color: var(--fgColor-default, #1f2328);
 }
 
 .center {
-  display: flex;
-  justify-content: center;
-  padding: 3rem 0;
+	display: flex;
+	justify-content: center;
+	padding: 3rem 0;
 }
 
 /* 顶部区域：热力图 + 数据控制器 */
 .calendarRow {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	align-items: flex-start;
+	margin-bottom: 1rem;
 }
 
 .calendarRow > div:first-child {
-  min-width: 0;
-  overflow-x: auto;
+	min-width: 0;
+	overflow-x: auto;
 	max-width: 1050px;
 	flex-shrink: 0;
 }
 
 .calendarRow > div:last-child {
-  flex: 1 1 auto;
+	flex: 1 1 auto;
 }
 
 @media (max-width: 768px) {
-  .calendarRow {
-    flex-wrap: wrap;
-  }
+	.calendarRow {
+		flex-wrap: wrap;
+	}
 
-  .calendarRow > div:last-child {
-    width: 100%;
-    max-width: 100%;
-  }
+	.calendarRow > div:last-child {
+		width: 100%;
+		max-width: 100%;
+	}
 }
 
 /* 帖子列表区域 */
 .listSection {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .listHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
 }
 
 .listHeaderInfo {
-  flex: 1;
+	flex: 1;
 }
 
 .listControls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 /* Module 标题 + 操作按钮 */
 .moduleHeader {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
 }
 
 .moduleHeader > div:first-child {
-  flex: 1;
-  min-width: 0;
+	flex: 1;
+	min-width: 0;
 }
 
 /* 图表区域：两列网格 */
 .chartRow {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+	margin-top: 1rem;
 }
 
 @media (max-width: 768px) {
-  .chartRow {
-    grid-template-columns: 1fr;
-  }
+	.chartRow {
+		grid-template-columns: 1fr;
+	}
 }

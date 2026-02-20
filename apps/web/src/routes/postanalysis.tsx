@@ -1,11 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodSearchValidator } from "@tanstack/router-zod-adapter";
-import {
-	Banner,
-	Button,
-	Spinner,
-	TextInput,
-} from "@primer/react";
+import { Banner, Button, Spinner, TextInput } from "@primer/react";
 import { Blankslate } from "@primer/react/experimental";
 import {
 	GraphIcon,
@@ -17,10 +12,7 @@ import { useMemo, useState, useCallback, useRef } from "react";
 import { QueryForm } from "../components/QueryForm.tsx";
 import { usePostsBatchInfinite } from "../hooks/queries.ts";
 import { userSearchSchema } from "../lib/search-schemas.ts";
-import {
-	UserPostClass,
-	type UserPost,
-} from "../lib/user-post.ts";
+import { UserPostClass, type UserPost } from "../lib/user-post.ts";
 import { useUPSelectorStore } from "../lib/store.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
 import { useVChartThemeSync } from "../lib/vchart-theme.ts";
@@ -73,11 +65,7 @@ function PostListModule({ data, listDescription }: PostListModuleProps) {
 						onClick={() => setAsc(!asc)}
 						aria-label="切换排序"
 					>
-						{asc ? (
-							<SortAscIcon size={16} />
-						) : (
-							<SortDescIcon size={16} />
-						)}
+						{asc ? <SortAscIcon size={16} /> : <SortDescIcon size={16} />}
 					</Button>
 				</div>
 			</div>
@@ -248,11 +236,7 @@ function WordCloudModule({ data, yearRangeStr }: WordCloudModuleProps) {
 				</div>
 				<ChartActionBar chartRef={chartRef} name="高频词云" />
 			</div>
-			<WordCloudChart
-				ref={chartRef}
-				data={data}
-				style={{ height: "300px" }}
-			/>
+			<WordCloudChart ref={chartRef} data={data} style={{ height: "300px" }} />
 		</Module>
 	);
 }
@@ -390,11 +374,9 @@ function PostAnalysisPage() {
 	// 热力图点击事件
 	const calendarEventHandlers = useMemo(
 		() => ({
-			onClick:
-				() =>
-				(activity: { date: string }) => {
-					setSelectedDate(activity.date);
-				},
+			onClick: () => (activity: { date: string }) => {
+				setSelectedDate(activity.date);
+			},
 		}),
 		[setSelectedDate],
 	);
@@ -426,8 +408,7 @@ function PostAnalysisPage() {
 		const last = lastPage[lastPage.length - 1];
 		const first = lastPage[0];
 		if (!last?.createTime || !first?.createTime) return "";
-		const fmt = (ts: number) =>
-			new Date(ts * 1000).toLocaleDateString("zh-CN");
+		const fmt = (ts: number) => new Date(ts * 1000).toLocaleDateString("zh-CN");
 		return `${fmt(last.createTime)}到${fmt(first.createTime)}`;
 	}, [data]);
 
@@ -448,9 +429,7 @@ function PostAnalysisPage() {
 				<Banner
 					variant="critical"
 					title="查询失败"
-					description={
-						error instanceof Error ? error.message : String(error)
-					}
+					description={error instanceof Error ? error.message : String(error)}
 				/>
 			)}
 
@@ -473,9 +452,7 @@ function PostAnalysisPage() {
 						{panels.heatmap && (
 							<Module>
 								<Module.Title>发帖热力图</Module.Title>
-								<Module.Description>
-									{yearRangeStr}
-								</Module.Description>
+								<Module.Description>{yearRangeStr}</Module.Description>
 								<PostActivityCalendar
 									data={up.postList2HeatMap(year)}
 									eventHandlers={calendarEventHandlers}
@@ -485,9 +462,7 @@ function PostAnalysisPage() {
 						<Module>
 							<Module.Title>数据控制器</Module.Title>
 							<DataIndicator
-								pageParams={
-									(data?.pageParams as Array<[number, number]>) ?? []
-								}
+								pageParams={(data?.pageParams as Array<[number, number]>) ?? []}
 								totalCount={allPosts.length}
 								lastBatchCount={data?.pages.at(-1)?.length ?? 0}
 								lastBatchTimeRange={lastBatchTimeRange}

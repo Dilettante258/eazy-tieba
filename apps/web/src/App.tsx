@@ -5,25 +5,25 @@ import { ColorModeProvider, useColorMode } from "./lib/color-mode.tsx";
 import { routeTree } from "./routeTree.gen.ts";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000,
-      retry: 1,
-    },
-  },
+	defaultOptions: {
+		queries: {
+			staleTime: 60 * 1000,
+			retry: 1,
+		},
+	},
 });
 
 const router = createRouter({
-  routeTree,
-  context: { queryClient },
-  defaultPreload: "intent",
-  defaultPreloadStaleTime: 0,
+	routeTree,
+	context: { queryClient },
+	defaultPreload: "intent",
+	defaultPreloadStaleTime: 0,
 });
 
 declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
+	interface Register {
+		router: typeof router;
+	}
 }
 
 /**
@@ -33,23 +33,23 @@ declare module "@tanstack/react-router" {
  * 自定义 CSS 的 [data-color-mode="dark"] 选择器才能正确命中。
  */
 function AppShell() {
-  const { colorMode } = useColorMode();
+	const { colorMode } = useColorMode();
 
-  return (
-    <ThemeProvider colorMode={colorMode}>
-      <BaseStyles>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </BaseStyles>
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider colorMode={colorMode}>
+			<BaseStyles>
+				<QueryClientProvider client={queryClient}>
+					<RouterProvider router={router} />
+				</QueryClientProvider>
+			</BaseStyles>
+		</ThemeProvider>
+	);
 }
 
 export function App() {
-  return (
-    <ColorModeProvider>
-      <AppShell />
-    </ColorModeProvider>
-  );
+	return (
+		<ColorModeProvider>
+			<AppShell />
+		</ColorModeProvider>
+	);
 }

@@ -18,10 +18,8 @@ export const useUPSelectorStore = create<UPSelectorStore>((set) => ({
 	selectedDate: "",
 	selectedYear: new Date().getFullYear(),
 	selectedForums: [],
-	setSelectedDate: (value) =>
-		set({ selectedDate: value, lastChange: "date" }),
-	setSelectedYear: (value) =>
-		set({ selectedYear: value, lastChange: "year" }),
+	setSelectedDate: (value) => set({ selectedDate: value, lastChange: "date" }),
+	setSelectedYear: (value) => set({ selectedYear: value, lastChange: "year" }),
 	setSelectedForums: (value) =>
 		set((state) => ({
 			...state,

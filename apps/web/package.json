@@ -26,7 +26,7 @@
 		"react": "^19.3.0-canary-47d1ad14-20260216",
 		"react-activity-calendar": "^2",
 		"react-dom": "^19.3.0-canary-47d1ad14-20260216",
-		"zod": "^3",
+		"zod": "^4",
 		"zustand": "^5"
 	},
 	"devDependencies": {

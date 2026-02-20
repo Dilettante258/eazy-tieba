@@ -216,7 +216,12 @@ function ChartModule({
 function IpDescription({
 	data,
 }: {
-	data: Array<{ name: string; value: number; topUsers: string[]; userCount: number }>;
+	data: Array<{
+		name: string;
+		value: number;
+		topUsers: string[];
+		userCount: number;
+	}>;
 }) {
 	const [open, setOpen] = useState(false);
 	const { overseas, total } = useMemo(() => {
@@ -288,14 +293,15 @@ function TimeScatterModule({
 
 	const resolvedGranularity = useMemo<ResolvedTimeGranularity>(
 		() =>
-			granularity === "auto"
-				? resolveAutoGranularity(data.mode)
-				: granularity,
+			granularity === "auto" ? resolveAutoGranularity(data.mode) : granularity,
 		[granularity, data.mode],
 	);
 
 	const chartData = useMemo(() => {
-		const grouped = new Map<string, { time: number; type: string; value: number }>();
+		const grouped = new Map<
+			string,
+			{ time: number; type: string; value: number }
+		>();
 		for (const point of data.data) {
 			const bucketedTime = bucketTime(point.time, resolvedGranularity);
 			const delta = Math.max(Math.abs(point.value), 1);
@@ -317,8 +323,7 @@ function TimeScatterModule({
 		);
 	}, [data.data, resolvedGranularity]);
 
-	const mode: "hour" | "day" =
-		resolvedGranularity === "1d" ? "day" : "hour";
+	const mode: "hour" | "day" = resolvedGranularity === "1d" ? "day" : "hour";
 	const granularityLabel =
 		granularity === "auto"
 			? `自动（${TIME_GRANULARITY_LABELS[resolvedGranularity]}）`
@@ -555,9 +560,7 @@ function ForumPostPage() {
 							/>
 						)}
 
-						{panels.hotUsers && (
-							<HotUsersTable data={data.hotUsers} />
-						)}
+						{panels.hotUsers && <HotUsersTable data={data.hotUsers} />}
 					</div>
 				</>
 			)}

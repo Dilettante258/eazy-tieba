@@ -36,9 +36,7 @@ function FanPage() {
 				<Banner
 					variant="critical"
 					title="查询失败"
-					description={
-						error instanceof Error ? error.message : String(error)
-					}
+					description={error instanceof Error ? error.message : String(error)}
 				/>
 			)}
 
@@ -48,9 +46,7 @@ function FanPage() {
 						<PeopleIcon size={24} />
 					</Blankslate.Visual>
 					<Blankslate.Heading>暂无粉丝数据</Blankslate.Heading>
-					<Blankslate.Description>
-						该用户还没有粉丝
-					</Blankslate.Description>
+					<Blankslate.Description>该用户还没有粉丝</Blankslate.Description>
 				</Blankslate>
 			)}
 
@@ -84,28 +80,18 @@ function FanPage() {
 									)}
 									<div className={styles.userCardBody}>
 										<div className={styles.userCardNameRow}>
-											<span
-												className={
-													styles.userCardName
-												}
-											>
+											<span className={styles.userCardName}>
 												{user.name_show || user.name}
 											</span>
 											<LinkExternalIcon
 												size={12}
-												className={
-													styles.userCardExtIcon
-												}
+												className={styles.userCardExtIcon}
 											/>
 										</div>
 										{user.name &&
 											user.name_show &&
 											user.name !== user.name_show && (
-												<span
-													className={
-														styles.userCardUsername
-													}
-												>
+												<span className={styles.userCardUsername}>
 													@{user.name}
 												</span>
 											)}

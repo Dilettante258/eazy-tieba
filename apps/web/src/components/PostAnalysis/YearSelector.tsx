@@ -15,9 +15,7 @@ export function YearSelector({
 		const target = event.target;
 		if (target instanceof HTMLLIElement) {
 			setSelectedYear(
-				target.innerText === "所有"
-					? "ALL"
-					: Number.parseInt(target.innerText),
+				target.innerText === "所有" ? "ALL" : Number.parseInt(target.innerText),
 			);
 		}
 	}

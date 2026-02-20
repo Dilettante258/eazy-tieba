@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /** 通用用户查询搜索参数 */
 export const userSearchSchema = z.object({

@@ -12,7 +12,9 @@ export function mapRowsByColumns<T>(
 	columns: CsvColumn<T>[],
 ): Array<Record<string, string | number>> {
 	return rows.map((row) =>
-		Object.fromEntries(columns.map((column) => [column.header, column.accessor(row)])),
+		Object.fromEntries(
+			columns.map((column) => [column.header, column.accessor(row)]),
+		),
 	);
 }
 
@@ -62,17 +64,18 @@ export function downloadFile(
 			: type === "xlsx"
 				? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 				: "application/json";
-	const blobData: string | ArrayBuffer | Uint8Array = type === "xlsx"
-		? content instanceof ArrayBuffer
-			? content
-			: content instanceof Uint8Array
-				? (() => {
-						const bytes = new Uint8Array(content.byteLength);
-						bytes.set(content);
-						return bytes;
-					})()
-				: new ArrayBuffer(0)
-		: text;
+	const blobData: string | ArrayBuffer | Uint8Array =
+		type === "xlsx"
+			? content instanceof ArrayBuffer
+				? content
+				: content instanceof Uint8Array
+					? (() => {
+							const bytes = new Uint8Array(content.byteLength);
+							bytes.set(content);
+							return bytes;
+						})()
+					: new ArrayBuffer(0)
+			: text;
 	const blob = new Blob([blobData as unknown as BlobPart], { type: mime });
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement("a");

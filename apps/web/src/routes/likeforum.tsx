@@ -12,9 +12,7 @@ import styles from "./page.module.css";
 
 function LikeForumPage() {
 	const { method, id } = Route.useSearch();
-	const { data, isLoading, error } = useQuery(
-		likeForumsOptions(method, id),
-	);
+	const { data, isLoading, error } = useQuery(likeForumsOptions(method, id));
 
 	const list = data?.list ?? [];
 	const hidden = data?.hidden ?? null;
@@ -80,7 +78,10 @@ function LikeForumPage() {
 										<div className={styles.forumHeaderText}>
 											<h4 className={styles.forumName}>
 												{forum.name}吧
-												<LinkExternalIcon size={12} className={styles.forumExternalIcon} />
+												<LinkExternalIcon
+													size={12}
+													className={styles.forumExternalIcon}
+												/>
 											</h4>
 											<div className={styles.forumMeta}>
 												{forum.level_id && (
@@ -120,7 +121,10 @@ function LikeForumPage() {
 function HiddenForums({
 	grade,
 	plain,
-}: { grade: Record<string, { forum_list: string[] }>; plain: string[] }) {
+}: {
+	grade: Record<string, { forum_list: string[] }>;
+	plain: string[];
+}) {
 	const gradeEntries = Object.entries(grade);
 	const hasData = gradeEntries.length > 0 || plain.length > 0;
 
@@ -162,7 +166,10 @@ function HiddenForums({
 									className={styles.hiddenForumChip}
 								>
 									{name}吧
-									<LinkExternalIcon size={12} className={styles.forumExternalIcon} />
+									<LinkExternalIcon
+										size={12}
+										className={styles.forumExternalIcon}
+									/>
 								</a>
 							))}
 						</div>
@@ -183,7 +190,10 @@ function HiddenForums({
 									className={styles.hiddenForumChip}
 								>
 									{name}吧
-									<LinkExternalIcon size={12} className={styles.forumExternalIcon} />
+									<LinkExternalIcon
+										size={12}
+										className={styles.forumExternalIcon}
+									/>
 								</a>
 							))}
 						</div>

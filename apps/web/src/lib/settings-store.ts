@@ -125,7 +125,11 @@ interface SettingsStore {
 
 	// 热门吧友权重（持久化）
 	hotUserWeights: { thread: number; reply: number; agree: number };
-	setHotUserWeights: (weights: { thread: number; reply: number; agree: number }) => void;
+	setHotUserWeights: (weights: {
+		thread: number;
+		reply: number;
+		agree: number;
+	}) => void;
 
 	// 外链图片并发数（持久化）
 	maxImageConcurrency: number;
@@ -199,33 +203,25 @@ export const useSettingsStore = create<SettingsStore>()(
 			highlightedForums: [],
 			addHighlightedForum: (name, color) =>
 				set((s) => ({
-					highlightedForums: s.highlightedForums.some(
-						(f) => f.name === name,
-					)
+					highlightedForums: s.highlightedForums.some((f) => f.name === name)
 						? s.highlightedForums
 						: [...s.highlightedForums, { name, color }],
 				})),
 			removeHighlightedForum: (name) =>
 				set((s) => ({
-					highlightedForums: s.highlightedForums.filter(
-						(f) => f.name !== name,
-					),
+					highlightedForums: s.highlightedForums.filter((f) => f.name !== name),
 				})),
 
 			highlightedUsers: [],
 			addHighlightedUser: (name, color) =>
 				set((s) => ({
-					highlightedUsers: s.highlightedUsers.some(
-						(u) => u.name === name,
-					)
+					highlightedUsers: s.highlightedUsers.some((u) => u.name === name)
 						? s.highlightedUsers
 						: [...s.highlightedUsers, { name, color }],
 				})),
 			removeHighlightedUser: (name) =>
 				set((s) => ({
-					highlightedUsers: s.highlightedUsers.filter(
-						(u) => u.name !== name,
-					),
+					highlightedUsers: s.highlightedUsers.filter((u) => u.name !== name),
 				})),
 
 			highlightedKeywords: [],
@@ -314,10 +310,10 @@ export const useSettingsStore = create<SettingsStore>()(
 					);
 					if (forums) state.highlightedForums = forums;
 
-					const users = migrateStringArray(
-						state.highlightedUsers,
-						(name) => ({ name, color: defaultColor }),
-					);
+					const users = migrateStringArray(state.highlightedUsers, (name) => ({
+						name,
+						color: defaultColor,
+					}));
 					if (users) state.highlightedUsers = users;
 				}
 
