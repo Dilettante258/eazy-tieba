@@ -62,19 +62,19 @@ export function Carousel() {
 				‹
 			</button>
 			<div ref={ref} className={styles.carousel}>
-				<div className={`${styles.slide} ${styles.slide1}`}>
-					<div className={styles.slideContent}>
-						<span className={styles.cardLabel}>便捷查询</span>
-					</div>
-				</div>
 				<div className={`${styles.slide} ${styles.slide2}`}>
 					<div className={styles.slideContent}>
-						<span className={styles.cardLabel}>数据分析</span>
+						<span className={styles.cardLabel}>可视化分析</span>
 					</div>
 				</div>
 				<div className={`${styles.slide} ${styles.slide3}`}>
 					<div className={styles.slideContent}>
-						<span className={styles.cardLabel}>开源免费</span>
+						<span className={styles.cardLabel}>数据导出</span>
+					</div>
+				</div>
+				<div className={`${styles.slide} ${styles.slide1}`}>
+					<div className={styles.slideContent}>
+						<span className={styles.cardLabel}>自定义设置</span>
 					</div>
 				</div>
 			</div>

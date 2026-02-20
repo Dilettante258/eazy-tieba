@@ -1,6 +1,7 @@
 .carouselShell {
 	position: relative;
 	width: min(23.75rem, calc(100vw - 2rem));
+	margin: 0 auto;
 }
 
 .carousel {
@@ -43,100 +44,56 @@
 	height: 25.6rem;
 	border-radius: 1.5rem;
 	display: flex;
-	align-items: center;
+	align-items: flex-end;
 	justify-content: center;
 	position: relative;
 	overflow: hidden;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 	opacity: 0.72;
 	scale: 0.96;
 	transition: opacity 0.35s ease, scale 0.35s ease;
 }
 
-.slideContent::before {
-	content: "";
-	position: absolute;
-	width: 180%;
-	height: 180%;
-	border-radius: 50%;
-	opacity: 0.35;
-}
-
-.slideContent::after {
-	content: "";
-	position: absolute;
-	width: 60%;
-	height: 60%;
-	border-radius: 50%;
-	opacity: 0.3;
-}
-
 .cardLabel {
-	position: relative;
-	z-index: 1;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 1.5rem;
+	text-align: center;
 	font-size: 1.5rem;
 	font-weight: 700;
 	letter-spacing: 0.05em;
-	opacity: 0.6;
+	opacity: 0.95;
+	color: #fff;
+	text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
 }
 
 .slide1 .slideContent {
-	background: linear-gradient(135deg, #e6f4fe 0%, #c2e0ff 100%);
-}
-
-.slide1 .slideContent::before {
-	background: radial-gradient(circle, #a8d4ff 0%, transparent 70%);
-	top: -60%;
-	left: -40%;
-}
-
-.slide1 .slideContent::after {
-	background: radial-gradient(circle, #7abfff 0%, transparent 70%);
-	bottom: -20%;
-	right: -15%;
-}
-
-.slide1 .cardLabel {
-	color: #1a6dba;
+	background-image: url("/slide1@1x.webp");
 }
 
 .slide2 .slideContent {
-	background: linear-gradient(135deg, #ffefd6 0%, #ffd9a8 100%);
-}
-
-.slide2 .slideContent::before {
-	background: radial-gradient(circle, #ffc985 0%, transparent 70%);
-	top: -50%;
-	right: -40%;
-}
-
-.slide2 .slideContent::after {
-	background: radial-gradient(circle, #ffb05c 0%, transparent 70%);
-	bottom: -25%;
-	left: -20%;
-}
-
-.slide2 .cardLabel {
-	color: #a86320;
+	background-image: url("/slide2@1x.webp");
 }
 
 .slide3 .slideContent {
-	background: linear-gradient(135deg, #e6f6eb 0%, #b8e6c8 100%);
+	background-image: url("/slide3@1x.webp");
 }
 
-.slide3 .slideContent::before {
-	background: radial-gradient(circle, #8dd4a6 0%, transparent 70%);
-	bottom: -60%;
-	left: -30%;
-}
+@media (min-resolution: 2dppx) {
+	.slide1 .slideContent {
+		background-image: url("/slide1@2x.webp");
+	}
 
-.slide3 .slideContent::after {
-	background: radial-gradient(circle, #6bc48c 0%, transparent 70%);
-	top: -20%;
-	right: -20%;
-}
+	.slide2 .slideContent {
+		background-image: url("/slide2@2x.webp");
+	}
 
-.slide3 .cardLabel {
-	color: #2a7a4a;
+	.slide3 .slideContent {
+		background-image: url("/slide3@2x.webp");
+	}
 }
 
 .slide::scroll-marker {
@@ -199,30 +156,6 @@
 	box-shadow: 0 20px 40px -12px rgb(0 0 0 / 30%);
 }
 
-[data-color-mode="dark"] .slide1 .slideContent {
-	background: linear-gradient(135deg, #0d3868 0%, #205d9e 100%);
-}
-
-[data-color-mode="dark"] .slide2 .slideContent {
-	background: linear-gradient(135deg, #331e0b 0%, #5c3a16 100%);
-}
-
-[data-color-mode="dark"] .slide3 .slideContent {
-	background: linear-gradient(135deg, #0d2e1c 0%, #1a5435 100%);
-}
-
-[data-color-mode="dark"] .slide1 .cardLabel {
-	color: #8ec8f6;
-}
-
-[data-color-mode="dark"] .slide2 .cardLabel {
-	color: #f5ae73;
-}
-
-[data-color-mode="dark"] .slide3 .cardLabel {
-	color: #8eceaa;
-}
-
 [data-color-mode="dark"] .slide::scroll-marker {
 	background: rgb(255 255 255 / 30%);
 }
@@ -244,10 +177,6 @@
 }
 
 @media (max-width: 768px) {
-	.carouselShell {
-		width: min(18rem, calc(100vw - 2rem));
-	}
-
 	.slideContent {
 		height: 20rem;
 	}
