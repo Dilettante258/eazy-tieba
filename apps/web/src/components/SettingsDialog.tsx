@@ -12,6 +12,7 @@ import {
 	Text,
 } from "@primer/react";
 import {
+	DownloadIcon,
 	GearIcon,
 	GlobeIcon,
 	GraphIcon,
@@ -21,6 +22,7 @@ import {
 	XIcon,
 } from "@primer/octicons-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePwaInstall } from "../lib/pwa-install.ts";
 import {
 	useSettingsStore,
 	PANEL_LABELS,
@@ -867,6 +869,8 @@ function GlobalSettings() {
 // ── 关于 ──
 
 function AboutSettings() {
+	const { canInstall, installed, install } = usePwaInstall();
+
 	return (
 		<div className={styles.aboutSection}>
 			<h3>关于 eztb</h3>
@@ -882,6 +886,25 @@ function AboutSettings() {
 				</a>
 			</p>
 			<p>一个贴吧工具箱，用于查看和分析贴吧用户数据。</p>
+			<div className={styles.aboutInstallRow}>
+				<Button
+					size="small"
+					leadingVisual={DownloadIcon}
+					disabled={!canInstall || installed}
+					onClick={async () => {
+						await install();
+					}}
+				>
+					{installed ? "已安装" : "安装到主屏幕"}
+				</Button>
+				<p className={styles.aboutInstallHint}>
+					{installed
+						? "已安装为应用，可从手机桌面直接打开。"
+						: canInstall
+							? "点击后会弹出浏览器安装提示。"
+							: "当前浏览器未提供安装事件，可使用“添加到主屏幕”手动安装。"}
+				</p>
+			</div>
 		</div>
 	);
 }

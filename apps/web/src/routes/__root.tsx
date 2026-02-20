@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { ActionList, ActionMenu, PageLayout } from "@primer/react";
 import {
+	DownloadIcon,
 	GearIcon,
 	MarkGithubIcon,
 	MoonIcon,
@@ -15,6 +16,7 @@ import {
 	ThreeBarsIcon,
 } from "@primer/octicons-react";
 import { useColorMode } from "../lib/color-mode.tsx";
+import { usePwaInstall } from "../lib/pwa-install.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
 import { SettingsDialog } from "../components/SettingsDialog.tsx";
 import type { RouterContext } from "../lib/router-context.ts";
@@ -66,6 +68,25 @@ function ThemeToggle() {
 			onClick={toggleColorMode}
 		>
 			{isDark ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+		</button>
+	);
+}
+
+function InstallAppButton() {
+	const { canInstall, installed, install } = usePwaInstall();
+
+	if (!canInstall || installed) return null;
+
+	return (
+		<button
+			type="button"
+			className={styles.installBtn}
+			onClick={async () => {
+				await install();
+			}}
+		>
+			<DownloadIcon size={14} />
+			<span className={styles.installLabel}>安装应用</span>
 		</button>
 	);
 }
@@ -140,6 +161,7 @@ function RootLayout() {
 				<div className={styles.spacer} />
 
 				<div className={styles.actions}>
+					<InstallAppButton />
 					<a
 						className={styles.githubLink}
 						href="https://github.com/Dilettante258/tieba-toolbox"

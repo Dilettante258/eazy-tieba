@@ -1,0 +1,23 @@
+{
+	"name": "eztb - 贴吧工具箱",
+	"short_name": "eztb",
+	"description": "开源的百度贴吧工具箱，支持查询、分析与导出。",
+	"start_url": "/",
+	"scope": "/",
+	"display": "standalone",
+	"background_color": "#0d1117",
+	"theme_color": "#0d1117",
+	"icons": [
+		{
+			"src": "/favicon192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	]
+}

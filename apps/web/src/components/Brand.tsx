@@ -22,17 +22,17 @@ export function Brand() {
 				<span>贴吧</span>
 				<span>工具箱</span>
 				<br />
-				<span>为</span>
-				<span>更</span>
-				<span>方便</span>
-				<span>调查</span>
-				<span>成分</span>
-				<span>而生</span>
+				<span>查询{" · "}</span>
+				<span>分析{" · "}</span>
+				<span>导出</span>
+				<span>,</span>
+				<span>一站</span>
+				<span>完成</span>
 			</div>
 
 			<div>
 				<p className={styles.description}>
-					现代化UI，便捷的操作，丰富的功能，为你带来最好的体验
+					便捷操作、现代化界面、丰富功能，让查询与分析一步到位。
 				</p>
 			</div>
 

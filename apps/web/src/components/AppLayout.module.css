@@ -185,6 +185,31 @@ html {
 	gap: 0.5rem;
 }
 
+.installBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.3rem 0.625rem;
+	border-radius: 6px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--_text);
+	border: 1px solid var(--_gh-border);
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.installBtn:hover {
+	color: var(--_gh-hover-color);
+	border-color: var(--_gh-hover-border);
+	background-color: var(--_gh-hover-bg);
+}
+
+.installLabel {
+	line-height: 1;
+}
+
 /* ── GitHub 链接 ── */
 
 .githubLink {
@@ -265,6 +290,10 @@ html {
 	}
 
 	.githubLink span {
+		display: none;
+	}
+
+	.installLabel {
 		display: none;
 	}
 }
