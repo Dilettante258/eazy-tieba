@@ -2,4 +2,4 @@
 registry = "https://mirrors.huaweicloud.com/repository/npm/"
 
 [env]
-file = ".env"
+file = true

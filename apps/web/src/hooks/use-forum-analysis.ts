@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import { resolveApiUrl } from "../lib/backend.ts";
 
 // ── 聚合结果类型（与后端一致） ──────────────────────────
 
@@ -81,13 +82,12 @@ const INITIAL_STATE: ForumAnalysisState = {
 	data: null,
 };
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
 // ── Hook ──────────────────────────────────────────────
 
 export function useForumAnalysis() {
 	const [state, setState] = useState<ForumAnalysisState>(INITIAL_STATE);
 	const esRef = useRef<EventSource | null>(null);
+	const runIdRef = useRef(0);
 
 	const start = useCallback(
 		(
@@ -97,6 +97,9 @@ export function useForumAnalysis() {
 			depth: string,
 			weights?: { thread: number; reply: number; agree: number },
 		) => {
+			runIdRef.current += 1;
+			const runId = runIdRef.current;
+
 			// 关闭之前的连接
 			esRef.current?.close();
 
@@ -119,61 +122,76 @@ export function useForumAnalysis() {
 				params.set("rw", String(weights.reply));
 				params.set("aw", String(weights.agree));
 			}
-			const es = new EventSource(`${API_BASE}/forum/analyze?${params}`);
-			esRef.current = es;
+			void resolveApiUrl("/forum/analyze")
+				.then((url) => {
+					if (runIdRef.current !== runId) return;
+					const es = new EventSource(`${url}?${params}`);
+					esRef.current = es;
 
-			es.onmessage = (e) => {
-				try {
-					const msg = JSON.parse(e.data);
-					switch (msg.type) {
-						case "threads":
-							setState((s) => ({
-								...s,
-								phase: "posts",
-								threadCount: msg.count,
-							}));
-							break;
-						case "post":
-							setState((s) => ({
-								...s,
-								postsFetched: s.postsFetched + 1,
-							}));
-							break;
-						case "done":
-							setState((s) => ({
-								...s,
-								status: "done",
-								data: msg.data,
-							}));
-							es.close();
-							break;
-						case "error":
-							setState((s) => ({
-								...s,
-								status: "error",
-								error: msg.message,
-							}));
-							es.close();
-							break;
-					}
-				} catch {
-					// 忽略解析错误
-				}
-			};
+					es.onmessage = (e) => {
+						if (runIdRef.current !== runId) return;
+						try {
+							const msg = JSON.parse(e.data);
+							switch (msg.type) {
+								case "threads":
+									setState((s) => ({
+										...s,
+										phase: "posts",
+										threadCount: msg.count,
+									}));
+									break;
+								case "post":
+									setState((s) => ({
+										...s,
+										postsFetched: s.postsFetched + 1,
+									}));
+									break;
+								case "done":
+									setState((s) => ({
+										...s,
+										status: "done",
+										data: msg.data,
+									}));
+									es.close();
+									break;
+								case "error":
+									setState((s) => ({
+										...s,
+										status: "error",
+										error: msg.message,
+									}));
+									es.close();
+									break;
+							}
+						} catch {
+							// 忽略解析错误
+						}
+					};
 
-			es.onerror = () => {
-				setState((s) => {
-					// 如果已经 done 了就忽略
-					if (s.status === "done") return s;
-					return { ...s, status: "error", error: "连接中断" };
+					es.onerror = () => {
+						if (runIdRef.current !== runId) return;
+						setState((s) => {
+							// 如果已经 done 了就忽略
+							if (s.status === "done") return s;
+							return { ...s, status: "error", error: "连接中断" };
+						});
+						es.close();
+					};
+				})
+				.catch(() => {
+					if (runIdRef.current !== runId) return;
+					setState((s) => ({
+						...s,
+						status: "error",
+						error: "节点检测失败或不可用",
+					}));
 				});
-				es.close();
-			};
 		},
 		[],
 	);
 
 	const reset = useCallback(() => {
+		runIdRef.current += 1;
 		esRef.current?.close();
 		setState(INITIAL_STATE);
 	}, []);

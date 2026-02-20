@@ -6,7 +6,7 @@
 		"paths": {
 			"@/*": ["./src/*"]
 		},
-		"types": ["vite/client", "react/canary"]
+		"types": ["vite/client", "react/canary", "hono/types"]
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]

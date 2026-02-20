@@ -28,6 +28,7 @@ import {
 } from "@primer/octicons-react";
 import { userSearchSchema } from "../lib/search-schemas.ts";
 import type { Method } from "../hooks/queries.ts";
+import { resolveApiUrl } from "../lib/backend.ts";
 import { api } from "../lib/api-client.ts";
 import {
 	downloadFile,
@@ -216,9 +217,9 @@ async function fetchLikeForum(method: Method, id: string) {
 	return unwrapRes<Record<string, unknown>>(res as unknown as Response);
 }
 
-function buildSseUrl(path: string, query: Record<string, string>) {
-	const base = import.meta.env.VITE_API_URL || "http://localhost:8000";
-	const url = new URL(path, base);
+async function buildSseUrl(path: string, query: Record<string, string>) {
+	const fullPath = path.startsWith("/") ? path : `/${path}`;
+	const url = new URL(await resolveApiUrl(fullPath));
 	for (const [k, v] of Object.entries(query)) url.searchParams.set(k, v);
 	return url.toString();
 }
@@ -229,36 +230,43 @@ function runSseTask<T>(
 	onEvent: (payload: Record<string, unknown>) => void,
 ) {
 	return new Promise<T>((resolve, reject) => {
-		const es = new EventSource(buildSseUrl(path, query));
 		let done = false;
+		let es: EventSource | null = null;
 
-		es.onmessage = (evt) => {
-			try {
-				const payload = JSON.parse(evt.data) as Record<string, unknown>;
-				onEvent(payload);
-				if (payload.type === "done") {
-					done = true;
-					es.close();
-					resolve(payload.data as T);
-					return;
-				}
-				if (payload.type === "error") {
-					done = true;
-					es.close();
-					reject(new Error(String(payload.message || "导出失败")));
-				}
-			} catch {
-				done = true;
-				es.close();
-				reject(new Error("SSE 消息解析失败"));
-			}
-		};
+		void buildSseUrl(path, query)
+			.then((sseUrl) => {
+				es = new EventSource(sseUrl);
+				es.onmessage = (evt) => {
+					try {
+						const payload = JSON.parse(evt.data) as Record<string, unknown>;
+						onEvent(payload);
+						if (payload.type === "done") {
+							done = true;
+							es?.close();
+							resolve(payload.data as T);
+							return;
+						}
+						if (payload.type === "error") {
+							done = true;
+							es?.close();
+							reject(new Error(String(payload.message || "导出失败")));
+						}
+					} catch {
+						done = true;
+						es?.close();
+						reject(new Error("SSE 消息解析失败"));
+					}
+				};
 
-		es.onerror = () => {
-			if (done) return;
-			es.close();
-			reject(new Error("SSE 连接中断"));
-		};
+				es.onerror = () => {
+					if (done) return;
+					es?.close();
+					reject(new Error("SSE 连接中断"));
+				};
+			})
+			.catch((error) => {
+				reject(error instanceof Error ? error : new Error("SSE 初始化失败"));
+			});
 	});
 }
 

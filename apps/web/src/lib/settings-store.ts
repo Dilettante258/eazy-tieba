@@ -2,6 +2,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { imagePool } from "./image-pool.ts";
 import { HIGHLIGHT_COLORS, type HighlightColor } from "./highlight.ts";
+import {
+	isBackendPreference,
+	type BackendNode,
+	type BackendPreference,
+} from "./backend-config.ts";
 
 export type SettingsTab =
 	| "postanalysis"
@@ -134,6 +139,16 @@ interface SettingsStore {
 	// 外链图片并发数（持久化）
 	maxImageConcurrency: number;
 	setMaxImageConcurrency: (n: number) => void;
+
+	// 后端节点偏好（持久化）
+	backendPreference: BackendPreference;
+	setBackendPreference: (preference: BackendPreference) => void;
+
+	// 当前生效节点（运行时）
+	activeBackend: BackendNode;
+	backendChecking: boolean;
+	backendProbeMessage: string;
+	backendProbeAt: number | null;
 }
 
 const DEFAULT_VISIBILITY: Record<PanelId, boolean> = {
@@ -280,10 +295,18 @@ export const useSettingsStore = create<SettingsStore>()(
 				imagePool.setLimit(clamped);
 				set({ maxImageConcurrency: clamped });
 			},
+
+			backendPreference: "auto",
+			setBackendPreference: (preference) =>
+				set({ backendPreference: preference }),
+			activeBackend: "domestic",
+			backendChecking: false,
+			backendProbeMessage: "尚未检测生产节点",
+			backendProbeAt: null,
 		}),
 		{
 			name: "tieba-settings",
-			version: 2,
+			version: 3,
 			partialize: (state) => ({
 				settingsTab: state.settingsTab,
 				panelVisibility: state.panelVisibility,
@@ -297,6 +320,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				forumMergeHighLevels: state.forumMergeHighLevels,
 				hotUserWeights: state.hotUserWeights,
 				maxImageConcurrency: state.maxImageConcurrency,
+				backendPreference: state.backendPreference,
 			}),
 			migrate: (persisted, version) => {
 				const state = persisted as Record<string, unknown>;
@@ -324,6 +348,10 @@ export const useSettingsStore = create<SettingsStore>()(
 						(keyword) => ({ keyword, color: defaultColor }),
 					);
 					if (keywords) state.highlightedKeywords = keywords;
+				}
+
+				if (version < 3 && !isBackendPreference(state.backendPreference)) {
+					state.backendPreference = "auto";
 				}
 
 				return persisted as SettingsStore;

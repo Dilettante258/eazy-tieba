@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import { resolveApiUrl } from "../lib/backend.ts";
 
 // ── 搜索结果类型（与后端一致） ──────────────────────────
 
@@ -32,13 +33,12 @@ const INITIAL_STATE: PostSearchState = {
 	results: [],
 };
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
 // ── Hook ──────────────────────────────────────────────
 
 export function usePostSearch() {
 	const [state, setState] = useState<PostSearchState>(INITIAL_STATE);
 	const esRef = useRef<EventSource | null>(null);
+	const runIdRef = useRef(0);
 
 	const start = useCallback(
 		(params: {
@@ -51,6 +51,9 @@ export function usePostSearch() {
 			count: number;
 			depth: string;
 		}) => {
+			runIdRef.current += 1;
+			const runId = runIdRef.current;
+
 			esRef.current?.close();
 
 			setState({
@@ -69,65 +72,80 @@ export function usePostSearch() {
 				count: String(params.count),
 				depth: params.depth,
 			});
-			const es = new EventSource(`${API_BASE}/forum/search?${qs}`);
-			esRef.current = es;
+			void resolveApiUrl("/forum/search")
+				.then((url) => {
+					if (runIdRef.current !== runId) return;
+					const es = new EventSource(`${url}?${qs}`);
+					esRef.current = es;
 
-			es.onmessage = (e) => {
-				try {
-					const msg = JSON.parse(e.data);
-					switch (msg.type) {
-						case "threads":
-							setState((s) => ({
-								...s,
-								phase: "searching",
-								threadCount: msg.count,
-							}));
-							break;
-						case "progress":
-							setState((s) => ({
-								...s,
-								threadsSearched: s.threadsSearched + 1,
-							}));
-							break;
-						case "match":
-							setState((s) => ({
-								...s,
-								results: [...s.results, ...msg.posts],
-							}));
-							break;
-						case "done":
-							setState((s) => ({
-								...s,
-								status: "done",
-							}));
-							es.close();
-							break;
-						case "error":
-							setState((s) => ({
-								...s,
-								status: "error",
-								error: msg.message,
-							}));
-							es.close();
-							break;
-					}
-				} catch {
-					// 忽略解析错误
-				}
-			};
+					es.onmessage = (e) => {
+						if (runIdRef.current !== runId) return;
+						try {
+							const msg = JSON.parse(e.data);
+							switch (msg.type) {
+								case "threads":
+									setState((s) => ({
+										...s,
+										phase: "searching",
+										threadCount: msg.count,
+									}));
+									break;
+								case "progress":
+									setState((s) => ({
+										...s,
+										threadsSearched: s.threadsSearched + 1,
+									}));
+									break;
+								case "match":
+									setState((s) => ({
+										...s,
+										results: [...s.results, ...msg.posts],
+									}));
+									break;
+								case "done":
+									setState((s) => ({
+										...s,
+										status: "done",
+									}));
+									es.close();
+									break;
+								case "error":
+									setState((s) => ({
+										...s,
+										status: "error",
+										error: msg.message,
+									}));
+									es.close();
+									break;
+							}
+						} catch {
+							// 忽略解析错误
+						}
+					};
 
-			es.onerror = () => {
-				setState((s) => {
-					if (s.status === "done") return s;
-					return { ...s, status: "error", error: "连接中断" };
+					es.onerror = () => {
+						if (runIdRef.current !== runId) return;
+						setState((s) => {
+							if (s.status === "done") return s;
+							return { ...s, status: "error", error: "连接中断" };
+						});
+						es.close();
+					};
+				})
+				.catch(() => {
+					if (runIdRef.current !== runId) return;
+					setState((s) => ({
+						...s,
+						status: "error",
+						error: "节点检测失败或不可用",
+					}));
 				});
-				es.close();
-			};
 		},
 		[],
 	);
 
 	const reset = useCallback(() => {
+		runIdRef.current += 1;
 		esRef.current?.close();
 		setState(INITIAL_STATE);
 	}, []);

@@ -6,6 +6,7 @@ import {
 	NavList,
 	ToggleSwitch,
 	Button,
+	Select,
 	TextInput,
 	Flash,
 	Text,
@@ -33,6 +34,13 @@ import {
 	HIGHLIGHT_COLOR_LABELS,
 	type HighlightColor,
 } from "../lib/highlight.ts";
+import {
+	BACKEND_NODE_LABELS,
+	BACKEND_PREFERENCE_LABELS,
+	BACKEND_PREFERENCE_OPTIONS,
+	isBackendPreference,
+} from "../lib/backend-config.ts";
+import { ensureBackendReady } from "../lib/backend.ts";
 import styles from "./SettingsDialog.module.css";
 
 const TABS: Array<{
@@ -781,10 +789,69 @@ function ImageConcurrencySection() {
 	);
 }
 
+function BackendNodeSection() {
+	const backendPreference = useSettingsStore((s) => s.backendPreference);
+	const setBackendPreference = useSettingsStore((s) => s.setBackendPreference);
+	const activeBackend = useSettingsStore((s) => s.activeBackend);
+	const backendChecking = useSettingsStore((s) => s.backendChecking);
+	const backendProbeMessage = useSettingsStore((s) => s.backendProbeMessage);
+	const backendProbeAt = useSettingsStore((s) => s.backendProbeAt);
+	const [isPending, startTransition] = useTransition();
+
+	const runProbe = useCallback(() => {
+		void ensureBackendReady(true);
+	}, []);
+
+	return (
+		<section className={styles.section}>
+			<h4 className={styles.sectionTitle}>后端节点</h4>
+			<p className={styles.sectionDesc}>
+				选择请求使用的后端节点。自动/生产模式会优先检测北京生产节点，不可用时自动切换到
+				CF 备用节点
+			</p>
+			<div className={styles.addRow} style={{ opacity: isPending ? 0.7 : 1 }}>
+				<Select
+					size="small"
+					value={backendPreference}
+					onChange={(e) => {
+						const value = e.target.value;
+						if (!isBackendPreference(value)) return;
+						startTransition(() => {
+							setBackendPreference(value);
+						});
+						void ensureBackendReady(true);
+					}}
+					className={styles.addInput}
+					aria-label="后端节点偏好"
+				>
+					{BACKEND_PREFERENCE_OPTIONS.map((item) => (
+						<Select.Option key={item} value={item}>
+							{BACKEND_PREFERENCE_LABELS[item]}
+						</Select.Option>
+					))}
+				</Select>
+				<Button size="small" onClick={runProbe} disabled={backendChecking}>
+					{backendChecking ? "检测中..." : "重新检测"}
+				</Button>
+			</div>
+			<p className={styles.cacheLabel}>
+				当前节点：{BACKEND_NODE_LABELS[activeBackend]} ·
+				{backendProbeAt
+					? ` 上次检测 ${new Date(backendProbeAt).toLocaleTimeString()}`
+					: " 尚未检测"}
+			</p>
+			<p className={styles.sectionDesc} style={{ marginBottom: 0 }}>
+				{backendProbeMessage}
+			</p>
+		</section>
+	);
+}
+
 function GlobalSettings() {
 	return (
 		<div className={styles.settingsPanel}>
 			<h3 className={styles.panelTitle}>全局设置</h3>
+			<BackendNodeSection />
 			<ImageConcurrencySection />
 			<BlockedWordCloudSection />
 			<section className={styles.section}>

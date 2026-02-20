@@ -1,7 +1,10 @@
 import { BaseStyles, ThemeProvider } from "@primer/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { ensureBackendReady } from "./lib/backend.ts";
 import { ColorModeProvider, useColorMode } from "./lib/color-mode.tsx";
+import { useSettingsStore } from "./lib/settings-store.ts";
 import { routeTree } from "./routeTree.gen.ts";
 
 const queryClient = new QueryClient({
@@ -34,6 +37,12 @@ declare module "@tanstack/react-router" {
  */
 function AppShell() {
 	const { colorMode } = useColorMode();
+	const backendPreference = useSettingsStore((s) => s.backendPreference);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		void ensureBackendReady(true);
+	}, [backendPreference]);
 
 	return (
 		<ThemeProvider colorMode={colorMode}>
