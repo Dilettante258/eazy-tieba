@@ -1,13 +1,14 @@
-import { registerPictogramChart, VChart } from "@visactor/vchart";
-
-// 注册象形图图表类型（1.x 版本）
-registerPictogramChart();
+import {
+	VChart,
+	ensureVChartRuntimeRegistered,
+} from "./vchart-runtime.ts";
 
 let registered = false;
 
 /** 动态加载并注册中国地图 SVG（首次调用时加载） */
 export async function ensureChinaMapRegistered() {
 	if (registered) return;
+	ensureVChartRuntimeRegistered();
 	const { default: svgText } = await import("./chinamap.svg?raw");
 	VChart.registerSVG("chinamap", svgText);
 	registered = true;

@@ -4,6 +4,7 @@ import {
 	useCallback,
 	forwardRef,
 	useImperativeHandle,
+	useEffect,
 } from "react";
 import { ActionBar, Dialog, Button, Link } from "@primer/react";
 import {
@@ -11,8 +12,7 @@ import {
 	PencilIcon,
 	ListUnorderedIcon,
 } from "@primer/octicons-react";
-import { VChart } from "@visactor/react-vchart";
-import type { IVChart, ISpec } from "@visactor/vchart";
+import type { ISpec, IVChart } from "../../lib/vchart-runtime.ts";
 import styles from "./PostAnalysis.module.css";
 
 // ── ChartWrapper handle ──
@@ -36,6 +36,30 @@ export const ChartWrapper = forwardRef<ChartWrapperHandle, ChartWrapperProps>(
 		const chartRef = useRef<IVChart>(null);
 		const [editOpen, setEditOpen] = useState(false);
 		const [editText, setEditText] = useState("");
+		const [VChartComponent, setVChartComponent] = useState<
+			(typeof import("@visactor/react-vchart/esm/VChartSimple"))["VChartSimple"] | null
+		>(null);
+		const [VChartConstructor, setVChartConstructor] = useState<
+			(typeof import("../../lib/vchart-runtime.ts"))["VChart"] | null
+		>(null);
+
+		useEffect(() => {
+			let alive = true;
+
+			void Promise.all([
+				import("@visactor/react-vchart/esm/VChartSimple"),
+				import("../../lib/vchart-runtime.ts"),
+			]).then(([reactVChart, runtime]) => {
+				runtime.ensureVChartRuntimeRegistered();
+				if (!alive) return;
+				setVChartComponent(() => reactVChart.VChartSimple);
+				setVChartConstructor(() => runtime.VChart);
+			});
+
+			return () => {
+				alive = false;
+			};
+		}, []);
 
 		useImperativeHandle(ref, () => ({
 			exportImg: (name?: string) => {
@@ -59,9 +83,19 @@ export const ChartWrapper = forwardRef<ChartWrapperHandle, ChartWrapperProps>(
 			}
 		}, [editText]);
 
+		if (!VChartComponent || !VChartConstructor) {
+			return <div style={style} />;
+		}
+
 		return (
 			<>
-				<VChart ref={chartRef} spec={spec} style={style} onClick={onClick} />
+				<VChartComponent
+					ref={chartRef}
+					vchartConstructor={VChartConstructor}
+					spec={spec}
+					style={style}
+					onClick={onClick}
+				/>
 				{editOpen && (
 					<Dialog
 						title="编辑图表配置"

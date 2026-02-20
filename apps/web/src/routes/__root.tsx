@@ -15,12 +15,18 @@ import {
 	SunIcon,
 	ThreeBarsIcon,
 } from "@primer/octicons-react";
+import { lazy, Suspense } from "react";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { usePwaInstall } from "../lib/pwa-install.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
-import { SettingsDialog } from "../components/SettingsDialog.tsx";
 import type { RouterContext } from "../lib/router-context.ts";
 import styles from "../components/AppLayout.module.css";
+
+const SettingsDialog = lazy(() =>
+	import("../components/SettingsDialog.tsx").then((mod) => ({
+		default: mod.SettingsDialog,
+	})),
+);
 
 const NAV_ITEMS = [
 	{ label: "首页", to: "/" },
@@ -128,10 +134,15 @@ function MobileNav() {
 function RootLayout() {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 	const isHome = pathname === "/";
+	const settingsOpen = useSettingsStore((s) => s.settingsOpen);
 
 	return (
 		<>
-			<SettingsDialog />
+			{settingsOpen ? (
+				<Suspense fallback={null}>
+					<SettingsDialog />
+				</Suspense>
+			) : null}
 			<nav className={styles.navbar} data-transparent={isHome || undefined}>
 				<Link
 					className={styles.logo}

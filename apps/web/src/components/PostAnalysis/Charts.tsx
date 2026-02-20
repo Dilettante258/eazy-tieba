@@ -1,12 +1,8 @@
 import { useMemo, useCallback, forwardRef } from "react";
 import type { ISpec } from "@visactor/vchart";
-import { registerMosaicChart, registerWordCloudChart } from "@visactor/vchart";
 import { useColorMode } from "../../lib/color-mode.tsx";
 import { getChartColors } from "../../lib/chart-colors.ts";
 import { ChartWrapper, type ChartWrapperHandle } from "./ChartWrapper.tsx";
-
-registerMosaicChart();
-registerWordCloudChart();
 
 const dateFmt = new Intl.DateTimeFormat("zh-CN", {
 	month: "long",
