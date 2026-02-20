@@ -197,6 +197,21 @@ const FOOTER_NAV = [
 	{ label: "导出数据", to: "/export" },
 ] as const;
 
+const FOOTER_OPEN_SOURCE = [
+	{
+		label: "Web（tieba-toolbox）",
+		href: "https://github.com/Dilettante258/tieba-toolbox/tree/v3/apps/web",
+	},
+	{
+		label: "Server（Tieba-API-SCF）",
+		href: "https://github.com/Dilettante258/Tieba-API-SCF",
+	},
+	{
+		label: "SDK（tieba.js）",
+		href: "https://github.com/Dilettante258/tieba.js",
+	},
+] as const;
+
 function FooterSection() {
 	return (
 		<footer className={styles.footer}>
@@ -209,6 +224,11 @@ function FooterSection() {
 						<p className={styles.footerDesc}>
 							开源的百度贴吧工具箱，为更方便调查成分而生。
 						</p>
+						<div className={styles.footerBadges}>
+							<span className={styles.footerBadge}>Web</span>
+							<span className={styles.footerBadge}>Server</span>
+							<span className={styles.footerBadge}>SDK</span>
+						</div>
 					</div>
 
 					<div className={styles.footerLinks}>
@@ -226,14 +246,39 @@ function FooterSection() {
 							))}
 						</div>
 						<div className={styles.footerCol}>
-							<h4 className={styles.footerColTitle}>资源</h4>
+							<h4 className={styles.footerColTitle}>开源</h4>
+							{FOOTER_OPEN_SOURCE.map((item) => (
+								<a
+									key={item.href}
+									className={styles.footerLink}
+									href={item.href}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									{item.label}
+								</a>
+							))}
+						</div>
+						<div className={styles.footerCol}>
+							<h4 className={styles.footerColTitle}>联系</h4>
+							<a
+								className={styles.footerLink}
+								href="https://kairi.cc/zh"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								作者主页
+							</a>
+							<a className={styles.footerLink} href="mailto:noreply@eztb.org">
+								noreply@eztb.org
+							</a>
 							<a
 								className={styles.footerLink}
 								href="https://github.com/Dilettante258/tieba-toolbox"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								GitHub
+								项目仓库
 							</a>
 							<Link
 								className={styles.footerLink}
@@ -249,7 +294,20 @@ function FooterSection() {
 				<div className={styles.footerBottom}>
 					<span>© 2024–2026 eztb</span>
 					<span className={styles.footerDot}>·</span>
-					<span>Powered by React + Hono</span>
+					<a
+						className={styles.footerBottomLink}
+						href="https://kairi.cc/zh"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						kairi.cc
+					</a>
+					<span className={styles.footerDot}>·</span>
+					<a className={styles.footerBottomLink} href="mailto:noreply@eztb.org">
+						noreply@eztb.org
+					</a>
+					<span className={styles.footerDot}>·</span>
+					<span>Powered by React 19 + Hono</span>
 				</div>
 			</div>
 		</footer>

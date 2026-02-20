@@ -905,7 +905,12 @@ export function SettingsDialog() {
 	const Panel = PANELS[settingsTab];
 
 	return (
-		<Dialog title="设置" onClose={() => closeSettings()} width="xlarge">
+		<Dialog
+			title="设置"
+			onClose={() => closeSettings()}
+			width="xlarge"
+			className={styles.settingDialog}
+		>
 			<div className={styles.splitLayout}>
 				<nav className={styles.sidebar}>
 					<NavList>

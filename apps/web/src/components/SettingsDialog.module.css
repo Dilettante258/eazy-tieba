@@ -1,5 +1,14 @@
 /* ── 设置 Dialog 内部布局 ── */
 
+.settingDialog {
+	& > div[role="region"] {
+		overflow: unset;
+
+
+
+	}
+}
+
 .splitLayout {
 	display: flex;
 	height: 60vh;
@@ -255,5 +264,6 @@
 
 	.content {
 		padding-left: 0;
+		overflow-y: unset;
 	}
 }

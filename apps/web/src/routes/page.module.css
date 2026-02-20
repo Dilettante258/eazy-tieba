@@ -651,6 +651,13 @@
 	margin: 0;
 }
 
+.aboutSubLead {
+	font-size: 0.875rem;
+	line-height: 1.65;
+	color: var(--fgColor-muted, #656d76);
+	margin: 0.75rem 0 0;
+}
+
 .aboutSectionTitle {
 	font-size: 1rem;
 	font-weight: 600;
@@ -687,6 +694,69 @@
 	line-height: 1.5;
 }
 
+.aboutBulletList {
+	margin: 0;
+	padding-left: 1.1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.aboutBulletItem {
+	font-size: 0.875rem;
+	line-height: 1.55;
+	color: var(--fgColor-default, #1f2328);
+}
+
+.aboutStackGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 0.75rem;
+	margin-bottom: 0.875rem;
+}
+
+.aboutStackCard {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.625rem;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+	background: color-mix(
+		in srgb,
+		var(--bgColor-default, #fff),
+		var(--bgColor-muted, #f6f8fa) 14%
+	);
+}
+
+[data-color-mode="dark"] .aboutStackCard {
+	border-color: var(--borderColor-default, #30363d);
+	background: color-mix(
+		in srgb,
+		var(--bgColor-default, #0d1117),
+		var(--bgColor-muted, #161b22) 22%
+	);
+}
+
+.aboutStackIcon {
+	flex-shrink: 0;
+	margin-top: 0.1rem;
+	color: var(--fgColor-muted, #656d76);
+}
+
+.aboutStackTitle {
+	margin: 0 0 0.3rem;
+	font-size: 0.9375rem;
+	font-weight: 600;
+}
+
+.aboutStackDesc {
+	margin: 0;
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: var(--fgColor-muted, #656d76);
+}
+
 .aboutTechList {
 	display: flex;
 	flex-wrap: wrap;
@@ -720,14 +790,14 @@
 }
 
 .aboutLinkRow {
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 	gap: 0.75rem;
 }
 
 .aboutLinkCard {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 0.75rem;
 	padding: 1rem;
 	border: 1px solid var(--borderColor-default, #d0d7de);
@@ -754,14 +824,26 @@
 	font-size: 0.9375rem;
 }
 
+.aboutLinkText {
+	min-width: 0;
+}
+
 .aboutLinkCard span {
 	font-size: 0.8125rem;
 	color: var(--fgColor-muted, #656d76);
 }
 
+.aboutLinkIcon {
+	flex-shrink: 0;
+	margin-top: 0.125rem;
+	color: var(--fgColor-default, #1f2328);
+}
+
 .aboutLinkExtIcon {
 	margin-left: auto;
+	margin-top: 0.15rem;
 	color: var(--fgColor-muted, #656d76);
+	flex-shrink: 0;
 }
 
 .aboutFootnote {

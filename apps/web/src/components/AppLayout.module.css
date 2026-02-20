@@ -3,7 +3,7 @@
 
 html {
 	container-type: scroll-state;
-	container-name: scroller;
+	container-name: rootCtn;
 }
 
 /* ── 导航栏 ── */
@@ -76,7 +76,7 @@ html {
 
 /* navbar 粘附时恢复毛玻璃 */
 @container scroll-state (scrollable: top) {
-	.navbar[data-transparent="true"] {
+	nav.navbar[data-transparent="true"] {
 		--_bg: rgba(255, 255, 255, 0.85);
 		--_blur: blur(12px);
 		--_border: #e8e8ec;
@@ -92,7 +92,7 @@ html {
 		--_gh-hover-bg: #f6f8fa;
 	}
 
-	[data-color-mode="dark"] .navbar[data-transparent="true"] {
+	[data-color-mode="dark"] nav.navbar[data-transparent="true"] {
 		--_bg: rgba(13, 17, 23, 0.85);
 		--_border: #21262d;
 		--_logo: #e6edf3;

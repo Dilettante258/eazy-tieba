@@ -22,6 +22,7 @@ import styles from "../components/AppLayout.module.css";
 
 const NAV_ITEMS = [
 	{ label: "首页", to: "/" },
+	{ label: "关于", to: "/about" },
 	{ label: "用户资料", to: "/profile" },
 	{ label: "用户帖子", to: "/userpost" },
 	{ label: "发帖分析", to: "/postanalysis" },
