@@ -13,6 +13,10 @@ const content = readFileSync(sourcePath, "utf8");
 
 for (const targetPath of targetPaths) {
 	mkdirSync(dirname(targetPath), { recursive: true });
-	writeFileSync(targetPath, content.endsWith("\n") ? content : `${content}\n`, "utf8");
+	writeFileSync(
+		targetPath,
+		content.endsWith("\n") ? content : `${content}\n`,
+		"utf8",
+	);
 	console.log(`synced: ${targetPath}`);
 }
