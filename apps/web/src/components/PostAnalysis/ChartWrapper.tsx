@@ -5,6 +5,7 @@ import {
 	forwardRef,
 	useImperativeHandle,
 	useEffect,
+	useMemo,
 } from "react";
 import { ActionBar, Dialog, Button, Link } from "@primer/react";
 import {
@@ -31,11 +32,45 @@ interface ChartWrapperProps {
 	onClick?: (e: any) => void;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return !!value && typeof value === "object";
+}
+
+function hasClickTrigger(trigger: unknown): boolean {
+	if (trigger === "click") return true;
+	if (!Array.isArray(trigger)) return false;
+	return trigger.some((item) => item === "click");
+}
+
+function usePreferClickTooltip(): boolean {
+	const [preferClickTooltip, setPreferClickTooltip] = useState(false);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		const media = window.matchMedia("(hover: none), (pointer: coarse)");
+		const update = () => {
+			const hasTouchPoints =
+				typeof navigator !== "undefined" && navigator.maxTouchPoints > 0;
+			setPreferClickTooltip(media.matches || hasTouchPoints);
+		};
+		update();
+		if (typeof media.addEventListener === "function") {
+			media.addEventListener("change", update);
+			return () => media.removeEventListener("change", update);
+		}
+		media.addListener(update);
+		return () => media.removeListener(update);
+	}, []);
+
+	return preferClickTooltip;
+}
+
 export const ChartWrapper = forwardRef<ChartWrapperHandle, ChartWrapperProps>(
 	function ChartWrapper({ spec, style, onClick }, ref) {
 		const chartRef = useRef<IVChart>(null);
 		const [editOpen, setEditOpen] = useState(false);
 		const [editText, setEditText] = useState("");
+		const preferClickTooltip = usePreferClickTooltip();
 		const [VChartComponent, setVChartComponent] = useState<
 			(typeof import("@visactor/react-vchart/esm/VChartSimple"))["VChartSimple"] | null
 		>(null);
@@ -82,6 +117,22 @@ export const ChartWrapper = forwardRef<ChartWrapperHandle, ChartWrapperProps>(
 				// JSON 解析失败，不关闭
 			}
 		}, [editText]);
+		const resolvedSpec = useMemo<ISpec>(() => {
+			if (!preferClickTooltip) return spec;
+			const specObject: Record<string, unknown> = isRecord(spec) ? spec : {};
+			const tooltipObject = isRecord(specObject.tooltip) ? specObject.tooltip : {};
+			if (tooltipObject.visible === false) return spec;
+			if (tooltipObject.trigger === "none") return spec;
+			if (hasClickTrigger(tooltipObject.trigger)) return spec;
+			return {
+				...specObject,
+				tooltip: {
+					...tooltipObject,
+					trigger: "click",
+					triggerOff: "click",
+				},
+			} as ISpec;
+		}, [preferClickTooltip, spec]);
 
 		if (!VChartComponent || !VChartConstructor) {
 			return <div style={style} />;
@@ -92,7 +143,7 @@ export const ChartWrapper = forwardRef<ChartWrapperHandle, ChartWrapperProps>(
 				<VChartComponent
 					ref={chartRef}
 					vchartConstructor={VChartConstructor}
-					spec={spec}
+					spec={resolvedSpec}
 					style={style}
 					onClick={onClick}
 				/>
