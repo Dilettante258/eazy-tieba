@@ -9,7 +9,7 @@ import {
 	NoteIcon,
 } from "@primer/octicons-react";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useRef, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { QueryForm } from "../components/QueryForm.tsx";
 import {
 	applyColoredHighlights,
@@ -29,6 +29,7 @@ function UserPostPage() {
 	const { method, id, page } = Route.useSearch();
 	const navigate = useNavigate();
 	const [isPending, startTransition] = useTransition();
+	const [isInfoBannerShown, setIsInfoBannerShown] = useState(true);
 	const { data, isLoading, error } = useQuery(
 		userPostsOptions(method, id, page),
 	);
@@ -41,13 +42,21 @@ function UserPostPage() {
 	const highlightedForums = useSettingsStore((s) => s.highlightedForums);
 	const highlightedUsers = useSettingsStore((s) => s.highlightedUsers);
 	const highlightedKeywords = useSettingsStore((s) => s.highlightedKeywords);
+	const openSettings = useSettingsStore((s) => s.openSettings);
+	const setSettingsTab = useSettingsStore((s) => s.setSettingsTab);
 	const forumMap = new Map(highlightedForums.map((f) => [f.name, f.color]));
 	const userMap = new Map(highlightedUsers.map((u) => [u.name, u.color]));
+	const hasQuery = !!id;
 
 	const goToPage = (p: number) =>
 		startTransition(() => {
 			navigate({ to: "/userpost", search: { method, id, page: p } });
 		});
+
+	const openUserPostSettings = () => {
+		setSettingsTab("userpost");
+		openSettings();
+	};
 
 	// 翻页后自动滚动：如果列表底部在视口底部附近，滚回列表顶部
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -81,6 +90,36 @@ function UserPostPage() {
 		<div>
 			<h2 className={styles.heading}>用户帖子</h2>
 			<QueryForm />
+
+			{!hasQuery && isInfoBannerShown && (
+				<Banner
+					className={styles.infoBanner}
+					aria-label="Userpost hint"
+					variant="info"
+					title="使用提示"
+					description={
+						<span>
+							可在设置{" > "}
+							用户帖子中配置高亮规则：遇到指定贴吧、回复特定人物，或发言包含特定关键词时自动高亮。
+							{/** biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+							<a
+								href="#open-userpost-settings"
+								onClick={(e) => {
+									e.preventDefault();
+									openUserPostSettings();
+								}}
+							>
+								打开设置
+							</a>
+							<br />
+							输入框可直接识别百度贴吧的分享链接
+						</span>
+					}
+					onDismiss={() => {
+						setIsInfoBannerShown(false);
+					}}
+				/>
+			)}
 
 			{/* 仅首次加载显示 Spinner */}
 			{!data && isLoading && (

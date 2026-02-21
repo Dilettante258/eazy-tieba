@@ -8,6 +8,11 @@
 	color: var(--fgColor-default, #1f2328);
 }
 
+.infoBanner {
+    max-width: 720px;
+    margin: 0 auto 2rem;
+}
+
 .center {
 	display: flex;
 	justify-content: center;

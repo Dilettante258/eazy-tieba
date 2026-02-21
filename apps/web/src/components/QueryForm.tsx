@@ -19,6 +19,7 @@ const METHODS = [
 ] as const;
 
 type MethodValue = (typeof METHODS)[number]["value"];
+const SHARE_UID_PATTERN = /#(\d{10})#/;
 
 /** 根据查询方式校验输入值，返回错误信息或 null */
 function validate(method: MethodValue, value: string): string | null {
@@ -27,6 +28,11 @@ function validate(method: MethodValue, value: string): string | null {
 	if (method === "uid" && !/^\d{10}$/.test(v)) return "贴吧 UID 应为 10 位数字";
 	if (method === "id" && !/^\d+$/.test(v)) return "用户 ID 应为纯数字";
 	return null;
+}
+
+/** 从贴吧分享文案中提取 UID，例如：@xxx@给你分享了贴吧号#1234567890#... */
+function extractUidFromShareText(value: string): string | null {
+	return value.match(SHARE_UID_PATTERN)?.[1] ?? null;
 }
 
 export function QueryForm() {
@@ -49,14 +55,21 @@ export function QueryForm() {
 			e.preventDefault();
 			const trimmed = value.trim();
 			if (!trimmed) return;
-			const err = validate(method, trimmed);
+			const sharedUid = extractUidFromShareText(trimmed);
+			const nextMethod: MethodValue = sharedUid ? "uid" : method;
+			const nextId = sharedUid ?? trimmed;
+			if (sharedUid) {
+				setMethod("uid");
+				setValue(sharedUid);
+			}
+			const err = validate(nextMethod, nextId);
 			if (err) {
 				setError(err);
 				return;
 			}
 			navigate({
 				to: ".",
-				search: () => ({ method, id: trimmed }),
+				search: () => ({ method: nextMethod, id: nextId }),
 			});
 		});
 	};
@@ -102,6 +115,16 @@ export function QueryForm() {
 										setValue(e.target.value);
 										if (error) setError(null);
 									}}
+									onPaste={(e) => {
+										const sharedUid = extractUidFromShareText(
+											e.clipboardData.getData("text"),
+										);
+										if (!sharedUid) return;
+										e.preventDefault();
+										setMethod("uid");
+										setValue(sharedUid);
+										setError(null);
+									}}
 									placeholder={
 										method === "uid"
 											? "请输入贴吧 UID"
@@ -128,6 +151,9 @@ export function QueryForm() {
 										{error}
 									</FormControl.Validation>
 								)}
+								<FormControl.Caption>
+									支持粘贴贴吧分享文案，自动识别并填入 UID
+								</FormControl.Caption>
 							</FormControl>
 							<Button type="submit" variant="primary" disabled={!value.trim()}>
 								查询
