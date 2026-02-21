@@ -25,6 +25,35 @@ function formatAxisDayHour(ts: number): string {
 	return `${d.getDate()}日${String(d.getHours()).padStart(2, "0")}时`;
 }
 
+function clamp01(value: number): number {
+	if (!Number.isFinite(value)) return 0;
+	if (value <= 0) return 0;
+	if (value >= 1) return 1;
+	return value;
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+	const raw = hex.replace("#", "");
+	if (raw.length !== 6) return [0, 0, 0];
+	return [
+		Number.parseInt(raw.slice(0, 2), 16),
+		Number.parseInt(raw.slice(2, 4), 16),
+		Number.parseInt(raw.slice(4, 6), 16),
+	];
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+	const toHex = (v: number) => Math.round(v).toString(16).padStart(2, "0");
+	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function interpolateHexColor(from: string, to: string, ratio: number): string {
+	const [r1, g1, b1] = hexToRgb(from);
+	const [r2, g2, b2] = hexToRgb(to);
+	const t = clamp01(ratio);
+	return rgbToHex(r1 + (r2 - r1) * t, g1 + (g2 - g1) * t, b1 + (b2 - b1) * t);
+}
+
 // ── IP 属地地图 ──
 
 interface IpMapChartProps {
@@ -36,6 +65,112 @@ export const IpMapChart = forwardRef<ChartWrapperHandle, IpMapChartProps>(
 	function IpMapChart({ data, style }, ref) {
 		const { isDark } = useColorMode();
 		const { palette } = getChartColors(isDark);
+		const startColor = isDark ? "#1a2332" : "#e6f0ff";
+		const endColor = palette[0];
+		const mergedData = useMemo<
+			Array<{ name: string; value: number; topUsers: string[] }>
+		>(() => {
+			const merged = new Map<
+				string,
+				{ value: number; topUsers: Set<string> }
+			>();
+			for (const item of data) {
+				const name = item.name;
+				const hit = merged.get(name);
+				if (hit) {
+					hit.value += item.value;
+					for (const user of item.topUsers) hit.topUsers.add(user);
+				} else {
+					merged.set(name, {
+						value: item.value,
+						topUsers: new Set(item.topUsers),
+					});
+				}
+			}
+			return [...merged.entries()].map(([name, item]) => ({
+				name,
+				value: item.value,
+				topUsers: [...item.topUsers].slice(0, 10),
+			}));
+		}, [data]);
+		const valueByRegion = useMemo(() => {
+			return new Map(mergedData.map((item) => [item.name, item]));
+		}, [mergedData]);
+		const valueMax = useMemo(
+			() => Math.max(...mergedData.map((item) => item.value), 1),
+			[mergedData],
+		);
+		const regionStyleOverrides = useMemo<
+			Record<string, { style: { fill: string } }>
+		>(() => {
+			return Object.fromEntries(
+				mergedData.map((item) => [
+					item.name,
+					{
+						style: {
+							fill: interpolateHexColor(
+								startColor,
+								endColor,
+								item.value / valueMax,
+							),
+						},
+					},
+				]),
+			);
+		}, [endColor, mergedData, startColor, valueMax]);
+		const getRegionNameFromDatum = (
+			datum: unknown,
+		): string | undefined => {
+			if (!datum || typeof datum !== "object") return undefined;
+			const record = datum as Record<string, unknown>;
+			const data = record.data;
+			if (data && typeof data === "object") {
+				const dataName = (data as Record<string, unknown>).name;
+				if (typeof dataName === "string" && valueByRegion.has(dataName)) {
+					return dataName;
+				}
+			}
+			const name = record.name;
+			if (typeof name === "string" && valueByRegion.has(name)) return name;
+			const nameFromParent = record._nameFromParent;
+			if (
+				typeof nameFromParent === "string" &&
+				valueByRegion.has(nameFromParent)
+			) {
+				return nameFromParent;
+			}
+			return undefined;
+		};
+		const getRegionNameFromTooltipData = (
+			tooltipData: unknown,
+		): string | undefined => {
+			if (!Array.isArray(tooltipData)) return undefined;
+			for (const item of tooltipData) {
+				if (!item || typeof item !== "object") continue;
+				const datumList = (item as { datum?: unknown }).datum;
+				if (!Array.isArray(datumList)) continue;
+				for (const datum of datumList) {
+					const regionName = getRegionNameFromDatum(datum);
+					if (regionName) return regionName;
+				}
+			}
+			return undefined;
+		};
+		const resolveRegionName = (
+			datum: unknown,
+			params?: unknown,
+			tooltipData?: unknown,
+		): string | undefined => {
+			const markName = (params as { mark?: { name?: unknown } } | undefined)
+				?.mark?.name;
+			if (typeof markName === "string" && valueByRegion.has(markName)) {
+				return markName;
+			}
+			return (
+				getRegionNameFromDatum(datum) ??
+				getRegionNameFromTooltipData(tooltipData)
+			);
+		};
 
 		// 动态加载地图 SVG
 		const [mapReady, setMapReady] = useState(false);
@@ -47,7 +182,7 @@ export const IpMapChart = forwardRef<ChartWrapperHandle, IpMapChartProps>(
 			() => ({
 				type: "pictogram",
 				padding: { top: 0, bottom: 0, left: 0, right: 0 },
-				data: [{ id: "ip", values: data }],
+				data: [{ id: "ip", values: mergedData }],
 				nameField: "name",
 				valueField: "value",
 				svg: "chinamap",
@@ -72,37 +207,50 @@ export const IpMapChart = forwardRef<ChartWrapperHandle, IpMapChartProps>(
 					{
 						id: "color",
 						type: "linear",
-						domain: [0, Math.max(...data.map((d) => d.value), 1)],
-						range: [isDark ? "#1a2332" : "#e6f0ff", palette[0]],
+						domain: [0, valueMax],
+						range: [startColor, endColor],
 					},
 				],
 				tooltip: {
 					trigger: "hover",
 					mark: {
 						title: {
-							// pictogram 的 datum 是 SVG 元素对象，实际数据在 datum.data
-							value: (datum) =>
-								datum?.data?.value != null ? String(datum.data.name) : "",
+							value: (datum, params) =>
+								resolveRegionName(datum, params, undefined),
 						},
 						content: [
 							{
-								key: "发帖数",
-								value: (datum) =>
-									datum?.data?.value != null ? `${datum.data.value} 人` : "",
+								key: (datum, params) =>
+									resolveRegionName(datum, params, undefined)
+										? "发帖数"
+										: undefined,
+								value: (datum, params) => {
+									const regionName = resolveRegionName(
+										datum,
+										params,
+										undefined,
+									);
+									if (!regionName) return undefined;
+									const entry = valueByRegion.get(regionName);
+									return entry ? `${entry.value} 人` : undefined;
+								},
 								hasShape: false,
 							},
 						],
-						updateContent: (prev) => {
-							if (!prev?.length) return prev;
-							// biome-ignore lint/suspicious/noExplicitAny: VChart pictogram tooltip datum
-							const d = (prev[0] as any).datum;
-							const users: string[] | undefined = d?.data?.topUsers;
-							if (users) {
-								for (const u of users) {
-									prev.push({ key: u, value: "", hasShape: false });
-								}
+						updateContent: (prev, tooltipData, params) => {
+							const baseContent = prev ? [...prev] : [];
+							const regionName = resolveRegionName(
+								baseContent[0]?.datum,
+								params,
+								tooltipData,
+							);
+							if (!regionName) return [];
+							const users = valueByRegion.get(regionName)?.topUsers;
+							if (!users?.length) return baseContent;
+							for (const user of users) {
+								baseContent.push({ key: user, value: "", hasShape: false });
 							}
-							return prev;
+							return baseContent;
 						},
 					},
 				},
@@ -115,11 +263,20 @@ export const IpMapChart = forwardRef<ChartWrapperHandle, IpMapChartProps>(
 						position: "middle",
 					},
 				],
+				...regionStyleOverrides,
 			}),
-			[data, palette, isDark],
+			[
+				endColor,
+				isDark,
+				mergedData,
+				regionStyleOverrides,
+				startColor,
+				valueByRegion,
+				valueMax,
+			],
 		);
 
-		if (!mapReady || data.length === 0) return <div style={style} />;
+		if (!mapReady || mergedData.length === 0) return <div style={style} />;
 		return <ChartWrapper ref={ref} spec={spec} style={style} />;
 	},
 );
