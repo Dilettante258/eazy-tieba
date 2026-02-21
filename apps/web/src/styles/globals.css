@@ -4,6 +4,18 @@ body {
 	margin: 0;
 }
 
+.seo-only-h1 {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
 /* BaseStyles 只设了 color/font，需要补上背景色并撑满视口 */
 [data-color-mode] {
 	background-color: var(--bgColor-default, #fff);
