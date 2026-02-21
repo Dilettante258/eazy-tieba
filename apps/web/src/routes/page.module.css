@@ -694,6 +694,24 @@
 	line-height: 1.5;
 }
 
+.aboutInstallList {
+	margin: 0;
+	padding-left: 1.25rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.aboutInstallItem {
+	font-size: 0.875rem;
+	line-height: 1.65;
+	color: var(--fgColor-default, #1f2328);
+}
+
+.aboutInstallItem strong {
+	font-weight: 600;
+}
+
 .aboutBulletList {
 	margin: 0;
 	padding-left: 1.1rem;

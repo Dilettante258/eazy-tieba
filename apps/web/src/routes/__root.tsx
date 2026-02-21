@@ -18,6 +18,7 @@ import {
 import { lazy, Suspense } from "react";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { usePwaInstall } from "../lib/pwa-install.ts";
+import { useRouteSeo } from "../lib/seo.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
 import type { RouterContext } from "../lib/router-context.ts";
 import styles from "../components/AppLayout.module.css";
@@ -135,6 +136,7 @@ function RootLayout() {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 	const isHome = pathname === "/";
 	const settingsOpen = useSettingsStore((s) => s.settingsOpen);
+	useRouteSeo(pathname);
 
 	return (
 		<>

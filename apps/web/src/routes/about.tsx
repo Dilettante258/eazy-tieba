@@ -59,7 +59,7 @@ const FEATURES = [
 	{ title: "发帖数据分析", desc: "按时间、贴吧、互动等维度做可视化分析" },
 	{ title: "发言搜索", desc: "支持按贴吧、时间范围和关键字筛选发言数据" },
 	{ title: "关系数据查询", desc: "查看关注、粉丝、关注贴吧等关系信息" },
-	{ title: "导出能力", desc: "支持 CSV/Excel 导出，便于二次分析与归档" },
+	{ title: "导出能力", desc: "支持 Json/Excel 导出，便于二次分析与归档" },
 ] as const;
 
 const USE_CASES = [
@@ -81,10 +81,19 @@ const USE_CASES = [
 	},
 ] as const;
 
-const DESIGN_PRINCIPLES = [
-	"保持查询链路清晰，优先给出可用结果，再逐步补充细节。",
-	"保证导出结构稳定，便于后续脚本处理和数据比对。",
-	"前后端职责分离，网页、服务端和 SDK 可以独立迭代。",
+const INSTALL_GUIDE = [
+	{
+		title: "网页端一键安装",
+		desc: "打开「设置 -> 关于」，点击“安装到主屏幕”按钮。支持安装提示的浏览器会直接弹出安装面板。",
+	},
+	{
+		title: "苹果手机安装方式",
+		desc: "请使用 Safari 打开本站，点击底部“分享”按钮，选择“添加到主屏幕”。",
+	},
+	{
+		title: "安装后的使用方式",
+		desc: "安装完成后会以独立应用打开，可直接从手机桌面进入，体验与普通 App 更接近。",
+	},
 ] as const;
 
 const RESOURCE_LINKS = [
@@ -156,9 +165,21 @@ function AboutPage() {
 					聚焦「查询、分析、导出」三类核心能力，帮助你更高效地理解贴吧用户与内容数据。
 				</p>
 				<p className={styles.aboutSubLead}>
-					项目采用前后端分层设计：网页端负责交互和可视化，服务端负责数据聚合与接口，
-					SDK 提供可复用的数据访问能力，方便后续扩展与二次开发。
+					便捷操作、现代化界面、丰富功能，让查询与分析一步到位。
 				</p>
+			</div>
+
+			{/* 安装到桌面 */}
+			<div className={styles.aboutSection}>
+				<h3 className={styles.aboutSectionTitle}>如何安装到桌面</h3>
+				<ol className={styles.aboutInstallList}>
+					{INSTALL_GUIDE.map((item) => (
+						<li key={item.title} className={styles.aboutInstallItem}>
+							<strong>{item.title}：</strong>
+							{item.desc}
+						</li>
+					))}
+				</ol>
 			</div>
 
 			{/* 功能列表 */}
@@ -185,18 +206,6 @@ function AboutPage() {
 						</div>
 					))}
 				</div>
-			</div>
-
-			{/* 设计原则 */}
-			<div className={styles.aboutSection}>
-				<h3 className={styles.aboutSectionTitle}>设计原则</h3>
-				<ul className={styles.aboutBulletList}>
-					{DESIGN_PRINCIPLES.map((item) => (
-						<li key={item} className={styles.aboutBulletItem}>
-							{item}
-						</li>
-					))}
-				</ul>
 			</div>
 
 			{/* 技术栈 */}
@@ -251,7 +260,10 @@ function AboutPage() {
 									<strong>{item.title}</strong>
 									<span>{item.desc}</span>
 								</div>
-								<LinkExternalIcon size={14} className={styles.aboutLinkExtIcon} />
+								<LinkExternalIcon
+									size={14}
+									className={styles.aboutLinkExtIcon}
+								/>
 							</a>
 						);
 					})}
@@ -270,14 +282,21 @@ function AboutPage() {
 								className={styles.aboutLinkCard}
 								href={item.url}
 								target={item.url.startsWith("http") ? "_blank" : undefined}
-								rel={item.url.startsWith("http") ? "noopener noreferrer" : undefined}
+								rel={
+									item.url.startsWith("http")
+										? "noopener noreferrer"
+										: undefined
+								}
 							>
 								<Icon size={20} className={styles.aboutLinkIcon} />
 								<div className={styles.aboutLinkText}>
 									<strong>{item.title}</strong>
 									<span>{item.desc}</span>
 								</div>
-								<LinkExternalIcon size={14} className={styles.aboutLinkExtIcon} />
+								<LinkExternalIcon
+									size={14}
+									className={styles.aboutLinkExtIcon}
+								/>
 							</a>
 						);
 					})}
@@ -303,7 +322,10 @@ function AboutPage() {
 									<strong>{item.title}</strong>
 									<span>{item.desc}</span>
 								</div>
-								<LinkExternalIcon size={14} className={styles.aboutLinkExtIcon} />
+								<LinkExternalIcon
+									size={14}
+									className={styles.aboutLinkExtIcon}
+								/>
 							</a>
 						);
 					})}

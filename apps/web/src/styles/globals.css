@@ -4,6 +4,15 @@ body {
 	margin: 0;
 }
 
+/* iOS Safari: 输入框字体小于 16px 时 focus 会自动放大页面 */
+@media (hover: none) and (pointer: coarse) {
+	input,
+	textarea,
+	select {
+		font-size: 16px;
+	}
+}
+
 /* BaseStyles 只设了 color/font，需要补上背景色并撑满视口 */
 [data-color-mode] {
 	background-color: var(--bgColor-default, #fff);

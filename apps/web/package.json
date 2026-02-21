@@ -35,6 +35,7 @@
 		"@tanstack/router-plugin": "^1",
 		"@tanstack/router-zod-adapter": "^1",
 		"@types/react": "^19",
-		"@types/react-dom": "^19"
+		"@types/react-dom": "^19",
+		"vite-plugin-sitemap": "^0.8.2"
 	}
 }

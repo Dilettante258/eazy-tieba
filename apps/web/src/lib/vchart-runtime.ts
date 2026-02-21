@@ -17,7 +17,9 @@ import { registerContinuousLegend } from "@visactor/vchart/esm/component/legend/
 import { registerDiscreteLegend } from "@visactor/vchart/esm/component/legend/discrete";
 import { registerTooltip } from "@visactor/vchart/esm/component/tooltip";
 import { registerBrowserEnv } from "@visactor/vchart/esm/env/env";
+import { registerAllMarks } from "@visactor/vchart/esm/mark";
 import { registerCanvasTooltipHandler } from "@visactor/vchart/esm/plugin/components/tooltip-handler/canvas-tooltip-handler";
+import { registerDomTooltipHandler } from "@visactor/vchart/esm/plugin/components/tooltip-handler/dom-tooltip-handler";
 
 let initialized = false;
 
@@ -26,6 +28,8 @@ export function ensureVChartRuntimeRegistered() {
 
 	VChart.useRegisters([
 		registerBrowserEnv,
+		registerAllMarks,
+		registerDomTooltipHandler,
 		registerCanvasTooltipHandler,
 		registerBarChart,
 		registerCommonChart,
