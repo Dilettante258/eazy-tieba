@@ -53,11 +53,11 @@ function DotsBg({ fill, id }: { fill: string; id: string }) {
 // ── 统计区域 ──
 
 const STATS = [
-	{ icon: ZapIcon, value: "90+", label: "人次日均访问量", color: "#1d8ae7" },
+	{ icon: ZapIcon, value: "350+", label: "人次日均访问量", color: "#1d8ae7" },
 	{
 		icon: SearchIcon,
-		value: "2nd",
-		label: "Bing搜索关键词中曾排行第二",
+		value: "1st",
+		label: "Bing、百度、谷歌等搜索排行第一",
 		color: "#f76b15",
 	},
 	{
@@ -68,7 +68,7 @@ const STATS = [
 	},
 	{
 		icon: PeopleIcon,
-		value: "3000+",
+		value: "10000+",
 		label: "累计独立使用者",
 		color: "#d6409f",
 	},
