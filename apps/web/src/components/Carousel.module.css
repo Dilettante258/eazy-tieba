@@ -71,28 +71,28 @@
 }
 
 .slide1 .slideContent {
-	background-image: url("/slide1@1x.webp");
+	background-image: url("https://h-r2.kairi.cc/tb/slide1%401x.webp");
 }
 
 .slide2 .slideContent {
-	background-image: url("/slide2@1x.webp");
+	background-image: url("https://h-r2.kairi.cc/tb/slide2%401x.webp");
 }
 
 .slide3 .slideContent {
-	background-image: url("/slide3@1x.webp");
+	background-image: url("https://h-r2.kairi.cc/tb/slide3%401x.webp");
 }
 
 @media (min-resolution: 2dppx) {
 	.slide1 .slideContent {
-		background-image: url("/slide1@2x.webp");
+		background-image: url("https://h-r2.kairi.cc/tb/slide1%402x.webp");
 	}
 
 	.slide2 .slideContent {
-		background-image: url("/slide2@2x.webp");
+		background-image: url("https://h-r2.kairi.cc/tb/slide2%402x.webp");
 	}
 
 	.slide3 .slideContent {
-		background-image: url("/slide3@2x.webp");
+		background-image: url("https://h-r2.kairi.cc/tb/slide3%402x.webp");
 	}
 }
 
