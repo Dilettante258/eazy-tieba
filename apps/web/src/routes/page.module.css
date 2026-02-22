@@ -43,6 +43,13 @@
 	}
 }
 
+.paginationHint {
+	margin: 1.25rem 0 0.5rem;
+	text-align: center;
+	font-size: 0.8125rem;
+	color: var(--fgColor-muted, #656d76);
+}
+
 /* ── Profile ── */
 
 .card {
@@ -731,6 +738,28 @@
 	color: var(--fgColor-default, #1f2328);
 }
 
+.aboutTimeline {
+	margin: 0;
+}
+
+.aboutTimelineBody {
+	padding-bottom: 0.125rem;
+}
+
+.aboutTimelineTitle {
+	margin: 0;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--fgColor-default, #1f2328);
+}
+
+.aboutTimelineSummary {
+	margin: 0.25rem 0 0.5rem;
+	font-size: 0.8125rem;
+	line-height: 1.55;
+	color: var(--fgColor-muted, #656d76);
+}
+
 .aboutStackGrid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -867,6 +896,73 @@
 	margin-top: 0.15rem;
 	color: var(--fgColor-muted, #656d76);
 	flex-shrink: 0;
+}
+
+.aboutContactList {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	border-top: 1px solid var(--borderColor-default, #d0d7de);
+}
+
+[data-color-mode="dark"] .aboutContactList {
+	border-top-color: var(--borderColor-default, #30363d);
+}
+
+.aboutContactItem {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.875rem 0.25rem;
+	border-bottom: 1px solid var(--borderColor-default, #d0d7de);
+	text-decoration: none;
+	color: inherit;
+}
+
+[data-color-mode="dark"] .aboutContactItem {
+	border-bottom-color: var(--borderColor-default, #30363d);
+}
+
+.aboutContactMain {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 9rem;
+	font-size: 0.9375rem;
+}
+
+.aboutContactIcon {
+	color: var(--fgColor-muted, #656d76);
+	flex-shrink: 0;
+}
+
+.aboutContactDesc {
+	font-size: 0.8125rem;
+	color: var(--fgColor-muted, #656d76);
+}
+
+.aboutContactExtIcon {
+	margin-left: auto;
+	color: var(--fgColor-muted, #656d76);
+	flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+	.aboutContactItem {
+		flex-wrap: wrap;
+		align-items: flex-start;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.aboutContactMain {
+		min-width: 0;
+		width: 100%;
+	}
+
+	.aboutContactExtIcon {
+		margin-left: 0;
+	}
 }
 
 .aboutFootnote {

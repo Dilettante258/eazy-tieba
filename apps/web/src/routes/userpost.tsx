@@ -223,25 +223,32 @@ function UserPostPage() {
 			)}
 
 			{data && (
-				<div className={styles.paginationWrap}>
-					<Button
-						variant="invisible"
-						leadingVisual={ChevronLeftIcon}
-						disabled={page <= 1}
-						onClick={() => goToPage(page - 1)}
-					>
-						上一页
-					</Button>
-					<span>第 {page} 页</span>
-					<Button
-						variant="invisible"
-						trailingVisual={ArrowRightIcon}
-						disabled={posts.length < 30}
-						onClick={() => goToPage(page + 1)}
-					>
-						下一页
-					</Button>
-				</div>
+				<>
+					{posts.length < 28 && (
+						<p className={styles.paginationHint}>
+							本页仅 {posts.length} 条，可能没有下一页了。
+						</p>
+					)}
+					<div className={styles.paginationWrap}>
+						<Button
+							variant="invisible"
+							leadingVisual={ChevronLeftIcon}
+							disabled={page <= 1}
+							onClick={() => goToPage(page - 1)}
+						>
+							上一页
+						</Button>
+						<span>第 {page} 页</span>
+						<Button
+							variant="invisible"
+							trailingVisual={ArrowRightIcon}
+							disabled={posts.length < 29}
+							onClick={() => goToPage(page + 1)}
+						>
+							下一页
+						</Button>
+					</div>
+				</>
 			)}
 		</div>
 	);

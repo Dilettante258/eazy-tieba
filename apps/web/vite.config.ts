@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -26,8 +27,19 @@ function normalizeSiteUrl(input?: string) {
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), "");
 	const hostname = normalizeSiteUrl(env.VITE_SITE_URL);
+	const pkg = JSON.parse(
+		readFileSync(resolve(__dirname, "./package.json"), "utf-8"),
+	) as { version?: string };
+	const appVersion =
+		typeof pkg.version === "string" && pkg.version.trim()
+			? pkg.version.trim()
+			: "0.0.0";
 
 	return {
+		define: {
+			__BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+			__APP_VERSION__: JSON.stringify(appVersion),
+		},
 		publicDir: "public",
 		plugins: [
 			tanstackRouter({

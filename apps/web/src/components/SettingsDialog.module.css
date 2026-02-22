@@ -225,6 +225,9 @@
 .aboutSection {
 	font-size: 0.875rem;
 	color: var(--fgColor-default);
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
 }
 
 .aboutSection h3 {
@@ -233,9 +236,50 @@
 	margin: 0 0 0.75rem;
 }
 
-.aboutSection p {
-	margin: 0.375rem 0;
+.aboutIntro {
+	margin: 0;
 	color: var(--fgColor-muted);
+	line-height: 1.5;
+}
+
+.aboutMetaList {
+	border: 1px solid var(--borderColor-default);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.aboutMetaItem {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.625rem 0.75rem;
+	border-bottom: 1px solid var(--borderColor-muted);
+}
+
+.aboutMetaItem:last-child {
+	border-bottom: 0;
+}
+
+.aboutMetaLabel {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 5.75rem;
+	color: var(--fgColor-default);
+	font-weight: 500;
+}
+
+.aboutMetaValue {
+	color: var(--fgColor-muted);
+}
+
+.aboutMetaLink {
+	color: var(--fgColor-accent) !important;
+	text-decoration: none;
+}
+
+.aboutMetaLink:hover {
+	text-decoration: underline;
 }
 
 .aboutSection a {
@@ -263,6 +307,17 @@
 }
 
 @media (max-width: 480px) {
+	.aboutMetaItem {
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 0.375rem 0.75rem;
+	}
+
+	.aboutMetaLabel {
+		min-width: 0;
+		width: 100%;
+	}
+
 	.splitLayout {
 		flex-direction: column;
 		min-height: auto;

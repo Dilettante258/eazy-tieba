@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Timeline } from "@primer/react";
 import {
 	BookIcon,
 	BrowserIcon,
 	CodeSquareIcon,
+	GitCommitIcon,
 	GraphIcon,
 	LinkExternalIcon,
 	MailIcon,
@@ -96,6 +98,26 @@ const INSTALL_GUIDE = [
 	},
 ] as const;
 
+const CHANGELOG = [
+	{
+		version: "v3.0.0",
+		summary: "v3 系列首发版本，完成核心能力整合。",
+		items: [
+			"支持PWA能力，支持安装到首页。",
+			"提供用户资料、发帖分析、发言搜索、关系查询与导出等核心功能。",
+		],
+	},
+	{
+		version: "v3.1.0",
+		summary: "当前版本，聚焦首屏体验和输入规则一致性。",
+		items: [
+			"首页轮播图资源迁移到 CDN，并提前 dns-prefetch。",
+			"UID 查询规则更新为支持 8 位到 10 位数字，兼容更多历史账号。",
+			"导出页与查询表单的 UID 提示文案和校验逻辑已保持一致。",
+		],
+	},
+] as const;
+
 const RESOURCE_LINKS = [
 	{
 		title: "项目主仓库",
@@ -180,6 +202,33 @@ function AboutPage() {
 						</li>
 					))}
 				</ol>
+			</div>
+
+			{/* 更新日志 */}
+			<div className={styles.aboutSection}>
+				<h3 className={styles.aboutSectionTitle}>更新日志</h3>
+				<Timeline className={styles.aboutTimeline} clipSidebar={false}>
+					{CHANGELOG.map((item) => (
+						<Timeline.Item key={item.version}>
+							<Timeline.Badge>
+								<GitCommitIcon aria-label="Commit" />
+							</Timeline.Badge>
+							<Timeline.Body>
+								<div className={styles.aboutTimelineBody}>
+									<p className={styles.aboutTimelineTitle}>{item.version}</p>
+									<p className={styles.aboutTimelineSummary}>{item.summary}</p>
+									<ul className={styles.aboutBulletList}>
+										{item.items.map((point) => (
+											<li key={point} className={styles.aboutBulletItem}>
+												{point}
+											</li>
+										))}
+									</ul>
+								</div>
+							</Timeline.Body>
+						</Timeline.Item>
+					))}
+				</Timeline>
 			</div>
 
 			{/* 功能列表 */}
@@ -273,30 +322,29 @@ function AboutPage() {
 			{/* 作者与联系 */}
 			<div className={styles.aboutSection}>
 				<h3 className={styles.aboutSectionTitle}>作者与联系</h3>
-				<div className={styles.aboutLinkRow}>
+				<div className={styles.aboutContactList}>
 					{AUTHOR_LINKS.map((item) => {
 						const Icon = item.icon;
+						const isExternal = item.url.startsWith("http");
 						return (
 							<a
 								key={item.title}
-								className={styles.aboutLinkCard}
+								className={styles.aboutContactItem}
 								href={item.url}
-								target={item.url.startsWith("http") ? "_blank" : undefined}
-								rel={
-									item.url.startsWith("http")
-										? "noopener noreferrer"
-										: undefined
-								}
+								target={isExternal ? "_blank" : undefined}
+								rel={isExternal ? "noopener noreferrer" : undefined}
 							>
-								<Icon size={20} className={styles.aboutLinkIcon} />
-								<div className={styles.aboutLinkText}>
+								<div className={styles.aboutContactMain}>
+									<Icon size={16} className={styles.aboutContactIcon} />
 									<strong>{item.title}</strong>
-									<span>{item.desc}</span>
 								</div>
-								<LinkExternalIcon
-									size={14}
-									className={styles.aboutLinkExtIcon}
-								/>
+								<span className={styles.aboutContactDesc}>{item.desc}</span>
+								{isExternal && (
+									<LinkExternalIcon
+										size={14}
+										className={styles.aboutContactExtIcon}
+									/>
+								)}
 							</a>
 						);
 					})}

@@ -12,12 +12,16 @@ import {
 	Text,
 } from "@primer/react";
 import {
+	ClockIcon,
 	DownloadIcon,
 	GearIcon,
 	GlobeIcon,
 	GraphIcon,
 	InfoIcon,
+	MailIcon,
+	MarkGithubIcon,
 	NoteIcon,
+	PackageIcon,
 	TrashIcon,
 	XIcon,
 } from "@primer/octicons-react";
@@ -870,22 +874,60 @@ function GlobalSettings() {
 
 function AboutSettings() {
 	const { canInstall, installed, install } = usePwaInstall();
+	const buildDate = new Date(__BUILD_DATE__);
+	const versionText = __APP_VERSION__.startsWith("v")
+		? __APP_VERSION__
+		: `v${__APP_VERSION__}`;
+	const buildDateText = Number.isNaN(buildDate.getTime())
+		? __BUILD_DATE__
+		: new Intl.DateTimeFormat("zh-CN", {
+				dateStyle: "long",
+				timeStyle: "short",
+			}).format(buildDate);
 
 	return (
 		<div className={styles.aboutSection}>
 			<h3>关于 eztb</h3>
-			<p>版本：v3.0.0-dev</p>
-			<p>
-				GitHub：
-				<a
-					href="https://github.com/Dilettante258/tieba-toolbox"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Dilettante258/tieba-toolbox
-				</a>
-			</p>
-			<p>一个贴吧工具箱，用于查看和分析贴吧用户数据。</p>
+			<p className={styles.aboutIntro}>一个贴吧工具箱，用于查看和分析贴吧用户数据。</p>
+			<div className={styles.aboutMetaList}>
+				<div className={styles.aboutMetaItem}>
+					<span className={styles.aboutMetaLabel}>
+						<PackageIcon size={14} />
+						版本
+					</span>
+					<span className={styles.aboutMetaValue}>{versionText}</span>
+				</div>
+				<div className={styles.aboutMetaItem}>
+					<span className={styles.aboutMetaLabel}>
+						<ClockIcon size={14} />
+						构建日期
+					</span>
+					<span className={styles.aboutMetaValue}>{buildDateText}</span>
+				</div>
+				<div className={styles.aboutMetaItem}>
+					<span className={styles.aboutMetaLabel}>
+						<MarkGithubIcon size={14} />
+						GitHub
+					</span>
+					<a
+						className={styles.aboutMetaLink}
+						href="https://github.com/Dilettante258/tieba-toolbox"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Dilettante258/tieba-toolbox
+					</a>
+				</div>
+				<div className={styles.aboutMetaItem}>
+					<span className={styles.aboutMetaLabel}>
+						<MailIcon size={14} />
+						联系邮箱
+					</span>
+					<a className={styles.aboutMetaLink} href="mailto:noreply@eztb.org">
+						noreply@eztb.org
+					</a>
+				</div>
+			</div>
 			<div className={styles.aboutInstallRow}>
 				<Button
 					size="small"
