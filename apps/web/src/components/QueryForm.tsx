@@ -19,14 +19,14 @@ const METHODS = [
 ] as const;
 
 type MethodValue = (typeof METHODS)[number]["value"];
-const SHARE_UID_PATTERN = /#(\d{9,10})#/;
+const SHARE_UID_PATTERN = /#(\d{8,10})#/;
 
 /** 根据查询方式校验输入值，返回错误信息或 null */
 function validate(method: MethodValue, value: string): string | null {
 	const v = value.trim();
 	if (!v) return null;
-	if (method === "uid" && !/^\d{9,10}$/.test(v))
-		return "贴吧 UID 应为 9 位或 10 位数字";
+	if (method === "uid" && !/^\d{8,10}$/.test(v))
+		return "贴吧 UID 应为 8 位到 10 位数字";
 	if (method === "id" && !/^\d+$/.test(v)) return "用户 ID 应为纯数字";
 	return null;
 }

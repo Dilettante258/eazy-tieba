@@ -72,7 +72,7 @@ const USER_METHOD_OPTIONS: Array<{
 	label: string;
 	hint: string;
 }> = [
-	{ value: "uid", label: "贴吧 UID", hint: "9 位或 10 位数字" },
+	{ value: "uid", label: "贴吧 UID", hint: "8 位到 10 位数字" },
 	{ value: "un", label: "用户名", hint: "请输入用户名" },
 	{ value: "id", label: "用户 ID", hint: "纯数字" },
 ];
