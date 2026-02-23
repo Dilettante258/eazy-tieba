@@ -888,7 +888,9 @@ function AboutSettings() {
 	return (
 		<div className={styles.aboutSection}>
 			<h3>关于 eztb</h3>
-			<p className={styles.aboutIntro}>一个贴吧工具箱，用于查看和分析贴吧用户数据。</p>
+			<p className={styles.aboutIntro}>
+				一个贴吧工具箱，用于查看和分析贴吧用户数据。
+			</p>
 			<div className={styles.aboutMetaList}>
 				<div className={styles.aboutMetaItem}>
 					<span className={styles.aboutMetaLabel}>
@@ -923,8 +925,8 @@ function AboutSettings() {
 						<MailIcon size={14} />
 						联系邮箱
 					</span>
-					<a className={styles.aboutMetaLink} href="mailto:noreply@eztb.org">
-						noreply@eztb.org
+					<a className={styles.aboutMetaLink} href="mailto:support@eztb.org">
+						support@eztb.org
 					</a>
 				</div>
 			</div>

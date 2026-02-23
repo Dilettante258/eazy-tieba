@@ -148,8 +148,8 @@ const AUTHOR_LINKS = [
 	},
 	{
 		title: "邮件询问",
-		desc: "联系邮箱：noreply@eztb.org",
-		url: "mailto:noreply@eztb.org",
+		desc: "联系邮箱：support@eztb.org",
+		url: "mailto:support@eztb.org",
 		icon: MailIcon,
 	},
 ] as const;

@@ -269,8 +269,8 @@ function FooterSection() {
 							>
 								作者主页
 							</a>
-							<a className={styles.footerLink} href="mailto:noreply@eztb.org">
-								noreply@eztb.org
+							<a className={styles.footerLink} href="mailto:support@eztb.org">
+								support@eztb.org
 							</a>
 							<a
 								className={styles.footerLink}
@@ -303,8 +303,8 @@ function FooterSection() {
 						kairi.cc
 					</a>
 					<span className={styles.footerDot}>·</span>
-					<a className={styles.footerBottomLink} href="mailto:noreply@eztb.org">
-						noreply@eztb.org
+					<a className={styles.footerBottomLink} href="mailto:support@eztb.org">
+						support@eztb.org
 					</a>
 					<span className={styles.footerDot}>·</span>
 					<span>Powered by React 19 + Hono</span>
