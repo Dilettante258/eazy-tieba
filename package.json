@@ -7,11 +7,14 @@
 		"packages/*"
 	],
 	"scripts": {
+		"init": "bun scripts/init-env.mjs",
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"typecheck": "turbo typecheck",
 		"proto:gen": "turbo proto:gen",
 		"tsconfig:sync": "bun scripts/sync-tsconfig.mjs",
+		"db:push": "bun run --cwd apps/api db:push",
+		"api:export": "bun run --cwd apps/api export",
 		"format": "biome format --write .",
 		"check": "biome check --write .",
 		"lint": "biome check ."

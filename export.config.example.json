@@ -1,0 +1,17 @@
+{
+	"name": "tieba-export",
+	"targets": [
+		{
+			"forumName": "存钱",
+			"from": "2025-06-01",
+			"to": "now",
+			"includeComments": true,
+			"includeSubPosts": false,
+			"maxForumPages": 500,
+			"maxThreadPages": 600
+		}
+	],
+	"rate": {
+		"requestsPerMinute": 30
+	}
+}
