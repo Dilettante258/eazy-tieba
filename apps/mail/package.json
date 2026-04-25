@@ -1,0 +1,24 @@
+{
+	"name": "mail",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"cf-typegen": "wrangler types",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"react": "^19.3.0-canary-47d1ad14-20260216",
+		"react-dom": "^19.3.0-canary-47d1ad14-20260216",
+		"zod": "^3.25.76"
+	},
+	"devDependencies": {
+		"@types/node": "^25.6.0",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"typescript": "^5.5.2",
+		"wrangler": "^4.85.0"
+	}
+}
