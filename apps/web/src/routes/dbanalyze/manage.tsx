@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Banner, Button, Spinner } from "@primer/react";
 import { SearchIcon, TrashIcon } from "@primer/octicons-react";
-import { api } from "../../lib/api-client.ts";
+import { useDbAnalyzeUsers } from "../../hooks/queries.ts";
 import { DeleteUserModal } from "../../components/DbAnalyze/DeleteUserModal.tsx";
 import styles from "../../components/DbAnalyze/DbAnalyze.module.css";
 
@@ -24,18 +23,7 @@ function ManagePage() {
 	const [query, setQuery] = useState("");
 	const [deletingUser, setDeletingUser] = useState<DeletingUser | null>(null);
 
-	const searchQuery = useQuery({
-		queryKey: ["db-analyze", "users", query] as const,
-		enabled: query.length > 0,
-		queryFn: async () => {
-			const res = await api["db-analyze"].users.$get({
-				query: { q: query, limit: "50" },
-			});
-			if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-			return res.json();
-		},
-		staleTime: 30 * 1000,
-	});
+	const searchQuery = useDbAnalyzeUsers(query, "50");
 
 	const users: UserResult[] = searchQuery.data?.users ?? [];
 

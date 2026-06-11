@@ -3,6 +3,7 @@ import { Button, Spinner } from "@primer/react";
 import { AlertIcon } from "@primer/octicons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../lib/api-client.ts";
+import { unwrap } from "../../hooks/queries.ts";
 import styles from "./DbAnalyze.module.css";
 
 interface DeleteUserModalProps {
@@ -20,13 +21,10 @@ export function DeleteUserModal({
 	const overlayRef = useRef<HTMLDivElement>(null);
 
 	const mutation = useMutation({
-		mutationFn: async (id: string) => {
-			const res = await api["db-analyze"].user.$delete({
-				query: { authorId: id },
-			});
-			if (!res.ok) throw new Error(`删除失败 (${res.status})`);
-			return res.json();
-		},
+		mutationFn: (id: string) =>
+			api["db-analyze"].user
+				.$delete({ query: { authorId: id } })
+				.then(unwrap),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["db-analyze"] });
 			onClose();

@@ -10,7 +10,7 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 export type Method = "id" | "uid" | "un";
 
 /** 检查响应状态码，非 2xx 抛出错误以触发 TanStack Query 的 error 状态 */
-async function unwrap<
+export async function unwrap<
 	T extends Record<string, unknown> | Record<string, unknown>[],
 >(res: ClientResponse<T, ContentfulStatusCode, "json">): Promise<T> {
 	if (!res.ok) {
@@ -132,5 +132,132 @@ export function usePostsBatchInfinite(method: Method, id: string) {
 			return [lastParam[0] + 10, lastParam[1] + 10] as [number, number];
 		},
 		enabled: !!method && !!id,
+	});
+}
+
+// ── 数据库分析查询 ──
+
+export const dbAnalyzeStatsOptions = () =>
+	queryOptions({
+		queryKey: ["db-analyze", "stats"] as const,
+		queryFn: () => api["db-analyze"].stats.$get({ query: {} }).then(unwrap),
+	});
+
+export const dbAnalyzeTopUsersOptions = (minForums: string) =>
+	queryOptions({
+		queryKey: ["db-analyze", "top-users", minForums] as const,
+		queryFn: () =>
+			api["db-analyze"]["top-users"]
+				.$get({ query: { minForums } })
+				.then(unwrap),
+	});
+
+export const dbAnalyzeCrossForumsOptions = () =>
+	queryOptions({
+		queryKey: ["db-analyze", "cross-forums"] as const,
+		queryFn: () =>
+			api["db-analyze"]["cross-forums"].$get().then(unwrap),
+	});
+
+export const dbAnalyzeIntersectionOptions = (forums: string, page: string) =>
+	queryOptions({
+		queryKey: ["db-analyze", "intersection", forums, page] as const,
+		queryFn: () =>
+			api["db-analyze"].intersection
+				.$get({ query: { forums, page } })
+				.then(unwrap),
+	});
+
+export const dbAnalyzeForumOverlapOptions = (forums: string) =>
+	queryOptions({
+		queryKey: ["db-analyze", "forum-overlap", forums] as const,
+		queryFn: () =>
+			api["db-analyze"]["forum-overlap"]
+				.$get({ query: { forums } })
+				.then(unwrap),
+	});
+
+export const dbAnalyzeUsersOptions = (q: string, limit?: string) =>
+	queryOptions({
+		queryKey: ["db-analyze", "users", q, limit] as const,
+		queryFn: () =>
+			api["db-analyze"].users
+				.$get({ query: { q, ...(limit && { limit }) } })
+				.then(unwrap),
+		enabled: !!q,
+	});
+
+export const dbAnalyzeUserPostsOptions = (
+	authorId: string,
+	forumId: string | undefined,
+	page: string,
+) =>
+	queryOptions({
+		queryKey: ["db-analyze", "user-posts", authorId, forumId, page] as const,
+		queryFn: () =>
+			api["db-analyze"]["user-posts"]
+				.$get({
+					query: {
+						authorId,
+						...(forumId && { forumId }),
+						page,
+						limit: "50",
+					},
+				})
+				.then(unwrap),
+	});
+
+// React Query hooks
+
+export const useDbAnalyzeStats = () => useQuery(dbAnalyzeStatsOptions());
+
+export const useDbAnalyzeTopUsers = (minForums: string) =>
+	useQuery(dbAnalyzeTopUsersOptions(minForums));
+
+export const useDbAnalyzeCrossForums = () =>
+	useQuery(dbAnalyzeCrossForumsOptions());
+
+export const useDbAnalyzeIntersection = (forums: string, page: string) =>
+	useQuery(dbAnalyzeIntersectionOptions(forums, page));
+
+export const useDbAnalyzeForumOverlap = (forums: string) =>
+	useQuery(dbAnalyzeForumOverlapOptions(forums));
+
+export const useDbAnalyzeUsers = (q: string, limit?: string) =>
+	useQuery(dbAnalyzeUsersOptions(q, limit));
+
+export const useDbAnalyzeUserPosts = (
+	authorId: string,
+	forumId: string | undefined,
+	page: string,
+) => useQuery(dbAnalyzeUserPostsOptions(authorId, forumId, page));
+
+export function useDbAnalyzeUserPostsInfinite(
+	authorId: string,
+	forumId: string | undefined,
+) {
+	return useInfiniteQuery({
+		queryKey: [
+			"db-analyze",
+			"user-posts",
+			authorId,
+			forumId,
+		] as const,
+		queryFn: async ({ pageParam }) => {
+			const res = await api["db-analyze"]["user-posts"].$get({
+				query: {
+					authorId,
+					...(forumId && { forumId }),
+					page: String(pageParam),
+					limit: "50",
+				},
+			});
+			return unwrap(res);
+		},
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, _allPages, lastParam) => {
+			const loaded = _allPages.reduce((s, p) => s + p.posts.length, 0);
+			return loaded < lastPage.total ? lastParam + 1 : undefined;
+		},
 	});
 }

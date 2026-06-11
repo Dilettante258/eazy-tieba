@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { useQuery, useInfiniteQuery, queryOptions } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { Banner, Spinner } from "@primer/react";
 import { api } from "../../lib/api-client.ts";
+import { useDbAnalyzeCrossForums, unwrap } from "../../hooks/queries.ts";
 import { ForumTagsPanel } from "../../components/DbAnalyze/ForumTagsPanel.tsx";
 import {
 	IntersectionTable,
@@ -25,16 +26,6 @@ function useDebounced<T>(value: T, delay: number): T {
 
 // ── 查询 ──
 
-const crossForumsOptions = queryOptions({
-	queryKey: ["db-analyze", "cross-forums"] as const,
-	queryFn: async () => {
-		const res = await api["db-analyze"]["cross-forums"].$get();
-		if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-		return res.json();
-	},
-	staleTime: 60 * 60 * 1000, // 1h — 服务端同样缓存 1h
-});
-
 const PAGE_LIMIT = 50;
 
 function useIntersection(forumIds: string[]) {
@@ -50,8 +41,7 @@ function useIntersection(forumIds: string[]) {
 					limit: String(PAGE_LIMIT),
 				},
 			});
-			if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-			return res.json();
+			return unwrap(res);
 		},
 		initialPageParam: 1,
 		getNextPageParam: (lastPage, allPages) => {
@@ -69,7 +59,7 @@ function ExplorePage() {
 	const [drawerUser, setDrawerUser] = useState<IntersectionUser | null>(null);
 	const [deletingUser, setDeletingUser] = useState<IntersectionUser | null>(null);
 
-	const forumsQuery = useQuery(crossForumsOptions);
+	const forumsQuery = useDbAnalyzeCrossForums();
 	const forums = forumsQuery.data?.forums ?? [];
 
 	const selectedForumIds = useMemo(
@@ -102,8 +92,7 @@ function ExplorePage() {
 			const res = await api["db-analyze"]["forum-overlap"].$get({
 				query: { forums: debouncedKey },
 			});
-			if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-			return res.json();
+			return unwrap(res);
 		},
 		staleTime: 5 * 60 * 1000,
 		placeholderData: (prev) => prev,

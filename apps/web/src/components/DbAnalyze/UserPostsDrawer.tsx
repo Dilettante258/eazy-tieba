@@ -1,13 +1,10 @@
 import { useState, useMemo, useEffect } from "react";
 import { Button, Spinner } from "@primer/react";
 import { XIcon } from "@primer/octicons-react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { api } from "../../lib/api-client.ts";
+import { useDbAnalyzeUserPostsInfinite } from "../../hooks/queries.ts";
 import type { CrossForum } from "./ForumTagsPanel.tsx";
 import type { IntersectionUser } from "./IntersectionTable.tsx";
 import styles from "./DbAnalyze.module.css";
-
-const PAGE_LIMIT = 50;
 
 interface Post {
 	id: string;
@@ -20,6 +17,7 @@ interface Post {
 	createTime: string;
 	floor: number;
 	agreeNum: number;
+	ipAddress: string | null;
 }
 
 function formatTime(t: string | null) {
@@ -62,6 +60,9 @@ function PostCard({ post }: { post: Post }) {
 					<span>第 {post.floor} 楼</span>
 				)}
 				{post.agreeNum > 0 && <span>👍 {post.agreeNum}</span>}
+				{post.ipAddress && (
+					<span>IP: {post.ipAddress}</span>
+				)}
 			</div>
 		</div>
 	);
@@ -88,32 +89,10 @@ export function UserPostsDrawer({
 
 	const [activeForumId, setActiveForumId] = useState<string | null>(null);
 
-	const postsQuery = useInfiniteQuery({
-		queryKey: [
-			"db-analyze",
-			"user-posts",
-			user.authorId,
-			activeForumId,
-		] as const,
-		queryFn: async ({ pageParam }) => {
-			const res = await api["db-analyze"]["user-posts"].$get({
-				query: {
-					authorId: user.authorId,
-					...(activeForumId ? { forumId: activeForumId } : {}),
-					page: String(pageParam),
-					limit: String(PAGE_LIMIT),
-				},
-			});
-			if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-			return res.json();
-		},
-		initialPageParam: 1,
-		getNextPageParam: (lastPage, allPages) => {
-			const loaded = allPages.reduce((s, p) => s + p.posts.length, 0);
-			return loaded < lastPage.total ? allPages.length + 1 : undefined;
-		},
-		staleTime: 2 * 60 * 1000,
-	});
+	const postsQuery = useDbAnalyzeUserPostsInfinite(
+		user.authorId,
+		activeForumId ?? undefined,
+	);
 
 	const allPosts = useMemo(
 		() => postsQuery.data?.pages.flatMap((p) => p.posts) ?? [],

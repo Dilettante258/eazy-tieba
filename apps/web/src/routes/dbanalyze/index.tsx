@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Banner, Spinner, SegmentedControl } from "@primer/react";
 import { useMemo, useRef, useState } from "react";
-import { useQuery, useInfiniteQuery, queryOptions } from "@tanstack/react-query";
-import { api } from "../../lib/api-client.ts";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVChartThemeSync } from "../../lib/vchart-theme.ts";
+import { api } from "../../lib/api-client.ts";
+import { unwrap } from "../../hooks/queries.ts";
+import { useDbAnalyzeStats } from "../../hooks/queries.ts";
 import { StatCard } from "../../components/DbAnalyze/StatCard.tsx";
 import { DistChart } from "../../components/DbAnalyze/DistChart.tsx";
 import { TopUsersTable } from "../../components/DbAnalyze/TopUsersTable.tsx";
@@ -12,16 +14,6 @@ import moduleStyles from "../../components/ForumPostAnalysis/ForumPostAnalysis.m
 import styles from "../dbanalyze.module.css";
 
 // ── 查询 ──
-
-const statsOptions = queryOptions({
-	queryKey: ["db-analyze", "stats"] as const,
-	queryFn: async () => {
-		const res = await api["db-analyze"].stats.$get({ query: {} });
-		if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-		return res.json();
-	},
-	staleTime: 5 * 60 * 1000,
-});
 
 const PAGE_LIMIT = 50;
 
@@ -36,8 +28,7 @@ function useTopUsers(minForums: number) {
 					limit: String(PAGE_LIMIT),
 				},
 			});
-			if (!res.ok) throw new Error(`请求失败 (${res.status})`);
-			return res.json();
+			return unwrap(res);
 		},
 		initialPageParam: 1,
 		getNextPageParam: (lastPage, allPages) => {
@@ -58,7 +49,7 @@ function DbAnalyzeStats() {
 	const [minForums, setMinForums] =
 		useState<(typeof MIN_FORUMS_OPTIONS)[number]>(2);
 
-	const statsQuery = useQuery(statsOptions);
+	const statsQuery = useDbAnalyzeStats();
 	const usersQuery = useTopUsers(minForums);
 
 	const allUsers = useMemo(
