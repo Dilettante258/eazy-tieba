@@ -1,5 +1,7 @@
 import { BaseStyles, ThemeProvider } from "@primer/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ensureBackendReady } from "./lib/backend.ts";
@@ -13,6 +15,15 @@ const queryClient = new QueryClient({
 			staleTime: 600 * 1000,
 			retry: 1,
 		},
+	},
+});
+
+persistQueryClient({
+	queryClient,
+	persister: createSyncStoragePersister({ storage: localStorage }),
+	maxAge: 24 * 60 * 60 * 1000,
+	dehydrateOptions: {
+		shouldDehydrateQuery: (query) => query.queryKey[0] === "gh-stars",
 	},
 });
 

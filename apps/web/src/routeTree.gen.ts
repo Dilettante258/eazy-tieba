@@ -18,8 +18,12 @@ import { Route as ForumpostRouteImport } from './routes/forumpost'
 import { Route as FollowRouteImport } from './routes/follow'
 import { Route as FanRouteImport } from './routes/fan'
 import { Route as ExportRouteImport } from './routes/export'
+import { Route as DbanalyzeRouteImport } from './routes/dbanalyze'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DbanalyzeIndexRouteImport } from './routes/dbanalyze/index'
+import { Route as DbanalyzeManageRouteImport } from './routes/dbanalyze/manage'
+import { Route as DbanalyzeExploreRouteImport } from './routes/dbanalyze/explore'
 
 const UserpostRoute = UserpostRouteImport.update({
   id: '/userpost',
@@ -66,6 +70,11 @@ const ExportRoute = ExportRouteImport.update({
   path: '/export',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DbanalyzeRoute = DbanalyzeRouteImport.update({
+  id: '/dbanalyze',
+  path: '/dbanalyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -76,10 +85,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DbanalyzeIndexRoute = DbanalyzeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DbanalyzeRoute,
+} as any)
+const DbanalyzeManageRoute = DbanalyzeManageRouteImport.update({
+  id: '/manage',
+  path: '/manage',
+  getParentRoute: () => DbanalyzeRoute,
+} as any)
+const DbanalyzeExploreRoute = DbanalyzeExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => DbanalyzeRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dbanalyze': typeof DbanalyzeRouteWithChildren
   '/export': typeof ExportRoute
   '/fan': typeof FanRoute
   '/follow': typeof FollowRoute
@@ -89,6 +114,9 @@ export interface FileRoutesByFullPath {
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
+  '/dbanalyze/explore': typeof DbanalyzeExploreRoute
+  '/dbanalyze/manage': typeof DbanalyzeManageRoute
+  '/dbanalyze/': typeof DbanalyzeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,11 +130,15 @@ export interface FileRoutesByTo {
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
+  '/dbanalyze/explore': typeof DbanalyzeExploreRoute
+  '/dbanalyze/manage': typeof DbanalyzeManageRoute
+  '/dbanalyze': typeof DbanalyzeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dbanalyze': typeof DbanalyzeRouteWithChildren
   '/export': typeof ExportRoute
   '/fan': typeof FanRoute
   '/follow': typeof FollowRoute
@@ -116,12 +148,16 @@ export interface FileRoutesById {
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
   '/userpost': typeof UserpostRoute
+  '/dbanalyze/explore': typeof DbanalyzeExploreRoute
+  '/dbanalyze/manage': typeof DbanalyzeManageRoute
+  '/dbanalyze/': typeof DbanalyzeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/dbanalyze'
     | '/export'
     | '/fan'
     | '/follow'
@@ -131,6 +167,9 @@ export interface FileRouteTypes {
     | '/postsearch'
     | '/profile'
     | '/userpost'
+    | '/dbanalyze/explore'
+    | '/dbanalyze/manage'
+    | '/dbanalyze/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,10 +183,14 @@ export interface FileRouteTypes {
     | '/postsearch'
     | '/profile'
     | '/userpost'
+    | '/dbanalyze/explore'
+    | '/dbanalyze/manage'
+    | '/dbanalyze'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/dbanalyze'
     | '/export'
     | '/fan'
     | '/follow'
@@ -157,11 +200,15 @@ export interface FileRouteTypes {
     | '/postsearch'
     | '/profile'
     | '/userpost'
+    | '/dbanalyze/explore'
+    | '/dbanalyze/manage'
+    | '/dbanalyze/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  DbanalyzeRoute: typeof DbanalyzeRouteWithChildren
   ExportRoute: typeof ExportRoute
   FanRoute: typeof FanRoute
   FollowRoute: typeof FollowRoute
@@ -238,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dbanalyze': {
+      id: '/dbanalyze'
+      path: '/dbanalyze'
+      fullPath: '/dbanalyze'
+      preLoaderRoute: typeof DbanalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -252,12 +306,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dbanalyze/': {
+      id: '/dbanalyze/'
+      path: '/'
+      fullPath: '/dbanalyze/'
+      preLoaderRoute: typeof DbanalyzeIndexRouteImport
+      parentRoute: typeof DbanalyzeRoute
+    }
+    '/dbanalyze/manage': {
+      id: '/dbanalyze/manage'
+      path: '/manage'
+      fullPath: '/dbanalyze/manage'
+      preLoaderRoute: typeof DbanalyzeManageRouteImport
+      parentRoute: typeof DbanalyzeRoute
+    }
+    '/dbanalyze/explore': {
+      id: '/dbanalyze/explore'
+      path: '/explore'
+      fullPath: '/dbanalyze/explore'
+      preLoaderRoute: typeof DbanalyzeExploreRouteImport
+      parentRoute: typeof DbanalyzeRoute
+    }
   }
 }
+
+interface DbanalyzeRouteChildren {
+  DbanalyzeExploreRoute: typeof DbanalyzeExploreRoute
+  DbanalyzeManageRoute: typeof DbanalyzeManageRoute
+  DbanalyzeIndexRoute: typeof DbanalyzeIndexRoute
+}
+
+const DbanalyzeRouteChildren: DbanalyzeRouteChildren = {
+  DbanalyzeExploreRoute: DbanalyzeExploreRoute,
+  DbanalyzeManageRoute: DbanalyzeManageRoute,
+  DbanalyzeIndexRoute: DbanalyzeIndexRoute,
+}
+
+const DbanalyzeRouteWithChildren = DbanalyzeRoute._addFileChildren(
+  DbanalyzeRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  DbanalyzeRoute: DbanalyzeRouteWithChildren,
   ExportRoute: ExportRoute,
   FanRoute: FanRoute,
   FollowRoute: FollowRoute,

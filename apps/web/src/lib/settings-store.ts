@@ -120,6 +120,11 @@ interface SettingsStore {
 	addBlockedWordCloudKeyword: (keyword: string) => void;
 	removeBlockedWordCloudKeyword: (keyword: string) => void;
 
+	// 词云自定义关键词（分词后额外统计）
+	wordCloudCustomKeywords: string[];
+	addWordCloudCustomKeyword: (keyword: string) => void;
+	removeWordCloudCustomKeyword: (keyword: string) => void;
+
 	// 活跃用户 Top N（5–30）
 	forumTopUsersCount: number;
 	setForumTopUsersCount: (n: number) => void;
@@ -278,6 +283,20 @@ export const useSettingsStore = create<SettingsStore>()(
 					),
 				})),
 
+			wordCloudCustomKeywords: [],
+			addWordCloudCustomKeyword: (keyword) =>
+				set((s) => ({
+					wordCloudCustomKeywords: s.wordCloudCustomKeywords.includes(keyword)
+						? s.wordCloudCustomKeywords
+						: [...s.wordCloudCustomKeywords, keyword],
+				})),
+			removeWordCloudCustomKeyword: (keyword) =>
+				set((s) => ({
+					wordCloudCustomKeywords: s.wordCloudCustomKeywords.filter(
+						(k) => k !== keyword,
+					),
+				})),
+
 			forumTopUsersCount: 30,
 			setForumTopUsersCount: (n) =>
 				set({ forumTopUsersCount: Math.max(5, Math.min(30, n)) }),
@@ -316,6 +335,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				highlightedKeywords: state.highlightedKeywords,
 				forumPanelVisibility: state.forumPanelVisibility,
 				blockedWordCloudKeywords: state.blockedWordCloudKeywords,
+				wordCloudCustomKeywords: state.wordCloudCustomKeywords,
 				forumTopUsersCount: state.forumTopUsersCount,
 				forumMergeHighLevels: state.forumMergeHighLevels,
 				hotUserWeights: state.hotUserWeights,

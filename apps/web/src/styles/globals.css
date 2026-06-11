@@ -22,6 +22,10 @@ body {
 	min-height: 100vh;
 }
 
+html {
+	background-color: var(--bgColor-default, #fff);
+}
+
 /* ── 路由切换动画（View Transition API） ── */
 
 /* 禁用 root 层默认的整页交叉淡出，避免拖影 */

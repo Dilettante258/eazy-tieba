@@ -1,0 +1,56 @@
+.tabNav {
+	display: flex;
+	gap: 0;
+	border-bottom: 1px solid var(--borderColor-default, #d0d7de);
+	margin-bottom: 1.5rem;
+}
+
+.tabItem {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	color: var(--fgColor-muted);
+	text-decoration: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	transition: color 0.15s, border-color 0.15s;
+}
+
+.tabItem:hover {
+	color: var(--fgColor-default);
+}
+
+.tabActive {
+	color: var(--fgColor-default);
+	border-bottom-color: var(--color-accent-fg, #0969da);
+	font-weight: 600;
+}
+
+.statsRow {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.statCard {
+	flex: 1;
+	min-width: 140px;
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+	padding: 1rem 1.25rem;
+	background: var(--bgColor-default);
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.statValue {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--fgColor-default);
+	line-height: 1.2;
+}
+
+.statLabel {
+	font-size: 0.8125rem;
+	color: var(--fgColor-muted);
+}

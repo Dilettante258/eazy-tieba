@@ -853,6 +853,71 @@ function BackendNodeSection() {
 	);
 }
 
+function WordCloudCustomKeywordsSection() {
+	const keywords = useSettingsStore((s) => s.wordCloudCustomKeywords);
+	const addKeyword = useSettingsStore((s) => s.addWordCloudCustomKeyword);
+	const removeKeyword = useSettingsStore((s) => s.removeWordCloudCustomKeyword);
+	const [input, setInput] = useState("");
+	const [isPending, startTransition] = useTransition();
+
+	const handleAdd = useCallback(() => {
+		const kw = input.trim();
+		if (!kw) return;
+		startTransition(() => addKeyword(kw));
+		setInput("");
+	}, [input, addKeyword, startTransition]);
+
+	const handleRemove = useCallback(
+		(kw: string) => {
+			startTransition(() => removeKeyword(kw));
+		},
+		[removeKeyword, startTransition],
+	);
+
+	return (
+		<section className={styles.section}>
+			<h4 className={styles.sectionTitle}>词云自定义关键词</h4>
+			<p className={styles.sectionDesc}>
+				分词完成后额外统计这些关键词（子串匹配），可补充分词器未能识别的专有词汇
+			</p>
+			<div className={styles.addRow}>
+				<TextInput
+					size="small"
+					placeholder="输入关键词..."
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") handleAdd();
+					}}
+					className={styles.addInput}
+				/>
+				<Button size="small" onClick={handleAdd}>
+					添加
+				</Button>
+			</div>
+			{keywords.length === 0 ? (
+				<p className={styles.emptyHint}>暂无自定义关键词</p>
+			) : (
+				<ul className={styles.tagList} style={{ opacity: isPending ? 0.6 : 1 }}>
+					{keywords.map((kw) => (
+						<li key={kw} className={styles.tag}>
+							<span>{kw}</span>
+							<button
+								type="button"
+								className={styles.tagRemove}
+								aria-label={`移除 ${kw}`}
+								onClick={() => handleRemove(kw)}
+							>
+								<XIcon size={12} />
+							</button>
+						</li>
+					))}
+				</ul>
+			)}
+		</section>
+	);
+}
+
 function GlobalSettings() {
 	return (
 		<div className={styles.settingsPanel}>
@@ -860,6 +925,7 @@ function GlobalSettings() {
 			<BackendNodeSection />
 			<ImageConcurrencySection />
 			<BlockedWordCloudSection />
+			<WordCloudCustomKeywordsSection />
 			<section className={styles.section}>
 				<h4 className={styles.sectionTitle}>其他</h4>
 				<p className={styles.sectionDesc}>

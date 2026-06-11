@@ -400,6 +400,7 @@ export class UserPostClass {
 	public getWordCloud(
 		year: number | "ALL",
 		maxWords = 400,
+		customKeywords: string[] = [],
 	): Array<{ name: string; value: number }> {
 		const postList =
 			year === "ALL" ? this.upData : this.getPostListFromYear(year);
@@ -407,6 +408,22 @@ export class UserPostClass {
 		for (const post of postList) {
 			if (post.title) countWords(post.title, counts);
 			if (post.content) countWords(post.content, counts);
+		}
+		// 自定义关键词：仅统计分词器未产生的词（子串匹配）
+		if (customKeywords.length > 0) {
+			const missing = customKeywords.filter((kw) => kw && !counts.has(kw));
+			if (missing.length > 0) {
+				for (const post of postList) {
+					const text = (post.title ?? "") + (post.content ?? "");
+					for (const kw of missing) {
+						let idx = 0;
+						while ((idx = text.indexOf(kw, idx)) !== -1) {
+							counts.set(kw, (counts.get(kw) ?? 0) + 1);
+							idx += kw.length;
+						}
+					}
+				}
+			}
 		}
 		return [...counts.entries()]
 			.map(([name, value]) => ({ name, value }))

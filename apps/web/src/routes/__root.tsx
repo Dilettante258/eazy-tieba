@@ -9,13 +9,12 @@ import { ActionList, ActionMenu, PageLayout } from "@primer/react";
 import {
 	DownloadIcon,
 	GearIcon,
-	MarkGithubIcon,
 	MoonIcon,
-	StarIcon,
 	SunIcon,
 	ThreeBarsIcon,
 } from "@primer/octicons-react";
 import { lazy, Suspense } from "react";
+import { GitHubStars } from "../components/GitHubStars.tsx";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { usePwaInstall } from "../lib/pwa-install.ts";
 import { useRouteSeo } from "../lib/seo.ts";
@@ -175,17 +174,7 @@ function RootLayout() {
 
 				<div className={styles.actions}>
 					<InstallAppButton />
-					<a
-						className={styles.githubLink}
-						href="https://github.com/Dilettante258/tieba-toolbox"
-						target="_blank"
-						rel="noopener noreferrer"
-						aria-label="GitHub"
-					>
-						<MarkGithubIcon size={16} />
-						<StarIcon size={12} />
-						<span>70</span>
-					</a>
+					<GitHubStars />
 					<button
 						type="button"
 						className={styles.themeBtn}

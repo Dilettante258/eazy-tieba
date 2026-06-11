@@ -260,6 +260,7 @@ function PostAnalysisPage() {
 	const panels = useSettingsStore((s) => s.panelVisibility);
 	const blockedForums = useSettingsStore((s) => s.blockedForums);
 	const blockedWords = useSettingsStore((s) => s.blockedWordCloudKeywords);
+	const customKeywords = useSettingsStore((s) => s.wordCloudCustomKeywords);
 
 	// Zustand 状态
 	const year = useUPSelectorStore((s) => s.selectedYear);
@@ -341,11 +342,11 @@ function PostAnalysisPage() {
 
 	// 词云数据
 	const wordCloudData = useMemo(() => {
-		const raw = up?.getWordCloud(year) ?? [];
+		const raw = up?.getWordCloud(year, 400, customKeywords) ?? [];
 		if (blockedWords.length === 0) return raw;
 		const blocked = new Set(blockedWords);
 		return raw.filter((d) => !blocked.has(d.name));
-	}, [up, year, blockedWords]);
+	}, [up, year, blockedWords, customKeywords]);
 
 	// 根据最后操作类型过滤帖子列表
 	const filteredPosts = useMemo((): UserPost[] => {
