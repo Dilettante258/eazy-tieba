@@ -4,7 +4,8 @@
 	"packageManager": "bun@1.2.11",
 	"workspaces": [
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"!packages/analysis"
 	],
 	"scripts": {
 		"init": "bun scripts/init-env.mjs",
