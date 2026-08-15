@@ -9,7 +9,6 @@ import { isStandaloneMode } from "./lib/pwa-install.ts";
 import { useSettingsStore } from "./lib/settings-store.ts";
 import "./styles/globals.css";
 
-declare const __APP_VERSION__: string;
 
 if (import.meta.env.VITE_SENTRY_DSN) {
 	Sentry.init({

@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => {
 	return {
 		define: {
 			__BUILD_DATE__: JSON.stringify(new Date().toISOString()),
-			__APP_VERSION__: JSON.stringify(appVersion),
+			__APP_VERSION__: JSON.stringify('v'+appVersion),
 		},
 		publicDir: "public",
 		plugins: [
