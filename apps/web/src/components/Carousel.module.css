@@ -2,6 +2,37 @@
 	position: relative;
 	width: min(23.75rem, calc(100vw - 2rem));
 	margin: 0 auto;
+	animation: carouselFloat 8s ease-in-out infinite;
+}
+
+/* 卡片背后的环境光晕，把橙色截图和深蓝背景衔接起来 */
+.carouselShell::before {
+	content: "";
+	position: absolute;
+	inset: -18% -22%;
+	background: radial-gradient(
+		55% 55% at 50% 42%,
+		rgb(56 189 248 / 30%) 0%,
+		rgb(56 189 248 / 0%) 70%
+	);
+	pointer-events: none;
+	z-index: 0;
+}
+
+@keyframes carouselFloat {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.carouselShell {
+		animation: none;
+	}
 }
 
 .carousel {
@@ -13,8 +44,12 @@
 	scroll-behavior: smooth;
 	scrollbar-width: none;
 	border-radius: 1.5rem;
-	box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.08);
+	box-shadow:
+		0 30px 60px -18px rgb(2 8 24 / 55%),
+		0 0 0 1px rgb(255 255 255 / 14%);
 	scroll-marker-group: after;
+	position: relative;
+	z-index: 1;
 }
 
 .carousel::-webkit-scrollbar {
@@ -99,9 +134,9 @@
 .slide::scroll-marker {
 	content: "";
 	width: 90px;
-	height: 6px;
+	height: 5px;
 	border-radius: 4px;
-	background: rgb(148 163 184 / 45%);
+	background: rgb(226 240 255 / 28%);
 	transition: background-color 0.25s ease;
 }
 
@@ -122,15 +157,19 @@
 	top: calc(50% - 0.5rem);
 	transform: translateY(-50%);
 	z-index: 3;
-	border: 0;
+	border: 1px solid rgb(255 255 255 / 18%);
 	width: 2rem;
 	height: 2rem;
 	border-radius: 999px;
-	background: rgb(15 23 42 / 35%);
+	background: rgb(8 16 36 / 45%);
+	backdrop-filter: blur(6px);
 	color: #fff;
 	font-size: 1.25rem;
 	line-height: 1;
 	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease;
 }
 
 .arrowLeft {
@@ -142,7 +181,8 @@
 }
 
 .arrow:hover {
-	background: rgb(15 23 42 / 52%);
+	background: rgb(8 16 36 / 65%);
+	border-color: rgb(186 230 253 / 45%);
 }
 
 @container slide scroll-state(snapped: x) {
@@ -153,11 +193,13 @@
 }
 
 [data-color-mode="dark"] .carousel {
-	box-shadow: 0 20px 40px -12px rgb(0 0 0 / 30%);
+	box-shadow:
+		0 30px 60px -18px rgb(0 0 0 / 70%),
+		0 0 0 1px rgb(255 255 255 / 10%);
 }
 
 [data-color-mode="dark"] .slide::scroll-marker {
-	background: rgb(255 255 255 / 30%);
+	background: rgb(255 255 255 / 26%);
 }
 
 [data-color-mode="dark"] .slide1::scroll-marker:target-current {

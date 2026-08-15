@@ -12,6 +12,7 @@ import {
 	DownloadIcon,
 } from "@primer/octicons-react";
 import { Link } from "@tanstack/react-router";
+import { useSettingsStore } from "../lib/settings-store.ts";
 import styles from "./ServiceList.module.css";
 
 function DotsBg({ fill, id }: { fill: string; id: string }) {
@@ -315,9 +316,12 @@ function FooterSection() {
 }
 
 export function ServiceList() {
+	// 隐藏 Hero 时统计区域一并隐藏，首页直接从功能列表开始
+	const hideHomeHero = useSettingsStore((s) => s.hideHomeHero);
+
 	return (
 		<div className={styles.container}>
-			<StatsSection />
+			{!hideHomeHero && <StatsSection />}
 			<ToolsSection />
 			<FooterSection />
 		</div>

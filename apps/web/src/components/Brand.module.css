@@ -3,25 +3,35 @@
 	flex-direction: column;
 	justify-content: center;
 	margin: 0 5%;
-	gap: 1.25rem;
+	gap: 1.5rem;
 	min-height: 24rem;
 }
 
 .news {
-	color: #fff;
-	background-color: rgba(255, 255, 255, 0.18);
-	border: rgba(255, 255, 255, 0.3) 1px solid;
+	color: #e3f3ff;
+	background: linear-gradient(
+		120deg,
+		rgba(56, 189, 248, 0.22) 0%,
+		rgba(255, 255, 255, 0.1) 100%
+	);
+	border: 1px solid rgba(148, 210, 255, 0.35);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 	border-radius: 10rem;
 	font-size: 0.75rem;
 	width: fit-content;
-	transition: background-color 0.3s ease;
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
 	text-decoration: none;
 	cursor: pointer;
 	backdrop-filter: blur(8px);
 }
 
 .news:hover {
-	background-color: rgba(255, 255, 255, 0.28);
+	border-color: rgba(186, 230, 253, 0.6);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.18),
+		0 0 20px rgba(56, 189, 248, 0.25);
 }
 
 .newsTip {
@@ -32,12 +42,13 @@
 }
 
 .textContainer {
+	margin: 0;
 	font-size: 3rem;
 	font-weight: 800;
-	line-height: 1.15;
+	line-height: 1.18;
 	letter-spacing: -0.02em;
 	color: #fff;
-	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+	text-shadow: 0 2px 16px rgba(2, 8, 24, 0.35);
 }
 
 @media (min-width: 1024px) {
@@ -52,6 +63,16 @@
 	animation: staggerUp 0.4s ease-out forwards;
 }
 
+/* 渐变强调：查询 · 分析 · 导出 */
+.accent {
+	background: linear-gradient(94deg, #a5f3fc 0%, #38bdf8 55%, #818cf8 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: none;
+	filter: drop-shadow(0 2px 14px rgba(56, 189, 248, 0.35));
+}
+
 @keyframes staggerUp {
 	from {
 		transform: translateY(400%);
@@ -63,7 +84,7 @@
 	}
 }
 
-/* eztb 贴吧 工具箱 <br> 为 更 方便 调查 成分 而生 */
+/* eztb 贴吧 工具箱 <br> 查询 · 分析 · 导出 , 一站 完成 */
 .textContainer span:nth-child(1) {
 	animation-delay: 0s;
 	margin-right: 0.4rem;
@@ -94,7 +115,7 @@
 }
 
 .description {
-	color: rgba(255, 255, 255, 0.8);
+	color: rgba(230, 242, 255, 0.82);
 	font-size: 1.125rem;
 	line-height: 1.75;
 	max-width: 28rem;
@@ -103,7 +124,7 @@
 .btnContainer {
 	display: flex;
 	gap: 1rem;
-	margin-top: 0.5rem;
+	margin-top: 0.25rem;
 }
 
 .btnSolid {
@@ -115,9 +136,11 @@
 	padding: 0 1.5rem;
 	font-size: 1rem;
 	font-weight: 600;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	background-color: #fff;
-	color: #1a1a2e;
+	box-shadow:
+		0 2px 8px rgba(2, 8, 24, 0.25),
+		0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+	background: linear-gradient(180deg, #ffffff 0%, #e8f4ff 100%);
+	color: #0b2545;
 	cursor: pointer;
 	transition: all 0.2s;
 	text-decoration: none;
@@ -125,9 +148,18 @@
 }
 
 .btnSolid:hover {
-	background-color: #f0f0f0;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-	transform: translateY(-1px);
+	box-shadow:
+		0 6px 20px rgba(56, 189, 248, 0.35),
+		0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+	transform: translateY(-2px);
+}
+
+.btnSolid:hover svg {
+	transform: translateX(3px);
+}
+
+.btnSolid svg {
+	transition: transform 0.2s ease;
 }
 
 .btnBordered {
@@ -139,9 +171,10 @@
 	padding: 0 1.5rem;
 	font-size: 1rem;
 	font-weight: 600;
-	background-color: rgba(255, 255, 255, 0.12);
+	background-color: rgba(255, 255, 255, 0.08);
 	color: #fff;
-	border: 1px solid rgba(255, 255, 255, 0.3);
+	border: 1px solid rgba(186, 230, 253, 0.32);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 	cursor: pointer;
 	transition: all 0.2s;
 	text-decoration: none;
@@ -149,7 +182,29 @@
 }
 
 .btnBordered:hover {
-	background-color: rgba(255, 255, 255, 0.22);
-	border-color: rgba(255, 255, 255, 0.5);
-	transform: translateY(-1px);
+	background-color: rgba(255, 255, 255, 0.16);
+	border-color: rgba(186, 230, 253, 0.55);
+	transform: translateY(-2px);
+}
+
+/* 按钮下方的信任点 */
+.trustRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.5rem;
+	margin: 0.25rem 0 0;
+	padding: 0;
+	list-style: none;
+	color: rgba(200, 226, 255, 0.66);
+	font-size: 0.8125rem;
+}
+
+.trustRow li {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+}
+
+.trustRow svg {
+	color: rgba(125, 211, 252, 0.85);
 }

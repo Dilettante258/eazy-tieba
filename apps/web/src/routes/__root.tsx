@@ -30,6 +30,8 @@ const SettingsDialog = lazy(() =>
 	})),
 );
 
+const UpdateNotice = lazy(() => import("../components/UpdateNotice.tsx"));
+
 const NAV_ITEMS = [
 	{ label: "首页", to: "/" },
 	{ label: "关于", to: "/about" },
@@ -135,8 +137,11 @@ function MobileNav() {
 
 function RootLayout() {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
-	const isHome = pathname === "/";
 	const settingsOpen = useSettingsStore((s) => s.settingsOpen);
+	const hideHomeHero = useSettingsStore((s) => s.hideHomeHero);
+	const isHome = pathname === "/";
+	// 隐藏 Hero 后首页没有深色大图，导航栏不再使用透明白字模式
+	const navTransparent = isHome && !hideHomeHero;
 	useRouteSeo(pathname);
 
 	return (
@@ -146,7 +151,13 @@ function RootLayout() {
 					<SettingsDialog />
 				</Suspense>
 			) : null}
-			<nav className={styles.navbar} data-transparent={isHome || undefined}>
+			<Suspense fallback={null}>
+				<UpdateNotice />
+			</Suspense>
+			<nav
+				className={styles.navbar}
+				data-transparent={navTransparent || undefined}
+			>
 				<Link
 					className={styles.logo}
 					to="/"

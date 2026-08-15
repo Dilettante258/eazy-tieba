@@ -145,6 +145,14 @@ interface SettingsStore {
 	maxImageConcurrency: number;
 	setMaxImageConcurrency: (n: number) => void;
 
+	// 隐藏首页 Hero 区域（持久化）
+	hideHomeHero: boolean;
+	toggleHideHomeHero: () => void;
+
+	// 本设备已看过的最新更新日志版本（持久化，null 表示从未看过）
+	lastSeenChangelogVersion: string | null;
+	markChangelogSeen: (version: string) => void;
+
 	// 后端节点偏好（持久化）
 	backendPreference: BackendPreference;
 	setBackendPreference: (preference: BackendPreference) => void;
@@ -315,6 +323,14 @@ export const useSettingsStore = create<SettingsStore>()(
 				set({ maxImageConcurrency: clamped });
 			},
 
+			hideHomeHero: false,
+			toggleHideHomeHero: () =>
+				set((s) => ({ hideHomeHero: !s.hideHomeHero })),
+
+			lastSeenChangelogVersion: null,
+			markChangelogSeen: (version) =>
+				set({ lastSeenChangelogVersion: version }),
+
 			backendPreference: "auto",
 			setBackendPreference: (preference) =>
 				set({ backendPreference: preference }),
@@ -340,6 +356,8 @@ export const useSettingsStore = create<SettingsStore>()(
 				forumMergeHighLevels: state.forumMergeHighLevels,
 				hotUserWeights: state.hotUserWeights,
 				maxImageConcurrency: state.maxImageConcurrency,
+				hideHomeHero: state.hideHomeHero,
+				lastSeenChangelogVersion: state.lastSeenChangelogVersion,
 				backendPreference: state.backendPreference,
 			}),
 			migrate: (persisted, version) => {

@@ -1,6 +1,7 @@
 import {
 	ArrowRightIcon,
 	ArrowUpRightIcon,
+	CheckCircleIcon,
 	SparkleIcon,
 } from "@primer/octicons-react";
 import { Link } from "@tanstack/react-router";
@@ -17,18 +18,18 @@ export function Brand() {
 				</div>
 			</Link>
 
-			<div className={styles.textContainer}>
+			<h1 className={styles.textContainer}>
 				<span>eztb</span>
 				<span>贴吧</span>
 				<span>工具箱</span>
 				<br />
-				<span>查询{" · "}</span>
-				<span>分析{" · "}</span>
-				<span>导出</span>
+				<span className={styles.accent}>查询{" · "}</span>
+				<span className={styles.accent}>分析{" · "}</span>
+				<span className={styles.accent}>导出</span>
 				<span>,</span>
 				<span>一站</span>
 				<span>完成</span>
-			</div>
+			</h1>
 
 			<div>
 				<p className={styles.description}>
@@ -51,6 +52,21 @@ export function Brand() {
 					<ArrowUpRightIcon size={16} />
 				</a>
 			</div>
+
+			<ul className={styles.trustRow}>
+				<li>
+					<CheckCircleIcon size={14} />
+					免费开源
+				</li>
+				<li>
+					<CheckCircleIcon size={14} />
+					可安装为应用
+				</li>
+				<li>
+					<CheckCircleIcon size={14} />
+					数据一键导出
+				</li>
+			</ul>
 		</div>
 	);
 }

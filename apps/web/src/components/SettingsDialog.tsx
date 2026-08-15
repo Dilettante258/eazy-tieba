@@ -918,11 +918,42 @@ function WordCloudCustomKeywordsSection() {
 	);
 }
 
+function HomeHeroSection() {
+	const hideHomeHero = useSettingsStore((s) => s.hideHomeHero);
+	const toggle = useSettingsStore((s) => s.toggleHideHomeHero);
+	const [isPending, startTransition] = useTransition();
+	const labelId = "hide-home-hero-label";
+
+	return (
+		<section className={styles.section}>
+			<h4 className={styles.sectionTitle}>首页显示</h4>
+			<p className={styles.sectionDesc}>
+				隐藏后首页不再显示顶部 Hero 大图与数据区域，直接展示功能列表
+			</p>
+			<div
+				className={styles.toggleRow}
+				style={{ opacity: isPending ? 0.6 : 1 }}
+			>
+				<Text id={labelId} className={styles.toggleLabel}>
+					隐藏首页 Hero 区域
+				</Text>
+				<ToggleSwitch
+					size="small"
+					checked={hideHomeHero}
+					onClick={() => startTransition(() => toggle())}
+					aria-labelledby={labelId}
+				/>
+			</div>
+		</section>
+	);
+}
+
 function GlobalSettings() {
 	return (
 		<div className={styles.settingsPanel}>
 			<h3 className={styles.panelTitle}>全局设置</h3>
 			<BackendNodeSection />
+			<HomeHeroSection />
 			<ImageConcurrencySection />
 			<BlockedWordCloudSection />
 			<WordCloudCustomKeywordsSection />
@@ -941,9 +972,6 @@ function GlobalSettings() {
 function AboutSettings() {
 	const { canInstall, installed, install } = usePwaInstall();
 	const buildDate = new Date(__BUILD_DATE__);
-	const versionText = __APP_VERSION__.startsWith("v")
-		? __APP_VERSION__
-		: `v${__APP_VERSION__}`;
 	const buildDateText = Number.isNaN(buildDate.getTime())
 		? __BUILD_DATE__
 		: new Intl.DateTimeFormat("zh-CN", {
@@ -963,7 +991,7 @@ function AboutSettings() {
 						<PackageIcon size={14} />
 						版本
 					</span>
-					<span className={styles.aboutMetaValue}>{versionText}</span>
+					<span className={styles.aboutMetaValue}>{__APP_VERSION__}</span>
 				</div>
 				<div className={styles.aboutMetaItem}>
 					<span className={styles.aboutMetaLabel}>

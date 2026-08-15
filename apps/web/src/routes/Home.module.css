@@ -9,23 +9,26 @@
 
 /* 用负 margin 让 hero 上移，覆盖到 sticky 透明 navbar 下方 */
 .heroWrap {
-	--hero-bg: linear-gradient(
-		132deg,
-		#071a33 0%,
-		#0d2f58 32%,
-		#14518a 66%,
-		#0d7aa5 100%
-	);
+	--hero-bg: radial-gradient(
+			80% 110% at 88% 10%,
+			rgba(37, 99, 235, 0.42) 0%,
+			rgba(37, 99, 235, 0) 55%
+		),
+		radial-gradient(
+			70% 90% at 6% 92%,
+			rgba(8, 145, 178, 0.3) 0%,
+			rgba(8, 145, 178, 0) 60%
+		),
+		linear-gradient(158deg, #060d20 0%, #0a1c3e 42%, #0d3763 78%, #0e5382 100%);
 	--hero-glow: radial-gradient(
-		120% 90% at 12% 8%,
-		rgba(156, 220, 255, 0.26) 0%,
-		rgba(156, 220, 255, 0) 56%
+		110% 80% at 14% 0%,
+		rgba(165, 224, 255, 0.18) 0%,
+		rgba(165, 224, 255, 0) 55%
 	);
 	--hero-overlay: linear-gradient(
 		180deg,
-		rgba(4, 10, 26, 0.06) 0%,
-		rgba(4, 10, 26, 0.16) 45%,
-		rgba(4, 10, 26, 0.3) 100%
+		rgba(3, 8, 20, 0) 55%,
+		rgba(3, 8, 20, 0.3) 100%
 	);
 	width: 100%;
 	display: flex;
@@ -65,23 +68,26 @@
 }
 
 [data-color-mode="dark"] .heroWrap {
-	--hero-bg: linear-gradient(
-		132deg,
-		#040d1e 0%,
-		#0b2344 32%,
-		#113967 66%,
-		#0d5f82 100%
-	);
+	--hero-bg: radial-gradient(
+			80% 110% at 88% 10%,
+			rgba(30, 80, 200, 0.36) 0%,
+			rgba(30, 80, 200, 0) 55%
+		),
+		radial-gradient(
+			70% 90% at 6% 92%,
+			rgba(8, 120, 150, 0.24) 0%,
+			rgba(8, 120, 150, 0) 60%
+		),
+		linear-gradient(158deg, #03081a 0%, #071531 42%, #0a2a50 78%, #0b3f66 100%);
 	--hero-glow: radial-gradient(
-		120% 90% at 16% 10%,
-		rgba(123, 204, 255, 0.22) 0%,
-		rgba(123, 204, 255, 0) 58%
+		110% 80% at 14% 0%,
+		rgba(123, 204, 255, 0.14) 0%,
+		rgba(123, 204, 255, 0) 55%
 	);
 	--hero-overlay: linear-gradient(
 		180deg,
-		rgba(1, 3, 10, 0.14) 0%,
-		rgba(1, 3, 10, 0.3) 45%,
-		rgba(1, 3, 10, 0.44) 100%
+		rgba(1, 3, 10, 0) 50%,
+		rgba(1, 3, 10, 0.42) 100%
 	);
 }
 
@@ -103,5 +109,55 @@
 	.heading {
 		grid-template-columns: 1fr;
 		gap: 3rem;
+	}
+}
+
+/* ── Hero 装饰动画 ── */
+
+.floatSlow {
+	animation: heroFloatY 9s ease-in-out infinite;
+}
+
+.floatSlower {
+	animation: heroFloatY 13s ease-in-out infinite reverse;
+}
+
+.twinkle {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: heroTwinkle 4.5s ease-in-out infinite;
+}
+
+.twinkleDelay {
+	animation-delay: 2.2s;
+}
+
+@keyframes heroFloatY {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-16px);
+	}
+}
+
+@keyframes heroTwinkle {
+	0%,
+	100% {
+		opacity: 0.15;
+		transform: scale(0.75);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.floatSlow,
+	.floatSlower,
+	.twinkle {
+		animation: none;
 	}
 }

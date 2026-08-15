@@ -17,6 +17,7 @@ import {
 	IssueOpenedIcon,
 	HeartIcon,
 } from "@primer/octicons-react";
+import { CHANGELOG } from "../lib/changelog.ts";
 import styles from "./page.module.css";
 
 const TECH_STACK = [
@@ -95,34 +96,6 @@ const INSTALL_GUIDE = [
 	{
 		title: "安装后的使用方式",
 		desc: "安装完成后会以独立应用打开，可直接从手机桌面进入，体验与普通 App 更接近。",
-	},
-] as const;
-
-const CHANGELOG = [
-	{
-		version: "v3.0.0",
-		summary: "v3 系列首发版本，完成核心能力整合。",
-		items: [
-			"支持PWA能力，支持安装到首页。",
-			"提供用户资料、发帖分析、发言搜索、关系查询与导出等核心功能。",
-		],
-	},
-	{
-		version: "v3.1.0",
-		summary: "聚焦首屏体验和输入规则一致性。",
-		items: [
-			"首页轮播图资源迁移到 CDN，并提前 dns-prefetch。",
-			"UID 查询规则更新为支持 8 位到 10 位数字，兼容更多历史账号。",
-			"导出页与查询表单的 UID 提示文案和校验逻辑已保持一致。",
-		],
-	},
-	{
-		version: "v3.2.0",
-		summary: "当前版本，增强词云与全局设置能力。",
-		items: [
-			"全局设置新增「词云自定义关键词」，可补充分词器未能识别的专有词汇。",
-			"词云屏蔽关键词从贴吧分析设置迁移至全局设置，统一管理入口。",
-		],
 	},
 ] as const;
 

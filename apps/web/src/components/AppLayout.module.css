@@ -75,7 +75,9 @@ html {
 }
 
 /* navbar 粘附时恢复毛玻璃 */
-@container scroll-state (scrollable: top) {
+/* scroll-state() 是函数语法，名称与括号间不能有空格，
+   否则 scroll-state 会被当作容器名、查询整体失效 */
+@container rootCtn scroll-state(scrollable: top) {
 	nav.navbar[data-transparent="true"] {
 		--_bg: rgba(255, 255, 255, 0.85);
 		--_blur: blur(12px);
