@@ -1,0 +1,47 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+	gap: 1rem;
+	padding: 2.5rem;
+	text-align: center;
+}
+
+.icon {
+	color: var(--fgColor-danger);
+}
+
+.title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: var(--fgColor-default);
+	margin: 0;
+}
+
+.desc {
+	font-size: 0.875rem;
+	color: var(--fgColor-muted);
+	max-width: 420px;
+	line-height: 1.6;
+	margin: 0;
+}
+
+.errorMessage {
+	padding: 0.5rem 0.75rem;
+	background: var(--bgColor-muted);
+	border: 1px solid var(--borderColor-default);
+	border-radius: 6px;
+	max-width: 480px;
+	word-break: break-word;
+	font-family: monospace;
+	font-size: 0.75rem;
+	color: var(--fgColor-muted);
+}
+
+.actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.25rem;
+}

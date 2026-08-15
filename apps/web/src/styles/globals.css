@@ -22,6 +22,14 @@ body {
 	min-height: 100vh;
 }
 
+div[data-color-mode="dark"] {
+	color-scheme: only dark;
+}
+
+div[data-color-mode="light"] {
+	color-scheme: only light;
+}
+
 html {
 	background-color: var(--bgColor-default, #fff);
 }

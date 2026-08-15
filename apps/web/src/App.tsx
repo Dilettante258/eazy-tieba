@@ -1,9 +1,11 @@
+import * as Sentry from "@sentry/react";
 import { BaseStyles, ThemeProvider } from "@primer/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { ErrorFallback } from "./components/ErrorFallback.tsx";
 import { ensureBackendReady } from "./lib/backend.ts";
 import { ColorModeProvider, useColorMode } from "./lib/color-mode.tsx";
 import { useSettingsStore } from "./lib/settings-store.ts";
@@ -20,14 +22,14 @@ const queryClient = new QueryClient({
 
 persistQueryClient({
 	queryClient,
-	persister: createSyncStoragePersister({ storage: localStorage }),
+	persister: createAsyncStoragePersister({ storage: localStorage }),
 	maxAge: 24 * 60 * 60 * 1000,
 	dehydrateOptions: {
 		shouldDehydrateQuery: (query) => query.queryKey[0] === "gh-stars",
 	},
 });
 
-const router = createRouter({
+export const router = createRouter({
 	routeTree,
 	context: { queryClient },
 	defaultPreload: "intent",
@@ -58,9 +60,15 @@ function AppShell() {
 	return (
 		<ThemeProvider colorMode={colorMode}>
 			<BaseStyles>
-				<QueryClientProvider client={queryClient}>
-					<RouterProvider router={router} />
-				</QueryClientProvider>
+				<Sentry.ErrorBoundary
+					fallback={({ error, resetError }) => (
+						<ErrorFallback error={error as Error} resetError={resetError} />
+					)}
+				>
+					<QueryClientProvider client={queryClient}>
+						<RouterProvider router={router} />
+					</QueryClientProvider>
+				</Sentry.ErrorBoundary>
 			</BaseStyles>
 		</ThemeProvider>
 	);

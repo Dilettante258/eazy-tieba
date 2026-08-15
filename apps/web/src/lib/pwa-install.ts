@@ -21,7 +21,7 @@ function emit() {
 	for (const notify of subscribers) notify();
 }
 
-function isStandaloneMode() {
+export function isStandaloneMode() {
 	if (typeof window === "undefined") return false;
 	const iosStandalone = (window.navigator as Navigator & { standalone?: boolean })
 		.standalone;

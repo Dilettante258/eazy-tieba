@@ -4,6 +4,7 @@ import {
 	createRootRouteWithContext,
 	useNavigate,
 	useRouterState,
+	type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { ActionList, ActionMenu, PageLayout } from "@primer/react";
 import {
@@ -14,6 +15,7 @@ import {
 	ThreeBarsIcon,
 } from "@primer/octicons-react";
 import { lazy, Suspense } from "react";
+import { ErrorFallback } from "../components/ErrorFallback.tsx";
 import { GitHubStars } from "../components/GitHubStars.tsx";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { usePwaInstall } from "../lib/pwa-install.ts";
@@ -204,6 +206,11 @@ function RootLayout() {
 	);
 }
 
+function RootErrorComponent({ error, reset }: ErrorComponentProps) {
+	return <ErrorFallback error={error as Error} resetError={reset} />;
+}
+
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootLayout,
+	errorComponent: RootErrorComponent,
 });

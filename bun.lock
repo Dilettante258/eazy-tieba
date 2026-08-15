@@ -58,6 +58,8 @@
         "@primer/octicons-react": "^19",
         "@primer/primitives": "11",
         "@primer/react": "^38",
+        "@sentry/react": "10.70.0",
+        "@tanstack/query-async-storage-persister": "5.101.4",
         "@tanstack/query-sync-storage-persister": "5.101.0",
         "@tanstack/react-query": "^5.61.0",
         "@tanstack/react-query-devtools": "^5.61.0",
@@ -442,6 +444,22 @@
 
     "@scalar/types": ["@scalar/types@0.6.6", "https://mirrors.huaweicloud.com/repository/npm/@scalar/types/-/types-0.6.6.tgz", { "dependencies": { "@scalar/helpers": "0.2.15", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-nr3m23p5MnGy4Wb4JFT7aA+jzvYSs/AS40NUEoQMBE1IwtuvG5gtLL0uu6kWpDq4UAfrWGntlAQNX7G8X9D4sg=="],
 
+    "@sentry/browser": ["@sentry/browser@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/browser/-/browser-10.70.0.tgz", { "dependencies": { "@sentry/browser-utils": "10.70.0", "@sentry/conventions": "^0.16.0", "@sentry/core": "10.70.0", "@sentry/feedback": "10.70.0", "@sentry/replay": "10.70.0", "@sentry/replay-canvas": "10.70.0" } }, "sha512-IK6+J+8H06tZe+A8L37TT5ZxxwNtyQatW8zl5RYYJ/e9CsjrM8fPi8I1OT7uquTw8UtjqFHt7bEef/Vy63ksPg=="],
+
+    "@sentry/browser-utils": ["@sentry/browser-utils@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/browser-utils/-/browser-utils-10.70.0.tgz", { "dependencies": { "@sentry/conventions": "^0.16.0", "@sentry/core": "10.70.0" } }, "sha512-IvjhafF5NFXrPCg5EHbAPGDwIhHxgUcLlHTklZ3DAdA6ky88BJYMfevbcnOEmgavf4nylhCaquRUFNB5+szj+A=="],
+
+    "@sentry/conventions": ["@sentry/conventions@0.16.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/conventions/-/conventions-0.16.0.tgz", {}, "sha512-fO9PLmHdVURcSPUpWCItWAtgKiMwGdJHbovoSEyLplX5sxs2ugvI4CBPTrkkgqhObnZOD0CnWBKDzSVQYBKEyQ=="],
+
+    "@sentry/core": ["@sentry/core@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/core/-/core-10.70.0.tgz", { "dependencies": { "@sentry/conventions": "^0.16.0" } }, "sha512-ozhCTDqg89oB4XmWfAwuHshABpvT7AkRpaPnogopPfMAaI61G1t8EKCJ4W7aum8JSBonlfyjPCyW5oYZFm0KvA=="],
+
+    "@sentry/feedback": ["@sentry/feedback@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/feedback/-/feedback-10.70.0.tgz", { "dependencies": { "@sentry/core": "10.70.0" } }, "sha512-6VQn2ETJjHkk4QQDdx/587/JDfXsk3yBTLZ3UZOMtBVrkmwgk+1FJZ8ULJ3ud1xZcuh2icunIkc7tGVv2axdnw=="],
+
+    "@sentry/react": ["@sentry/react@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/react/-/react-10.70.0.tgz", { "dependencies": { "@sentry/browser": "10.70.0", "@sentry/conventions": "^0.16.0", "@sentry/core": "10.70.0" }, "peerDependencies": { "react": "^16.14.0 || 17.x || 18.x || 19.x" } }, "sha512-j1d/4hvoaUVKs5GRrfmwUCkiEmkfaeHsk+xgausZlzg5YvmwpF+gyevBLNP26GFEH7nyHXW4l8dbbo0eNieJmw=="],
+
+    "@sentry/replay": ["@sentry/replay@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/replay/-/replay-10.70.0.tgz", { "dependencies": { "@sentry/browser-utils": "10.70.0", "@sentry/core": "10.70.0" } }, "sha512-xMnSGzJn9Xd29rYd32lkx/gFW+5mtgqADJ2FiZvis0MBGZuDlNRwPn0/Cs1xA3JNXKV3NGfhdmmvs90w4dHSmw=="],
+
+    "@sentry/replay-canvas": ["@sentry/replay-canvas@10.70.0", "https://mirrors.huaweicloud.com/repository/npm/@sentry/replay-canvas/-/replay-canvas-10.70.0.tgz", { "dependencies": { "@sentry/core": "10.70.0", "@sentry/replay": "10.70.0" } }, "sha512-irzpw22bK5CF3jbecDa0gBUcfjv7tgeUoLAvtIfeHOP5ajmf3o4Cp99a9RQqkfgvkcMeRZBUwE91SQhp6Ank+w=="],
+
     "@shikijs/engine-oniguruma": ["@shikijs/engine-oniguruma@3.22.0", "https://mirrors.huaweicloud.com/repository/npm/@shikijs/engine-oniguruma/-/engine-oniguruma-3.22.0.tgz", { "dependencies": { "@shikijs/types": "3.22.0", "@shikijs/vscode-textmate": "^10.0.2" } }, "sha512-DyXsOG0vGtNtl7ygvabHd7Mt5EY8gCNqR9Y7Lpbbd/PbJvgWrqaKzH1JW6H6qFkuUa8aCxoiYVv8/YfFljiQxA=="],
 
     "@shikijs/langs": ["@shikijs/langs@3.22.0", "https://mirrors.huaweicloud.com/repository/npm/@shikijs/langs/-/langs-3.22.0.tgz", { "dependencies": { "@shikijs/types": "3.22.0" } }, "sha512-x/42TfhWmp6H00T6uwVrdTJGKgNdFbrEdhaDwSR5fd5zhQ1Q46bHq9EO61SCEWJR0HY7z2HNDMaBZp8JRmKiIA=="],
@@ -464,11 +482,13 @@
 
     "@tanstack/history": ["@tanstack/history@1.154.14", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/history/-/history-1.154.14.tgz", {}, "sha512-xyIfof8eHBuub1CkBnbKNKQXeRZC4dClhmzePHVOEel4G7lk/dW+TQ16da7CFdeNLv6u6Owf5VoBQxoo6DFTSA=="],
 
-    "@tanstack/query-core": ["@tanstack/query-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-core/-/query-core-5.101.0.tgz", {}, "sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow=="],
+    "@tanstack/query-async-storage-persister": ["@tanstack/query-async-storage-persister@5.101.4", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-async-storage-persister/-/query-async-storage-persister-5.101.4.tgz", { "dependencies": { "@tanstack/query-core": "5.101.4", "@tanstack/query-persist-client-core": "5.101.4" } }, "sha512-ROenNOVvxIZ1zKsBAiIvvslLo2xD8Me/vFz/tChdmuI7ciU+ET63yRrQ01W899Tx1ayQXdsGQJqYqjjVZk+OBQ=="],
+
+    "@tanstack/query-core": ["@tanstack/query-core@5.101.4", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-core/-/query-core-5.101.4.tgz", {}, "sha512-gNwcvOJcRbLWPOLG/2OBm+zM+Yv+MKsXKEOWC57USuZDEsI71hEErQsiEGx5wX9rzWWkfwM0fVSPoiIFSsxfiw=="],
 
     "@tanstack/query-devtools": ["@tanstack/query-devtools@5.93.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-devtools/-/query-devtools-5.93.0.tgz", {}, "sha512-+kpsx1NQnOFTZsw6HAFCW3HkKg0+2cepGtAWXjiiSOJJ1CtQpt72EE2nyZb+AjAbLRPoeRmPJ8MtQd8r8gsPdg=="],
 
-    "@tanstack/query-persist-client-core": ["@tanstack/query-persist-client-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-persist-client-core/-/query-persist-client-core-5.101.0.tgz", { "dependencies": { "@tanstack/query-core": "5.101.0" } }, "sha512-LH99WepGVLwlLfuOcQcPK7f3Xg/Gf+xlMMIj9xWu/8oQ3egnDzjr+a4HvEmi6PGob5SmGXvmDKZaH5+In9dzjw=="],
+    "@tanstack/query-persist-client-core": ["@tanstack/query-persist-client-core@5.101.4", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-persist-client-core/-/query-persist-client-core-5.101.4.tgz", { "dependencies": { "@tanstack/query-core": "5.101.4" } }, "sha512-Bmu+RfWhwYEyYZEwSeKC0gX4+KTkiEB3yO8oz9BfAY/Jfe3ndz9EnYVhihIZPmWIr8NXayF7JuraNQcrXQQCCg=="],
 
     "@tanstack/query-sync-storage-persister": ["@tanstack/query-sync-storage-persister@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-sync-storage-persister/-/query-sync-storage-persister-5.101.0.tgz", { "dependencies": { "@tanstack/query-core": "5.101.0", "@tanstack/query-persist-client-core": "5.101.0" } }, "sha512-UAGbsIJe9vkV/rbFxUBOPH27Eu6K17KuVLfK1mSy8qoSUJ4qt6JKGMxA8NMUoowbPG0ZnTfRt1Y5SFsqfqlfcA=="],
 
@@ -1174,7 +1194,13 @@
 
     "@scalar/types/zod": ["zod@4.3.6", "https://mirrors.huaweicloud.com/repository/npm/zod/-/zod-4.3.6.tgz", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
 
+    "@tanstack/query-sync-storage-persister/@tanstack/query-core": ["@tanstack/query-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-core/-/query-core-5.101.0.tgz", {}, "sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow=="],
+
+    "@tanstack/query-sync-storage-persister/@tanstack/query-persist-client-core": ["@tanstack/query-persist-client-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-persist-client-core/-/query-persist-client-core-5.101.0.tgz", { "dependencies": { "@tanstack/query-core": "5.101.0" } }, "sha512-LH99WepGVLwlLfuOcQcPK7f3Xg/Gf+xlMMIj9xWu/8oQ3egnDzjr+a4HvEmi6PGob5SmGXvmDKZaH5+In9dzjw=="],
+
     "@tanstack/react-query/@tanstack/query-core": ["@tanstack/query-core@5.90.20", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-core/-/query-core-5.90.20.tgz", {}, "sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg=="],
+
+    "@tanstack/react-query-persist-client/@tanstack/query-persist-client-core": ["@tanstack/query-persist-client-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-persist-client-core/-/query-persist-client-core-5.101.0.tgz", { "dependencies": { "@tanstack/query-core": "5.101.0" } }, "sha512-LH99WepGVLwlLfuOcQcPK7f3Xg/Gf+xlMMIj9xWu/8oQ3egnDzjr+a4HvEmi6PGob5SmGXvmDKZaH5+In9dzjw=="],
 
     "@tieba/analysis/@types/bun": ["@types/bun@1.3.14", "https://mirrors.huaweicloud.com/repository/npm/@types/bun/-/bun-1.3.14.tgz", { "dependencies": { "bun-types": "1.3.14" } }, "sha512-h1hFqFVcvAvD9j9K7ZW7vd82aSA+rTdznZa+5bwvCwqSB1jmmfLcbIWhOLx1/+boy/xmjgCs/OMUL8hRJSmnPw=="],
 
@@ -1267,6 +1293,8 @@
     "@esbuild-kit/core-utils/esbuild/@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.18.20", "https://mirrors.huaweicloud.com/repository/npm/@esbuild/win32-ia32/-/win32-ia32-0.18.20.tgz", { "os": "win32", "cpu": "ia32" }, "sha512-Wv7QBi3ID/rROT08SABTS7eV4hX26sVduqDOTe1MvGMjNd3EjOz4b7zeexIR62GTIEKrfJXKL9LFxTYgkyeu7g=="],
 
     "@esbuild-kit/core-utils/esbuild/@esbuild/win32-x64": ["@esbuild/win32-x64@0.18.20", "https://mirrors.huaweicloud.com/repository/npm/@esbuild/win32-x64/-/win32-x64-0.18.20.tgz", { "os": "win32", "cpu": "x64" }, "sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ=="],
+
+    "@tanstack/react-query-persist-client/@tanstack/query-persist-client-core/@tanstack/query-core": ["@tanstack/query-core@5.101.0", "https://mirrors.huaweicloud.com/repository/npm/@tanstack/query-core/-/query-core-5.101.0.tgz", {}, "sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow=="],
 
     "@tieba/analysis/@types/bun/bun-types": ["bun-types@1.3.14", "https://mirrors.huaweicloud.com/repository/npm/bun-types/-/bun-types-1.3.14.tgz", { "dependencies": { "@types/node": "*" } }, "sha512-4N0ig0fEomHt5R0KCFWjovxow98rIoRwKolrYdCcknNwMekCXRnWEUvgu5soYV8QXtVsrUD8B95MBOZGPvr6KQ=="],
 
