@@ -31,6 +31,7 @@ jobs:
 
       - name: Build web app
         env:
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
           VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
         run: bun run --cwd apps/web build
 
