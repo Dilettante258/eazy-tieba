@@ -1,3 +1,51 @@
+.titleRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.titleRow h2,
+.authCard h2 {
+	margin: 0;
+}
+
+.authPage,
+.authLoading {
+	min-height: 45vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.authLoading {
+	gap: 0.75rem;
+	color: var(--fgColor-muted);
+}
+
+.authCard {
+	width: min(100%, 360px);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1.5rem;
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+	background: var(--bgColor-default);
+	box-shadow: var(--shadow-resting-small, 0 1px 3px rgba(0, 0, 0, 0.12));
+}
+
+.authCard p {
+	margin: 0;
+	color: var(--fgColor-muted);
+}
+
+.authError,
+.authCard .authError {
+	color: var(--fgColor-danger, #cf222e);
+}
+
 .tabNav {
 	display: flex;
 	gap: 0;
@@ -12,7 +60,9 @@
 	text-decoration: none;
 	border-bottom: 2px solid transparent;
 	margin-bottom: -1px;
-	transition: color 0.15s, border-color 0.15s;
+	transition:
+		color 0.15s,
+		border-color 0.15s;
 }
 
 .tabItem:hover {

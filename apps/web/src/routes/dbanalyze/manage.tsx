@@ -1,10 +1,14 @@
+import { SearchIcon, TrashIcon } from "@primer/octicons-react";
+import { Banner, Button, Spinner } from "@primer/react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Banner, Button, Spinner } from "@primer/react";
-import { SearchIcon, TrashIcon } from "@primer/octicons-react";
-import { useDbAnalyzeUsers } from "../../hooks/queries.ts";
-import { DeleteUserModal } from "../../components/DbAnalyze/DeleteUserModal.tsx";
+import type { AnalysisCatalog } from "../../components/DbAnalyze/analysis-types.ts";
 import styles from "../../components/DbAnalyze/DbAnalyze.module.css";
+import { DeleteUserModal } from "../../components/DbAnalyze/DeleteUserModal.tsx";
+import { ForumGroupManager } from "../../components/DbAnalyze/ForumGroupManager.tsx";
+import { unwrap, useDbAnalyzeUsers } from "../../hooks/queries.ts";
+import { api } from "../../lib/api-client.ts";
 
 interface UserResult {
 	id: string;
@@ -24,6 +28,13 @@ function ManagePage() {
 	const [deletingUser, setDeletingUser] = useState<DeletingUser | null>(null);
 
 	const searchQuery = useDbAnalyzeUsers(query, "50");
+	const catalogQuery = useQuery({
+		queryKey: ["db-analyze", "forum-catalog"],
+		queryFn: () =>
+			api["db-analyze"]["forum-catalog"]
+				.$get()
+				.then(unwrap) as Promise<AnalysisCatalog>,
+	});
 
 	const users: UserResult[] = searchQuery.data?.users ?? [];
 
@@ -34,7 +45,29 @@ function ManagePage() {
 
 	return (
 		<div>
-			<p style={{ color: "var(--fgColor-muted)", fontSize: "0.875rem", marginBottom: "1.25rem" }}>
+			{catalogQuery.data && (
+				<div style={{ marginBottom: "2rem" }}>
+					<ForumGroupManager
+						forums={catalogQuery.data.forums}
+						types={catalogQuery.data.types}
+						onChanged={() => catalogQuery.refetch()}
+					/>
+				</div>
+			)}
+			{catalogQuery.error && (
+				<Banner
+					variant="critical"
+					title="加载自定义吧类型失败"
+					description={catalogQuery.error.message}
+				/>
+			)}
+			<p
+				style={{
+					color: "var(--fgColor-muted)",
+					fontSize: "0.875rem",
+					marginBottom: "1.25rem",
+				}}
+			>
 				搜索用户后可删除机器人账号的所有发言记录（帖子、楼中楼、主题帖、用户档案）。
 			</p>
 
@@ -64,7 +97,9 @@ function ManagePage() {
 
 			{/* 结果 */}
 			{searchQuery.isPending && query && (
-				<div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
+				<div
+					style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
+				>
 					<Spinner />
 				</div>
 			)}
@@ -96,8 +131,15 @@ function ManagePage() {
 						{users.map((u) => (
 							<tr key={u.id}>
 								<td>
-									<div style={{ fontWeight: 500 }}>{u.nameShow || u.name || "—"}</div>
-									<div style={{ color: "var(--fgColor-muted)", fontSize: "0.6875rem" }}>
+									<div style={{ fontWeight: 500 }}>
+										{u.nameShow || u.name || "—"}
+									</div>
+									<div
+										style={{
+											color: "var(--fgColor-muted)",
+											fontSize: "0.6875rem",
+										}}
+									>
 										{u.id}
 									</div>
 								</td>

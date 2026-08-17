@@ -1,9 +1,9 @@
-import * as Sentry from "@sentry/react";
 import { BaseStyles, ThemeProvider } from "@primer/react";
+import * as Sentry from "@sentry/react";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { ErrorFallback } from "./components/ErrorFallback.tsx";
 import { ensureBackendReady } from "./lib/backend.ts";
@@ -22,10 +22,9 @@ const queryClient = new QueryClient({
 
 // This code is only for TypeScript
 declare global {
-  interface Window {
-    __TANSTACK_QUERY_CLIENT__:
-      import('@tanstack/query-core').QueryClient
-  }
+	interface Window {
+		__TANSTACK_QUERY_CLIENT__: import("@tanstack/react-query").QueryClient;
+	}
 }
 
 // This code is for all users
@@ -63,14 +62,14 @@ function AppShell() {
 	const { colorMode } = useColorMode();
 	const backendPreference = useSettingsStore((s) => s.backendPreference);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: recheck only when the selected backend changes
 	useEffect(() => {
 		void ensureBackendReady(true);
 	}, [backendPreference]);
 
 	return (
 		<ThemeProvider colorMode={colorMode}>
-			<BaseStyles>
+			<BaseStyles className="appContent">
 				<Sentry.ErrorBoundary
 					fallback={({ error, resetError }) => (
 						<ErrorFallback error={error as Error} resetError={resetError} />

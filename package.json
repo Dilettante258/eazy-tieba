@@ -15,6 +15,7 @@
 		"proto:gen": "turbo proto:gen",
 		"tsconfig:sync": "bun scripts/sync-tsconfig.mjs",
 		"db:push": "bun run --cwd apps/api db:push",
+		"db:analyze:prepare": "bun run --cwd apps/api db:analyze:prepare",
 		"api:export": "bun run --cwd apps/api export",
 		"api:export:config": "bun run --cwd apps/api export:config",
 		"format": "biome format --write .",
