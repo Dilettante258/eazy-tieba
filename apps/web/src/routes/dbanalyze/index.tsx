@@ -143,6 +143,7 @@ function DbAnalyzeStats() {
 							最少吧数
 						</span>
 						<SegmentedControl
+							aria-label="最少贴吧数"
 							size="small"
 							onChange={(i) => setMinForums(MIN_FORUMS_OPTIONS[i])}
 						>

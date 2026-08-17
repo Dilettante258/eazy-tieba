@@ -235,6 +235,7 @@ function SearchForm({ onSubmit, loading }: SearchFormProps) {
 				<FormControl>
 					<FormControl.Label>排序</FormControl.Label>
 					<SegmentedControl
+						aria-label="排序方式"
 						size="small"
 						onChange={(i) => setLocalSort(i === 0 ? 1 : 0)}
 					>
@@ -250,6 +251,7 @@ function SearchForm({ onSubmit, loading }: SearchFormProps) {
 				<FormControl>
 					<FormControl.Label>抓取深度</FormControl.Label>
 					<SegmentedControl
+						aria-label="抓取深度"
 						size="small"
 						onChange={(i) => setLocalDepth(i === 0 ? "first" : "all")}
 					>
@@ -270,6 +272,7 @@ function SearchForm({ onSubmit, loading }: SearchFormProps) {
 					<FormControl.Label>筛选用户</FormControl.Label>
 					<div className={styles.addRow}>
 						<SegmentedControl
+							aria-label="用户标识类型"
 							size="small"
 							onChange={(i) => {
 								const types: UserIdType[] = ["uid", "un", "id"];

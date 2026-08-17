@@ -118,6 +118,7 @@ function ForumQueryForm({ onSubmit, loading }: ForumQueryFormProps) {
 			<div className={styles.formField}>
 				<span className={styles.formLabel}>排序</span>
 				<SegmentedControl
+					aria-label="排序方式"
 					size="small"
 					onChange={(i) => setLocalSort(i === 0 ? 1 : 0)}
 				>
@@ -146,6 +147,7 @@ function ForumQueryForm({ onSubmit, loading }: ForumQueryFormProps) {
 			<div className={styles.formField}>
 				<span className={styles.formLabel}>抓取深度</span>
 				<SegmentedControl
+					aria-label="抓取深度"
 					size="small"
 					onChange={(i) => setLocalDepth(i === 0 ? "first" : "all")}
 				>
