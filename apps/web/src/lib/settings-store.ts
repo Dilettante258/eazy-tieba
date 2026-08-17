@@ -15,6 +15,12 @@ export type SettingsTab =
 	| "global"
 	| "about";
 
+export type ThemePreference = "system" | "day" | "night";
+
+export function isThemePreference(value: unknown): value is ThemePreference {
+	return value === "system" || value === "day" || value === "night";
+}
+
 /** 带颜色的标记项 */
 export interface HighlightedForum {
 	name: string;
@@ -156,6 +162,10 @@ interface SettingsStore {
 	// 后端节点偏好（持久化）
 	backendPreference: BackendPreference;
 	setBackendPreference: (preference: BackendPreference) => void;
+
+	// 主题偏好（持久化；导航栏主题按钮只做临时切换）
+	themePreference: ThemePreference;
+	setThemePreference: (preference: ThemePreference) => void;
 
 	// 当前生效节点（运行时）
 	activeBackend: BackendNode;
@@ -334,6 +344,9 @@ export const useSettingsStore = create<SettingsStore>()(
 			backendPreference: "auto",
 			setBackendPreference: (preference) =>
 				set({ backendPreference: preference }),
+
+			themePreference: "system",
+			setThemePreference: (preference) => set({ themePreference: preference }),
 			activeBackend: "domestic",
 			backendChecking: false,
 			backendProbeMessage: "尚未检测生产节点",
@@ -341,7 +354,7 @@ export const useSettingsStore = create<SettingsStore>()(
 		}),
 		{
 			name: "tieba-settings",
-			version: 3,
+			version: 4,
 			partialize: (state) => ({
 				settingsTab: state.settingsTab,
 				panelVisibility: state.panelVisibility,
@@ -359,6 +372,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				hideHomeHero: state.hideHomeHero,
 				lastSeenChangelogVersion: state.lastSeenChangelogVersion,
 				backendPreference: state.backendPreference,
+				themePreference: state.themePreference,
 			}),
 			migrate: (persisted, version) => {
 				const state = persisted as Record<string, unknown>;
@@ -390,6 +404,10 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				if (version < 3 && !isBackendPreference(state.backendPreference)) {
 					state.backendPreference = "auto";
+				}
+
+				if (version < 4 && !isThemePreference(state.themePreference)) {
+					state.themePreference = "system";
 				}
 
 				return persisted as SettingsStore;

@@ -34,6 +34,8 @@ import {
 	type SettingsTab,
 	type PanelId,
 	type ForumPanelId,
+	type ThemePreference,
+	isThemePreference,
 } from "../lib/settings-store.ts";
 import {
 	HIGHLIGHT_COLORS,
@@ -766,6 +768,45 @@ function ForumAnalysisSettings() {
 
 // ── 全局设置 ──
 
+const THEME_PREFERENCE_OPTIONS: Array<{
+	value: ThemePreference;
+	label: string;
+}> = [
+	{ value: "system", label: "跟随系统" },
+	{ value: "day", label: "亮色" },
+	{ value: "night", label: "暗色" },
+];
+
+function ThemePreferenceSection() {
+	const themePreference = useSettingsStore((s) => s.themePreference);
+	const setThemePreference = useSettingsStore((s) => s.setThemePreference);
+
+	return (
+		<section className={styles.section}>
+			<h4 className={styles.sectionTitle}>主题</h4>
+			<p className={styles.sectionDesc}>
+				选择长期使用的主题。导航栏主题按钮只在当前标签页会话中临时切换
+			</p>
+			<Select
+				size="small"
+				value={themePreference}
+				onChange={(event) => {
+					const value = event.target.value;
+					if (isThemePreference(value)) setThemePreference(value);
+				}}
+				className={styles.addInput}
+				aria-label="主题偏好"
+			>
+				{THEME_PREFERENCE_OPTIONS.map((option) => (
+					<Select.Option key={option.value} value={option.value}>
+						{option.label}
+					</Select.Option>
+				))}
+			</Select>
+		</section>
+	);
+}
+
 function ImageConcurrencySection() {
 	const maxImageConcurrency = useSettingsStore((s) => s.maxImageConcurrency);
 	const setMaxImageConcurrency = useSettingsStore(
@@ -952,6 +993,7 @@ function GlobalSettings() {
 	return (
 		<div className={styles.settingsPanel}>
 			<h3 className={styles.panelTitle}>全局设置</h3>
+			<ThemePreferenceSection />
 			<BackendNodeSection />
 			<HomeHeroSection />
 			<ImageConcurrencySection />

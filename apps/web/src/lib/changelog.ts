@@ -39,24 +39,30 @@ export const CHANGELOG: readonly ChangelogEntry[] = [
 	{
 		version: "v3.3.0",
 		summary: "新增错误追踪",
-		items: [
-			"接入 Sentry 错误追踪，提升稳定性。",
-		],
+		items: ["接入 Sentry 错误追踪，提升稳定性。"],
 	},
 	{
 		version: "v3.4.0",
-		summary: "当前版本，首页视觉焕新与更新提示。",
+		summary: "首页视觉焕新与更新提示。",
 		items: [
 			"首页 Hero 区域全新设计：极光网格背景、渐变标题与悬浮卡片。",
 			"全局设置新增「隐藏首页 Hero 区域」开关。",
 			"新增版本更新提示：设备未看过最新更新内容时自动弹出。",
 		],
 	},
+	{
+		version: "v3.4.1",
+		summary: "完善主题体验与使用行为观测。",
+		items: [
+			"全局设置新增主题偏好，支持跟随系统、亮色和暗色模式。",
+			"导航栏主题切换改为标签页会话级：刷新后保留，关闭标签页后失效。",
+			"暗色模式下，弹簧效果下的页面根节点的背景颜色失效。",
+		],
+	},
 ] as const;
 
 /** 最新版本号（CHANGELOG 末尾条目） */
-export const LATEST_CHANGELOG_VERSION =
-	CHANGELOG[CHANGELOG.length - 1].version;
+export const LATEST_CHANGELOG_VERSION = CHANGELOG[CHANGELOG.length - 1].version;
 
 /**
  * 返回设备尚未看过的版本条目（从新到旧），最多 limit 条。

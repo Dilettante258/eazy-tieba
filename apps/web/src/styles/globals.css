@@ -22,11 +22,11 @@ body {
 	min-height: 100vh;
 }
 
-div[data-color-mode="dark"] {
+html[data-color-mode="dark"] {
 	color-scheme: only dark;
 }
 
-div[data-color-mode="light"] {
+html[data-color-mode="light"] {
 	color-scheme: only light;
 }
 

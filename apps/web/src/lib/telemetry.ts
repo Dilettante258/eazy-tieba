@@ -11,6 +11,7 @@ const PRIMITIVE_SETTING_KEYS = [
 	"maxImageConcurrency",
 	"hideHomeHero",
 	"backendPreference",
+	"themePreference",
 ] as const satisfies readonly (keyof SettingsState)[];
 
 const RECORD_SETTING_KEYS = [
