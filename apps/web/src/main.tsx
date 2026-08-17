@@ -1,3 +1,4 @@
+import "./instrument.ts";
 import "@primer/primitives/dist/css/functional/themes/light.css";
 import "@primer/primitives/dist/css/functional/themes/dark.css";
 import "@primer/primitives/dist/css/base/motion/motion.css";
@@ -7,35 +8,15 @@ import { createRoot } from "react-dom/client";
 import { App, router } from "./App.tsx";
 import { isStandaloneMode } from "./lib/pwa-install.ts";
 import { useSettingsStore } from "./lib/settings-store.ts";
+import {
+	recordFirstUse,
+	startExternalLinkTelemetry,
+	startSettingsTelemetry,
+} from "./lib/telemetry.ts";
 import "./styles/globals.css";
 
-
 if (import.meta.env.VITE_SENTRY_DSN) {
-	Sentry.init({
-		debug: !import.meta.env.PROD,
-		dsn: import.meta.env.VITE_SENTRY_DSN,
-		release: __APP_VERSION__,
-		environment: import.meta.env.MODE,
-		integrations: [
-			Sentry.browserTracingIntegration(),
-			Sentry.tanstackRouterBrowserTracingIntegration(router),
-			Sentry.httpClientIntegration(),
-		],
-		tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
-		tracePropagationTargets: [
-			"localhost",
-			/^https:\/\/zwrcjbwbskoa\.sealosbja\.site/,
-			/^https:\/\/cf\.eztb\.org/,
-		],
-		enableLogs: true,
-		sendDefaultPii: true,
-		beforeSendTransaction(event) {
-			event.spans = event.spans?.filter(
-				(span) => !span.op?.startsWith("resource."),
-			);
-			return event;
-		},
-	});
+	Sentry.addIntegration(Sentry.tanstackRouterBrowserTracingIntegration(router));
 
 	const { activeBackend, backendPreference } = useSettingsStore.getState();
 	Sentry.setTag("activeBackend", activeBackend);
@@ -63,9 +44,23 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 		Sentry.setTag("activeBackend", state.activeBackend);
 		Sentry.setTag("backendPreference", state.backendPreference);
 	});
+	recordFirstUse();
+	startSettingsTelemetry();
+	startExternalLinkTelemetry();
 }
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Root element not found");
+
+const sentryRootOptions = import.meta.env.VITE_SENTRY_DSN
+	? {
+			onUncaughtError: Sentry.reactErrorHandler(),
+			onCaughtError: Sentry.reactErrorHandler(),
+			onRecoverableError: Sentry.reactErrorHandler(),
+		}
+	: undefined;
+
+createRoot(rootElement, sentryRootOptions).render(
 	<StrictMode>
 		<App />
 	</StrictMode>,

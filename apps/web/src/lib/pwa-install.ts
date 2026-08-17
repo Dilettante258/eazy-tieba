@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { recordPwaInstalled, recordPwaInstallPrompt } from "./telemetry.ts";
 
 interface BeforeInstallPromptEvent extends Event {
 	prompt: () => Promise<void>;
@@ -16,22 +17,41 @@ let initialized = false;
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 let installed = false;
 const subscribers = new Set<() => void>();
+const INSTALL_RECORDED_KEY = "eztb-pwa-install-recorded";
 
 function emit() {
 	for (const notify of subscribers) notify();
 }
 
+function recordInstallation(
+	source: "appinstalled" | "install_prompt" | "standalone",
+) {
+	try {
+		if (localStorage.getItem(INSTALL_RECORDED_KEY) === "true") return;
+		if (recordPwaInstalled(source)) {
+			localStorage.setItem(INSTALL_RECORDED_KEY, "true");
+		}
+	} catch {
+		recordPwaInstalled(source);
+	}
+}
+
 export function isStandaloneMode() {
 	if (typeof window === "undefined") return false;
-	const iosStandalone = (window.navigator as Navigator & { standalone?: boolean })
-		.standalone;
-	return window.matchMedia("(display-mode: standalone)").matches || iosStandalone === true;
+	const iosStandalone = (
+		window.navigator as Navigator & { standalone?: boolean }
+	).standalone;
+	return (
+		window.matchMedia("(display-mode: standalone)").matches ||
+		iosStandalone === true
+	);
 }
 
 function ensureInitialized() {
 	if (initialized || typeof window === "undefined") return;
 	initialized = true;
 	installed = isStandaloneMode();
+	if (installed) recordInstallation("standalone");
 
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
@@ -42,13 +62,17 @@ function ensureInitialized() {
 	window.addEventListener("appinstalled", () => {
 		installed = true;
 		deferredPrompt = null;
+		recordInstallation("appinstalled");
 		emit();
 	});
 
 	const media = window.matchMedia("(display-mode: standalone)");
 	media.addEventListener("change", () => {
 		installed = isStandaloneMode();
-		if (installed) deferredPrompt = null;
+		if (installed) {
+			deferredPrompt = null;
+			recordInstallation("standalone");
+		}
 		emit();
 	});
 }
@@ -68,9 +92,13 @@ async function promptInstall(): Promise<InstallOutcome> {
 	const currentPrompt = deferredPrompt;
 	await currentPrompt.prompt();
 	const result = await currentPrompt.userChoice;
+	recordPwaInstallPrompt(result.outcome, result.platform);
 
 	deferredPrompt = null;
-	if (result.outcome === "accepted") installed = true;
+	if (result.outcome === "accepted") {
+		installed = true;
+		recordInstallation("install_prompt");
+	}
 	emit();
 	return result.outcome;
 }
@@ -99,4 +127,3 @@ export function usePwaInstall() {
 		install,
 	};
 }
-
