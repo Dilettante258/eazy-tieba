@@ -1,8 +1,8 @@
+import { GraphIcon, PersonIcon, TrashIcon } from "@primer/octicons-react";
+import { Button } from "@primer/react";
 import { useRouter } from "@tanstack/react-router";
-import { Button, Spinner } from "@primer/react";
-import { PersonIcon, GraphIcon, TrashIcon } from "@primer/octicons-react";
-import type { CrossForum } from "./ForumTagsPanel.tsx";
 import styles from "./DbAnalyze.module.css";
+import type { CrossForum } from "./ForumTagsPanel.tsx";
 
 export interface IntersectionUser {
 	authorId: string;
@@ -57,7 +57,9 @@ export function IntersectionTable({
 							(f) => (u.forumPosts[f.id] ?? 0) > 0,
 						);
 						// 其他活跃吧：不在选中列表里但用户也发言过的
-						const otherForumIds = u.allForumIds.filter((id) => !selectedSet.has(id));
+						const otherForumIds = u.allForumIds.filter(
+							(id) => !selectedSet.has(id),
+						);
 						return (
 							<tr key={u.authorId}>
 								<td
@@ -115,7 +117,10 @@ export function IntersectionTable({
 											variant="invisible"
 											leadingVisual={PersonIcon}
 											onClick={() => {
-												const href = router.buildLocation({ to: "/userpost", search: { method: "id", id: u.authorId } }).href;
+												const href = router.buildLocation({
+													to: "/userpost",
+													search: { method: "id", id: u.authorId },
+												}).href;
 												window.open(href, "_blank");
 											}}
 										>
@@ -126,7 +131,10 @@ export function IntersectionTable({
 											variant="invisible"
 											leadingVisual={GraphIcon}
 											onClick={() => {
-												const href = router.buildLocation({ to: "/postanalysis", search: { method: "id", id: u.authorId } }).href;
+												const href = router.buildLocation({
+													to: "/postanalysis",
+													search: { method: "id", id: u.authorId },
+												}).href;
 												window.open(href, "_blank");
 											}}
 										>
@@ -153,12 +161,15 @@ export function IntersectionTable({
 
 			{hasNextPage && (
 				<div style={{ textAlign: "center", marginTop: "1rem" }}>
-					<Button variant="default" onClick={onLoadMore} disabled={loading}>
-						{loading ? (
-							<Spinner size="small" />
-						) : (
-							`加载更多（已显示 ${users.length.toLocaleString()} / ${total.toLocaleString()}）`
-						)}
+					<Button
+						variant="default"
+						onClick={onLoadMore}
+						disabled={loading}
+						loading={loading}
+						loadingAnnouncement="正在加载更多交集用户"
+					>
+						加载更多（已显示 {users.length.toLocaleString()} /{" "}
+						{total.toLocaleString()}）
 					</Button>
 				</div>
 			)}

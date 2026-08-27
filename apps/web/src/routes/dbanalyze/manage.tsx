@@ -90,7 +90,12 @@ function ManagePage() {
 					onChange={(e) => setInput(e.target.value)}
 					onKeyDown={(e) => e.key === "Enter" && handleSearch()}
 				/>
-				<Button leadingVisual={SearchIcon} onClick={handleSearch}>
+				<Button
+					leadingVisual={SearchIcon}
+					loading={searchQuery.isFetching}
+					loadingAnnouncement="正在搜索用户"
+					onClick={handleSearch}
+				>
 					搜索
 				</Button>
 			</div>

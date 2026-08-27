@@ -1,5 +1,5 @@
 import { PencilIcon, PlusIcon, TrashIcon, XIcon } from "@primer/octicons-react";
-import { Button, Spinner, TextInput } from "@primer/react";
+import { Button, TextInput } from "@primer/react";
 import { useMemo, useState } from "react";
 import { api } from "../../lib/api-client.ts";
 import type { AnalysisForum, AnalysisForumType } from "./analysis-types.ts";
@@ -27,6 +27,7 @@ export function ForumGroupManager({
 	const [memberIds, setMemberIds] = useState<Set<string>>(new Set());
 	const [filter, setFilter] = useState("");
 	const [saving, setSaving] = useState(false);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
 	const [error, setError] = useState("");
 
 	const filteredForums = useMemo(() => {
@@ -84,6 +85,8 @@ export function ForumGroupManager({
 
 	async function remove(group: AnalysisForumType) {
 		if (!window.confirm(`确认删除自定义类型“${group.name}”？`)) return;
+		setDeletingId(group.id);
+		setError("");
 		try {
 			await api["db-analyze"]["forum-groups"][":id"]
 				.$delete({ param: { id: group.id.replace("custom:", "") } })
@@ -91,6 +94,8 @@ export function ForumGroupManager({
 			await onChanged();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : String(err));
+		} finally {
+			setDeletingId(null);
 		}
 	}
 
@@ -104,6 +109,7 @@ export function ForumGroupManager({
 				<Button
 					size="small"
 					leadingVisual={PlusIcon}
+					disabled={saving || deletingId !== null}
 					onClick={() => openEditor("new")}
 				>
 					新建类型
@@ -121,6 +127,7 @@ export function ForumGroupManager({
 									aria-label="编辑"
 									size="small"
 									variant="invisible"
+									disabled={saving || deletingId !== null}
 									onClick={() => openEditor(group)}
 								>
 									<PencilIcon />
@@ -129,6 +136,9 @@ export function ForumGroupManager({
 									aria-label="删除"
 									size="small"
 									variant="invisible"
+									disabled={saving || deletingId !== null}
+									loading={deletingId === group.id}
+									loadingAnnouncement={`正在删除自定义类型${group.name}`}
 									onClick={() => remove(group)}
 								>
 									<TrashIcon />
@@ -217,9 +227,17 @@ export function ForumGroupManager({
 							{error && <p className={styles.modalError}>{error}</p>}
 						</div>
 						<div className={styles.modalFooter}>
-							<Button onClick={() => setEditing(null)}>取消</Button>
-							<Button variant="primary" disabled={saving} onClick={save}>
-								{saving ? <Spinner size="small" /> : "保存"}
+							<Button disabled={saving} onClick={() => setEditing(null)}>
+								取消
+							</Button>
+							<Button
+								variant="primary"
+								disabled={saving}
+								loading={saving}
+								loadingAnnouncement="正在保存自定义类型"
+								onClick={save}
+							>
+								保存
 							</Button>
 						</div>
 					</div>

@@ -62,8 +62,9 @@ export function AnalysisUtterancesDrawer({
 	request: AnalysisRequest;
 	onClose: () => void;
 }) {
-
-	const contentDom = useState(()=> document.querySelector('div.appContent'))[0] ?? document.body
+	const contentDom =
+		useState(() => document.querySelector("div.appContent"))[0] ??
+		document.body;
 
 	useEffect(() => {
 		const previous = document.body.style.overflow;
@@ -194,13 +195,11 @@ export function AnalysisUtterancesDrawer({
 								<div className={styles.loadMore}>
 									<Button
 										disabled={query.isFetchingNextPage}
+										loading={query.isFetchingNextPage}
+										loadingAnnouncement="正在加载更多发言"
 										onClick={() => query.fetchNextPage()}
 									>
-										{query.isFetchingNextPage ? (
-											<Spinner size="small" />
-										) : (
-											`加载更多（${posts.length} / ${total}）`
-										)}
+										加载更多（{posts.length} / {total}）
 									</Button>
 								</div>
 							)}

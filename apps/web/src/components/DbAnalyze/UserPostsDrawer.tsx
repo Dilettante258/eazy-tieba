@@ -1,10 +1,10 @@
-import { useState, useMemo, useEffect } from "react";
-import { Button, Spinner } from "@primer/react";
 import { XIcon } from "@primer/octicons-react";
+import { Button, Spinner } from "@primer/react";
+import { useEffect, useMemo, useState } from "react";
 import { useDbAnalyzeUserPostsInfinite } from "../../hooks/queries.ts";
+import styles from "./DbAnalyze.module.css";
 import type { CrossForum } from "./ForumTagsPanel.tsx";
 import type { IntersectionUser } from "./IntersectionTable.tsx";
-import styles from "./DbAnalyze.module.css";
 
 interface Post {
 	id: string;
@@ -46,7 +46,9 @@ function PostCard({ post }: { post: Post }) {
 				>
 					{post.type === "post" ? "主帖" : "楼中楼"}
 				</span>
-				<span className={styles.postForum}>{post.forumName ?? post.forumId}</span>
+				<span className={styles.postForum}>
+					{post.forumName ?? post.forumId}
+				</span>
 				{post.threadTitle && (
 					<span className={styles.postThread} title={post.threadTitle}>
 						· {post.threadTitle}
@@ -60,9 +62,7 @@ function PostCard({ post }: { post: Post }) {
 					<span>第 {post.floor} 楼</span>
 				)}
 				{post.agreeNum > 0 && <span>👍 {post.agreeNum}</span>}
-				{post.ipAddress && (
-					<span>IP: {post.ipAddress}</span>
-				)}
+				{post.ipAddress && <span>IP: {post.ipAddress}</span>}
 			</div>
 		</div>
 	);
@@ -101,16 +101,13 @@ export function UserPostsDrawer({
 
 	const total = postsQuery.data?.pages[0]?.total ?? 0;
 
-	const displayName =
-		user.nameShow || user.name || user.authorId;
+	const displayName = user.nameShow || user.name || user.authorId;
 
 	return (
 		<div className={styles.drawerOverlay} onClick={onClose}>
 			<div className={styles.drawerPanel} onClick={(e) => e.stopPropagation()}>
 				<div className={styles.drawerHeader}>
-					<span className={styles.drawerTitle}>
-						{displayName} 的发言记录
-					</span>
+					<span className={styles.drawerTitle}>{displayName} 的发言记录</span>
 					<Button
 						aria-label="关闭"
 						variant="invisible"
@@ -165,11 +162,19 @@ export function UserPostsDrawer({
 
 					{/* 发言列表 */}
 					{postsQuery.isPending ? (
-						<div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								padding: "2rem",
+							}}
+						>
 							<Spinner />
 						</div>
 					) : postsQuery.isError ? (
-						<div style={{ color: "var(--fgColor-danger)", fontSize: "0.875rem" }}>
+						<div
+							style={{ color: "var(--fgColor-danger)", fontSize: "0.875rem" }}
+						>
 							加载失败：{postsQuery.error.message}
 						</div>
 					) : (
@@ -185,12 +190,10 @@ export function UserPostsDrawer({
 										size="small"
 										onClick={() => postsQuery.fetchNextPage()}
 										disabled={postsQuery.isFetchingNextPage}
+										loading={postsQuery.isFetchingNextPage}
+										loadingAnnouncement="正在加载更多发言记录"
 									>
-										{postsQuery.isFetchingNextPage ? (
-											<Spinner size="small" />
-										) : (
-											`加载更多（已显示 ${allPosts.length} / ${total}）`
-										)}
+										加载更多（已显示 {allPosts.length} / {total}）
 									</Button>
 								</div>
 							)}

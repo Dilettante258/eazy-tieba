@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { Button, Spinner } from "@primer/react";
 import { AlertIcon } from "@primer/octicons-react";
+import { Button } from "@primer/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../lib/api-client.ts";
+import { useRef } from "react";
 import { unwrap } from "../../hooks/queries.ts";
+import { api } from "../../lib/api-client.ts";
 import styles from "./DbAnalyze.module.css";
 
 interface DeleteUserModalProps {
@@ -22,9 +22,7 @@ export function DeleteUserModal({
 
 	const mutation = useMutation({
 		mutationFn: (id: string) =>
-			api["db-analyze"].user
-				.$delete({ query: { authorId: id } })
-				.then(unwrap),
+			api["db-analyze"].user.$delete({ query: { authorId: id } }).then(unwrap),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["db-analyze"] });
 			onClose();
@@ -48,14 +46,16 @@ export function DeleteUserModal({
 				</div>
 				<div className={styles.modalBody}>
 					<p>
-						确定要删除用户{" "}
-						<strong>{displayName}</strong>（ID: {authorId}）的所有发言记录和用户信息吗？
+						确定要删除用户 <strong>{displayName}</strong>（ID: {authorId}
+						）的所有发言记录和用户信息吗？
 					</p>
 					<p className={styles.modalHint}>
 						将删除该用户的帖子、楼中楼、主题帖和用户档案，操作不可撤销。
 					</p>
 					{mutation.error && (
-						<p className={styles.modalError}>{(mutation.error as Error).message}</p>
+						<p className={styles.modalError}>
+							{(mutation.error as Error).message}
+						</p>
 					)}
 				</div>
 				<div className={styles.modalFooter}>
@@ -70,15 +70,10 @@ export function DeleteUserModal({
 						variant="danger"
 						onClick={() => mutation.mutate(authorId)}
 						disabled={mutation.isPending}
+						loading={mutation.isPending}
+						loadingAnnouncement="正在删除用户数据"
 					>
-						{mutation.isPending ? (
-							<>
-								<Spinner size="small" />
-								<span>删除中…</span>
-							</>
-						) : (
-							"确认删除"
-						)}
+						确认删除
 					</Button>
 				</div>
 			</div>

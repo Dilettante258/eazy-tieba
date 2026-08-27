@@ -21,6 +21,7 @@ import {
 } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { AnalysisUtterancesDrawer } from "../../components/DbAnalyze/AnalysisUtterancesDrawer.tsx";
 import type {
 	AnalysisCatalog,
@@ -35,6 +36,7 @@ import { ForumGroupManager } from "../../components/DbAnalyze/ForumGroupManager.
 import moduleStyles from "../../components/ForumPostAnalysis/ForumPostAnalysis.module.css";
 import { unwrap } from "../../hooks/queries.ts";
 import { api } from "../../lib/api-client.ts";
+import { useDbAnalyzeExploreStore } from "../../lib/db-analyze-explore-store.ts";
 
 const PAGE_LIMIT = 50;
 
@@ -420,12 +422,14 @@ function ResultsTable({
 			)}
 			{hasNextPage && (
 				<div className={styles.loadMore}>
-					<Button disabled={loadingMore} onClick={onLoadMore}>
-						{loadingMore ? (
-							<Spinner size="small" />
-						) : (
-							`加载更多（${users.length.toLocaleString()} / ${total.toLocaleString()}）`
-						)}
+					<Button
+						disabled={loadingMore}
+						loading={loadingMore}
+						loadingAnnouncement="正在加载更多分析结果"
+						onClick={onLoadMore}
+					>
+						加载更多（{users.length.toLocaleString()} / {total.toLocaleString()}
+						）
 					</Button>
 				</div>
 			)}
@@ -457,29 +461,37 @@ function ExplorePage() {
 		},
 	});
 	const catalog = catalogQuery.data;
-	const [selectedTypeIds, setSelectedTypeIds] = useState<Set<string>>(
-		new Set(),
+	const {
+		selectedTypeIds,
+		selectedForumIds,
+		keywords,
+		matchMode,
+		request,
+		drawerUser,
+		validationError,
+		toggleType,
+		setSelectedForumIds,
+		setKeywords,
+		setMatchMode,
+		setDrawerUser,
+		submitAnalysis,
+	} = useDbAnalyzeExploreStore(
+		useShallow((state) => ({
+			selectedTypeIds: state.selectedTypeIds,
+			selectedForumIds: state.selectedForumIds,
+			keywords: state.keywords,
+			matchMode: state.matchMode,
+			request: state.request,
+			drawerUser: state.drawerUser,
+			validationError: state.validationError,
+			toggleType: state.toggleType,
+			setSelectedForumIds: state.setSelectedForumIds,
+			setKeywords: state.setKeywords,
+			setMatchMode: state.setMatchMode,
+			setDrawerUser: state.setDrawerUser,
+			submitAnalysis: state.submitAnalysis,
+		})),
 	);
-	const [selectedForumIds, setSelectedForumIds] = useState<Set<string>>(
-		new Set(),
-	);
-	const [keywords, setKeywords] = useState<string[]>([]);
-	const [matchMode, setMatchMode] = useState<"any" | "all">("any");
-	const [request, setRequest] = useState<AnalysisRequest | null>(null);
-	const [drawerUser, setDrawerUser] = useState<CrossTypeUser | null>(null);
-	const [validationError, setValidationError] = useState("");
-
-	function toggleType(type: AnalysisForumType) {
-		setSelectedTypeIds((previous) => {
-			const next = new Set(previous);
-			if (next.has(type.id)) next.delete(type.id);
-			else {
-				next.add(type.id);
-				setSelectedForumIds((forums) => new Set([...forums, ...type.forumIds]));
-			}
-			return next;
-		});
-	}
 	const analysisQuery = useInfiniteQuery({
 		queryKey: ["db-analyze", "cross-type-analysis", request] as const,
 		enabled: request !== null,
@@ -510,32 +522,12 @@ function ExplorePage() {
 		() => new Map(catalog?.forums.map((forum) => [forum.id, forum]) ?? []),
 		[catalog],
 	);
-	function submit() {
-		if (selectedTypeIds.size < 2) {
-			setValidationError("请至少选择两个吧类型");
-			return;
-		}
-		if (selectedForumIds.size === 0) {
-			setValidationError("请至少选择一个贴吧");
-			return;
-		}
-		const covered = [...selectedTypeIds].filter((id) =>
-			typeMap
-				.get(id)
-				?.forumIds.some((forumId) => selectedForumIds.has(forumId)),
-		);
-		if (covered.length < 2) {
-			setValidationError("当前分析范围必须实际覆盖至少两个所选类型");
-			return;
-		}
-		setValidationError("");
-		setRequest({
-			typeIds: [...selectedTypeIds],
-			forumIds: [...selectedForumIds],
-			keywords,
-			matchMode,
-		});
-	}
+	const analysisLoading =
+		request !== null &&
+		analysisQuery.isFetching &&
+		!analysisQuery.isFetchingNextPage;
+	const indexRefreshing =
+		refreshMutation.isPending || indexQuery.data?.status === "refreshing";
 
 	if (catalogQuery.isPending)
 		return (
@@ -573,13 +565,12 @@ function ExplorePage() {
 				<Button
 					size="small"
 					leadingVisual={SyncIcon}
-					disabled={
-						refreshMutation.isPending ||
-						indexQuery.data?.status === "refreshing"
-					}
+					loading={indexRefreshing}
+					loadingAnnouncement="正在刷新分析数据"
+					disabled={indexRefreshing}
 					onClick={() => refreshMutation.mutate()}
 				>
-					{refreshMutation.isPending ? "刷新中…" : "立即刷新"}
+					立即刷新
 				</Button>
 			</div>
 			{refreshMutation.error && (
@@ -657,7 +648,13 @@ function ExplorePage() {
 					<p className={styles.validationError}>{validationError}</p>
 				)}
 				<div className={styles.analyzeAction}>
-					<Button variant="primary" size="large" onClick={submit}>
+					<Button
+						variant="primary"
+						size="large"
+						loading={analysisLoading}
+						loadingAnnouncement="正在分析跨类型用户与发言"
+						onClick={() => submitAnalysis(catalog.types)}
+					>
 						开始分析
 					</Button>
 				</div>

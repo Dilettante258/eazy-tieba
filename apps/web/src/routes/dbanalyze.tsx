@@ -14,6 +14,7 @@ import {
 	getDbAnalyzeToken,
 	setDbAnalyzeToken,
 } from "../lib/db-analyze-auth.ts";
+import { useDbAnalyzeExploreStore } from "../lib/db-analyze-explore-store.ts";
 import styles from "./dbanalyze.module.css";
 
 type AuthState = "checking" | "locked" | "unlocked";
@@ -74,10 +75,12 @@ function DbAnalyzeLogin({
 				<Button
 					block
 					disabled={!password || submitting}
+					loading={submitting}
+					loadingAnnouncement="正在验证数据库分析密码"
 					type="submit"
 					variant="primary"
 				>
-					{submitting ? "验证中…" : "进入"}
+					进入
 				</Button>
 			</form>
 		</div>
@@ -114,6 +117,7 @@ function DbAnalyzeLayout() {
 			setAuthMessage("登录已失效，请重新输入密码");
 			setAuthState("locked");
 			queryClient.removeQueries({ queryKey: ["db-analyze"] });
+			useDbAnalyzeExploreStore.getState().reset();
 		}
 		void restoreSession();
 		window.addEventListener(DB_ANALYZE_AUTH_EXPIRED_EVENT, handleExpired);
@@ -152,6 +156,7 @@ function DbAnalyzeLayout() {
 					onClick={() => {
 						clearDbAnalyzeToken();
 						queryClient.removeQueries({ queryKey: ["db-analyze"] });
+						useDbAnalyzeExploreStore.getState().reset();
 						setAuthMessage("");
 						setAuthState("locked");
 					}}

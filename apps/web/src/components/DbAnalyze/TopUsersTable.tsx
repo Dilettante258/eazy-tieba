@@ -1,4 +1,4 @@
-import { Button, Spinner } from "@primer/react";
+import { Button } from "@primer/react";
 import moduleStyles from "../ForumPostAnalysis/ForumPostAnalysis.module.css";
 
 export interface TopUser {
@@ -66,12 +66,15 @@ export function TopUsersTable({
 
 			{hasNextPage && (
 				<div style={{ textAlign: "center", marginTop: "1rem" }}>
-					<Button variant="default" onClick={onLoadMore} disabled={loading}>
-						{loading ? (
-							<Spinner size="small" />
-						) : (
-							`加载更多（已显示 ${users.length.toLocaleString()} / ${total.toLocaleString()}）`
-						)}
+					<Button
+						variant="default"
+						onClick={onLoadMore}
+						disabled={loading}
+						loading={loading}
+						loadingAnnouncement="正在加载更多跨吧用户"
+					>
+						加载更多（已显示 {users.length.toLocaleString()} /{" "}
+						{total.toLocaleString()}）
 					</Button>
 				</div>
 			)}
