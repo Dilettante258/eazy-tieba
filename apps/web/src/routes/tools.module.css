@@ -1,0 +1,168 @@
+.page {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.heading {
+	margin: 0.5rem 0;
+	text-align: center;
+	font-size: 1.5rem;
+}
+
+.intro {
+	margin: 0 0 1.25rem;
+	text-align: center;
+	color: var(--fgColor-muted, #656d76);
+}
+
+.modePicker {
+	display: flex;
+	justify-content: center;
+	margin: 1.25rem 0;
+	overflow-x: auto;
+}
+
+.toolForm {
+	display: flex;
+	align-items: flex-end;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+}
+
+.levelForm {
+	display: grid;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+}
+
+.grow {
+	flex: 1;
+}
+
+.formActions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	padding: 3rem;
+}
+
+.userSummary {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin: 1rem 0;
+	padding: 0.875rem;
+	border: 1px solid var(--borderColor-muted, #d8dee4);
+	border-radius: 8px;
+	background: var(--bgColor-muted, #f6f8fa);
+}
+
+.userSummary p {
+	margin: 0.25rem 0 0;
+	color: var(--fgColor-muted, #656d76);
+	font-size: 0.8125rem;
+}
+
+.postList {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.postItem {
+	padding: 1rem;
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+}
+
+.postItem h3 {
+	margin: 0;
+	font-size: 1rem;
+}
+
+.postItem p {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.externalLink {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 0.8125rem;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	margin: 1.25rem 0;
+}
+
+.tableWrap {
+	max-height: 32rem;
+	overflow: auto;
+	border: 1px solid var(--borderColor-default, #d0d7de);
+	border-radius: 8px;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table th,
+.table td {
+	padding: 0.625rem 0.75rem;
+	border-bottom: 1px solid var(--borderColor-muted, #d8dee4);
+	text-align: left;
+}
+
+.table th {
+	position: sticky;
+	top: 0;
+	background: var(--bgColor-muted, #f6f8fa);
+	z-index: 1;
+}
+
+.table th button {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.loadMore {
+	display: flex;
+	justify-content: center;
+	padding: 0.75rem;
+}
+
+.notice {
+	margin-top: 1.5rem;
+	padding: 0.75rem;
+	border-top: 1px solid var(--borderColor-muted, #d8dee4);
+	color: var(--fgColor-muted, #656d76);
+	text-align: center;
+	font-size: 0.75rem;
+}
+
+@media (max-width: 640px) {
+	.toolForm {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.toolForm button {
+		width: 100%;
+	}
+}

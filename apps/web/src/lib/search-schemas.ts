@@ -11,6 +11,16 @@ export const userPostSearchSchema = userSearchSchema.extend({
 	page: z.number().int().positive().catch(1),
 });
 
+/** 贴吧工具页搜索参数 */
+export const toolsSearchSchema = userSearchSchema.extend({
+	tool: z
+		.enum(["posts-old", "posts-new", "levels", "levels-legacy"])
+		.catch("posts-old"),
+	fname: z.string().catch(""),
+	fnameList: z.string().catch(""),
+	page: z.number().int().positive().catch(1),
+});
+
 /** 贴吧帖子分析搜索参数 */
 export const forumPostSearchSchema = z.object({
 	fname: z.string().catch(""),
@@ -29,5 +39,6 @@ export const postSearchSchema = z.object({
 
 export type UserSearch = z.infer<typeof userSearchSchema>;
 export type UserPostSearch = z.infer<typeof userPostSearchSchema>;
+export type ToolsSearch = z.infer<typeof toolsSearchSchema>;
 export type ForumPostSearch = z.infer<typeof forumPostSearchSchema>;
 export type PostSearch = z.infer<typeof postSearchSchema>;

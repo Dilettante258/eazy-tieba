@@ -1,20 +1,20 @@
+import { SearchIcon, XCircleFillIcon } from "@primer/octicons-react";
 import {
 	Button,
 	FormControl,
 	SegmentedControl,
 	TextInput,
 } from "@primer/react";
-import { SearchIcon, XCircleFillIcon } from "@primer/octicons-react";
-import { startTransition, useState, ViewTransition } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { startTransition, useState, ViewTransition } from "react";
 import type { Method } from "../hooks/queries.ts";
 import { ProfileCard } from "./ProfileCard.tsx";
-import { Tutorial } from "./Tutorial.tsx";
 import styles from "./QueryForm.module.css";
+import { Tutorial } from "./Tutorial.tsx";
 
 const METHODS = [
 	{ label: "贴吧 UID", value: "uid" },
-	{ label: "用户名", value: "un" },
+	{ label: "用户名 / 昵称", value: "un" },
 	{ label: "用户 ID", value: "id" },
 ] as const;
 
@@ -70,7 +70,12 @@ export function QueryForm() {
 			}
 			navigate({
 				to: ".",
-				search: () => ({ method: nextMethod, id: nextId }),
+				search: (previous: Record<string, unknown>) => ({
+					...previous,
+					...("page" in previous ? { page: 1 } : {}),
+					method: nextMethod,
+					id: nextId,
+				}),
 			});
 		});
 	};
@@ -107,7 +112,7 @@ export function QueryForm() {
 									{method === "uid"
 										? "贴吧 UID"
 										: method === "un"
-											? "用户名"
+											? "用户名或昵称"
 											: "用户 ID"}
 								</FormControl.Label>
 								<TextInput
@@ -130,7 +135,7 @@ export function QueryForm() {
 										method === "uid"
 											? "请输入贴吧 UID"
 											: method === "un"
-												? "请输入用户名"
+												? "请输入用户名或昵称"
 												: "请输入用户 ID"
 									}
 									leadingVisual={SearchIcon}
@@ -165,8 +170,8 @@ export function QueryForm() {
 
 				{/* 右侧：用户资料卡片 */}
 				<div className={styles.profileSide}>
-					{hasQuery && (
-						<ProfileCard method={search.method as Method} id={search.id!} />
+					{hasQuery && search.id && (
+						<ProfileCard method={search.method as Method} id={search.id} />
 					)}
 				</div>
 			</div>

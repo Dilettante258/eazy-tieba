@@ -1,28 +1,28 @@
 import {
-	Outlet,
-	Link,
-	createRootRouteWithContext,
-	useNavigate,
-	useRouterState,
-	type ErrorComponentProps,
-} from "@tanstack/react-router";
-import { ActionList, ActionMenu, PageLayout } from "@primer/react";
-import {
 	DownloadIcon,
 	GearIcon,
 	MoonIcon,
 	SunIcon,
 	ThreeBarsIcon,
 } from "@primer/octicons-react";
+import { ActionList, ActionMenu, PageLayout } from "@primer/react";
+import {
+	createRootRouteWithContext,
+	type ErrorComponentProps,
+	Link,
+	Outlet,
+	useNavigate,
+	useRouterState,
+} from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
+import styles from "../components/AppLayout.module.css";
 import { ErrorFallback } from "../components/ErrorFallback.tsx";
 import { GitHubStars } from "../components/GitHubStars.tsx";
 import { useColorMode } from "../lib/color-mode.tsx";
 import { usePwaInstall } from "../lib/pwa-install.ts";
+import type { RouterContext } from "../lib/router-context.ts";
 import { useRouteSeo } from "../lib/seo.ts";
 import { useSettingsStore } from "../lib/settings-store.ts";
-import type { RouterContext } from "../lib/router-context.ts";
-import styles from "../components/AppLayout.module.css";
 
 const SettingsDialog = lazy(() =>
 	import("../components/SettingsDialog.tsx").then((mod) => ({
@@ -40,6 +40,7 @@ const NAV_ITEMS = [
 	{ label: "发帖分析", to: "/postanalysis" },
 	{ label: "贴吧分析", to: "/forumpost" },
 	{ label: "发言搜索", to: "/postsearch" },
+	{ label: "贴吧工具", to: "/tools" },
 	{ label: "关注", to: "/follow" },
 	{ label: "粉丝", to: "/fan" },
 	{ label: "关注的吧", to: "/likeforum" },

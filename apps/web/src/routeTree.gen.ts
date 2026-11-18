@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UserpostRouteImport } from './routes/userpost'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostsearchRouteImport } from './routes/postsearch'
 import { Route as PostanalysisRouteImport } from './routes/postanalysis'
@@ -28,6 +29,11 @@ import { Route as DbanalyzeExploreRouteImport } from './routes/dbanalyze/explore
 const UserpostRoute = UserpostRouteImport.update({
   id: '/userpost',
   path: '/userpost',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/postanalysis': typeof PostanalysisRoute
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
+  '/tools': typeof ToolsRoute
   '/userpost': typeof UserpostRoute
   '/dbanalyze/explore': typeof DbanalyzeExploreRoute
   '/dbanalyze/manage': typeof DbanalyzeManageRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/postanalysis': typeof PostanalysisRoute
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
+  '/tools': typeof ToolsRoute
   '/userpost': typeof UserpostRoute
   '/dbanalyze/explore': typeof DbanalyzeExploreRoute
   '/dbanalyze/manage': typeof DbanalyzeManageRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/postanalysis': typeof PostanalysisRoute
   '/postsearch': typeof PostsearchRoute
   '/profile': typeof ProfileRoute
+  '/tools': typeof ToolsRoute
   '/userpost': typeof UserpostRoute
   '/dbanalyze/explore': typeof DbanalyzeExploreRoute
   '/dbanalyze/manage': typeof DbanalyzeManageRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/postanalysis'
     | '/postsearch'
     | '/profile'
+    | '/tools'
     | '/userpost'
     | '/dbanalyze/explore'
     | '/dbanalyze/manage'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/postanalysis'
     | '/postsearch'
     | '/profile'
+    | '/tools'
     | '/userpost'
     | '/dbanalyze/explore'
     | '/dbanalyze/manage'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/postanalysis'
     | '/postsearch'
     | '/profile'
+    | '/tools'
     | '/userpost'
     | '/dbanalyze/explore'
     | '/dbanalyze/manage'
@@ -217,6 +229,7 @@ export interface RootRouteChildren {
   PostanalysisRoute: typeof PostanalysisRoute
   PostsearchRoute: typeof PostsearchRoute
   ProfileRoute: typeof ProfileRoute
+  ToolsRoute: typeof ToolsRoute
   UserpostRoute: typeof UserpostRoute
 }
 
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/userpost'
       fullPath: '/userpost'
       preLoaderRoute: typeof UserpostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -358,6 +378,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostanalysisRoute: PostanalysisRoute,
   PostsearchRoute: PostsearchRoute,
   ProfileRoute: ProfileRoute,
+  ToolsRoute: ToolsRoute,
   UserpostRoute: UserpostRoute,
 }
 export const routeTree = rootRouteImport

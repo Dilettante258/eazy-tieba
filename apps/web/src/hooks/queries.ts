@@ -3,9 +3,9 @@ import {
 	useInfiniteQuery,
 	useQuery,
 } from "@tanstack/react-query";
-import { api } from "../lib/api-client.ts";
 import type { ClientResponse } from "hono/client";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { api } from "../lib/api-client.ts";
 
 export type Method = "id" | "uid" | "un";
 
@@ -87,6 +87,67 @@ export const likeForumsOptions = (method: Method, id: string) =>
 		enabled: !!method && !!id,
 	});
 
+// ── 贴吧工具 ──
+
+export const forumPostsToolOptions = (
+	version: "old" | "new",
+	method: Method,
+	id: string,
+	fname: string,
+	page: number,
+	enabled = true,
+) =>
+	queryOptions({
+		queryKey: [
+			"tools",
+			"forum-posts",
+			version,
+			method,
+			id,
+			fname,
+			page,
+		] as const,
+		queryFn: () => {
+			const query = { method, id, fname, page: String(page) };
+			return version === "new"
+				? api.tools["forum-posts-new"].$get({ query }).then(unwrap)
+				: api.tools["forum-posts"].$get({ query }).then(unwrap);
+		},
+		enabled: enabled && !!method && !!id && !!fname,
+		staleTime: 60_000,
+	});
+
+export const forumLevelsToolOptions = (
+	method: Method,
+	id: string,
+	fnameList: string,
+	enabled = true,
+) =>
+	queryOptions({
+		queryKey: ["tools", "forum-levels", method, id, fnameList] as const,
+		queryFn: () =>
+			api.tools["forum-levels"]
+				.$get({ query: { method, id, fnameList } })
+				.then(unwrap),
+		enabled: enabled && !!method && !!id && !!fnameList,
+		staleTime: 60_000,
+	});
+
+export const legacyForumLevelsToolOptions = (
+	method: Method,
+	id: string,
+	enabled = true,
+) =>
+	queryOptions({
+		queryKey: ["tools", "forum-levels-legacy", method, id] as const,
+		queryFn: () =>
+			api.tools["forum-levels-legacy"]
+				.$get({ query: { method, id } })
+				.then(unwrap),
+		enabled: enabled && !!method && !!id,
+		staleTime: 60_000,
+	});
+
 // ── React Query hooks（供组件直接使用） ──
 
 export const useCondenseProfile = (method: Method, id: string) =>
@@ -155,8 +216,7 @@ export const dbAnalyzeTopUsersOptions = (minForums: string) =>
 export const dbAnalyzeCrossForumsOptions = () =>
 	queryOptions({
 		queryKey: ["db-analyze", "cross-forums"] as const,
-		queryFn: () =>
-			api["db-analyze"]["cross-forums"].$get().then(unwrap),
+		queryFn: () => api["db-analyze"]["cross-forums"].$get().then(unwrap),
 	});
 
 export const dbAnalyzeIntersectionOptions = (forums: string, page: string) =>
@@ -237,12 +297,7 @@ export function useDbAnalyzeUserPostsInfinite(
 	forumId: string | undefined,
 ) {
 	return useInfiniteQuery({
-		queryKey: [
-			"db-analyze",
-			"user-posts",
-			authorId,
-			forumId,
-		] as const,
+		queryKey: ["db-analyze", "user-posts", authorId, forumId] as const,
 		queryFn: async ({ pageParam }) => {
 			const res = await api["db-analyze"]["user-posts"].$get({
 				query: {
