@@ -89,19 +89,24 @@ export const likeForumsOptions = (method: Method, id: string) =>
 
 // ── 贴吧工具 ──
 
-export const forumPostsToolOptions = (
+export const recentPostsOptions = (
 	method: Method,
 	id: string,
-	fname: string,
 	page: number,
+	fname: string,
 ) =>
 	queryOptions({
-		queryKey: ["tools", "forum-posts", method, id, fname, page] as const,
-		queryFn: () =>
-			api.tools["forum-posts"]
-				.$get({ query: { method, id, fname, page: String(page) } })
-				.then(unwrap),
-		enabled: !!method && !!id && !!fname,
+		queryKey: ["recentPosts", method, id, page, fname] as const,
+		queryFn: () => {
+			const query = {
+				method,
+				id,
+				page: String(page),
+				...(fname ? { fname } : {}),
+			};
+			return api.user.recentPosts.$get({ query }).then(unwrap);
+		},
+		enabled: !!method && !!id,
 		staleTime: 60_000,
 	});
 

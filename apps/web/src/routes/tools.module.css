@@ -70,6 +70,15 @@
 	word-break: break-word;
 }
 
+.postMeta {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	color: var(--fgColor-muted, #656d76);
+	font-size: 0.8125rem;
+}
+
 .externalLink {
 	display: inline-flex;
 	align-items: center;
