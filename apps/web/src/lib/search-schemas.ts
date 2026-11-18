@@ -13,11 +13,7 @@ export const userPostSearchSchema = userSearchSchema.extend({
 
 /** 贴吧工具页搜索参数 */
 export const toolsSearchSchema = userSearchSchema.extend({
-	tool: z
-		.enum(["posts-old", "posts-new", "levels", "levels-legacy"])
-		.catch("posts-old"),
 	fname: z.string().catch(""),
-	fnameList: z.string().catch(""),
 	page: z.number().int().positive().catch(1),
 });
 
