@@ -7,6 +7,15 @@ export const BACKEND_ENDPOINTS = {
 export const PRODUCTION_BACKEND = "domestic";
 export const BACKUP_BACKEND = "foreign";
 
+const isLocalWeb =
+	typeof window !== "undefined" &&
+	["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+/** 近期发言使用独立 API，避免影响保留在 8000 端口的旧后端。 */
+export const RECENT_POSTS_BACKEND =
+	import.meta.env.VITE_RECENT_POSTS_API_URL ??
+	(isLocalWeb ? "http://localhost:8001" : BACKEND_ENDPOINTS.domestic);
+
 export type BackendNode = keyof typeof BACKEND_ENDPOINTS;
 export type BackendPreference = "auto" | BackendNode;
 

@@ -10,6 +10,7 @@
 	"scripts": {
 		"init": "bun scripts/init-env.mjs",
 		"dev": "turbo dev",
+		"dev:recent-api": "bun run --cwd apps/api dev:recent",
 		"build": "turbo build",
 		"typecheck": "turbo typecheck",
 		"proto:gen": "turbo proto:gen",

@@ -6,6 +6,7 @@ import {
 import type { ClientResponse } from "hono/client";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { api } from "../lib/api-client.ts";
+import { recentPostsApi } from "../lib/recent-posts-api-client.ts";
 
 export type Method = "id" | "uid" | "un";
 
@@ -104,7 +105,7 @@ export const recentPostsOptions = (
 				page: String(page),
 				...(fname ? { fname } : {}),
 			};
-			return api.user.recentPosts.$get({ query }).then(unwrap);
+			return recentPostsApi.user.recentPosts.$get({ query }).then(unwrap);
 		},
 		enabled: !!method && !!id,
 		staleTime: 60_000,
